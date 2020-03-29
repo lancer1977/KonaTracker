@@ -22,7 +22,15 @@ namespace KonaAnalyzer.Data
             States = Changes.Select(x => x.state).Distinct().OrderBy(x => x).ToList();
         }
 
-        public DateTime? LastDate(string state)
+        public int GetPopulation(string state)
+        {
+            string url =
+                "api.census.gov/data/2019/pep/population?get=COUNTY,DATE_CODE,DATE_DESC,DENSITY,POP,NAME,STATE&for=region:*&key=YOUR_KEY";
+            var censusData = DataExtensions.GetStringFromUrl(url);
+            return 0;
+        }
+
+        public DateTime LastDate(string state)
         {
             return Changes.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }

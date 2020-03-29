@@ -15,6 +15,7 @@ namespace KonaAnalyzer.Views
     public partial class MainPage : MasterDetailPage
     {
         StatePage _statePage = new StatePage();
+        OverviewPage _overviewPage = new OverviewPage();
         public MainPage()
         {
             InitializeComponent();
@@ -24,10 +25,20 @@ namespace KonaAnalyzer.Views
         }
 
         public async Task NavigateFromMenu(string id)
-        {  
-            if (Device.RuntimePlatform == Device.Android)
-                await Task.Delay(100);
-            _statePage.ViewModel.LoadState(id);
+        {
+            //if (Device.RuntimePlatform == Device.Android)
+            //    await Task.Delay(100);
+            if (id == "Overview")
+            {
+                Detail = new NavigationPage(_overviewPage);
+            }
+            else
+            {
+                Detail = new NavigationPage(_statePage);
+                _statePage.ViewModel.LoadState(id);
+            }
+
+      
             if(Device.RuntimePlatform != Device.WPF)
                 IsPresented = false;
         }

@@ -13,6 +13,6 @@ namespace KonaAnalyzer.Data
         double ChangeRateByCounty(string state, string county);
         double ChangeRateByState(string state);
         void Load();
-        DateTime? LastDate(string state);
+        DateTime LastDate(string state);
     }
 }
