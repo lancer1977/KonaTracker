@@ -19,14 +19,12 @@ namespace KonaAnalyzer.Views
         {
             InitializeComponent();
 
-            MasterBehavior = MasterBehavior.Popover;
-            Detail = new Page();
+            MasterBehavior = MasterBehavior.Popover; 
+            Detail = new NavigationPage(_statePage);
         }
 
         public async Task NavigateFromMenu(string id)
-        { 
-            Detail = _statePage;
-
+        {  
             if (Device.RuntimePlatform == Device.Android)
                 await Task.Delay(100);
             _statePage.ViewModel.LoadState(id);

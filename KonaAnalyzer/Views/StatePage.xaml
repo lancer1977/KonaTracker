@@ -7,11 +7,11 @@
              x:Class="KonaAnalyzer.Views.StatePage"
              xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
              Title="{Binding Title}">
-    
+
     <ContentPage.BindingContext>
         <vm:StateViewModel />
     </ContentPage.BindingContext>
-    
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="Primary">#2196F3</Color>
@@ -20,24 +20,35 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-  
-            <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
-                <Picker ItemsSource="{Binding Counties}" SelectedItem="{Binding County}"/>
-                <Picker ItemsSource="{Binding Dates}" SelectedItem="{Binding Date}"/>
-      
-                <Label Text="Total Sick"/>
-                <Label FontSize="22" Text="{Binding Current}"/>
-                <Label Text="Change"/>
-                <Label FontSize="12" Text="{Binding CurrentChange}" />
-                <Label Text="Change Rate"/>
-                <Label FontSize="12" Text="{Binding CurrentChangeRate}" />
-                <BoxView HeightRequest="3" HorizontalOptions="FillAndExpand"/> 
-                <Label Text="Total Deaths"/>
-                <Label FontSize="22" Text="{Binding Dead}"/>
-                <Label Text="Change"/>
-                <Label FontSize="12" Text="{Binding DeadChange}" />
-                <Label Text="Change Rate"/>
-                <Label FontSize="12" Text="{Binding DeadChangeRate}" />
 
-            </StackLayout> 
+    <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
+        <Picker ItemsSource="{Binding Counties}" SelectedItem="{Binding County}"/>
+        <Picker ItemsSource="{Binding Dates}" SelectedItem="{Binding Date}"/>
+
+        <Label Text="Total Sick"/>
+        <Label FontSize="22" Text="{Binding Current}"/>
+        <Label Text="Change"/>
+        <Label FontSize="12" Text="{Binding CurrentChange}" />
+        <Label Text="Change Rate"/>
+        <Label FontSize="12" Text="{Binding CurrentChangeRate}" />
+        <BoxView HeightRequest="3" HorizontalOptions="FillAndExpand"/>
+        <Label Text="Total Deaths"/>
+        <Label FontSize="22" Text="{Binding Dead}"/>
+        <Label Text="Change"/>
+        <Label FontSize="12" Text="{Binding DeadChange}" />
+        <Label Text="Change Rate"/>
+        <Label FontSize="12" Text="{Binding DeadChangeRate}" />
+        <StackLayout Orientation="Horizontal">
+            <StackLayout>
+                <Label Text="Illness Risk"/>
+                <Label Text="{Binding IllnessRisk}"/>
+
+            </StackLayout>
+            <StackLayout>
+                <Label Text="Death Risk"/>
+                <Label Text="{Binding DeathRisk}"/>
+
+            </StackLayout>
+        </StackLayout>
+    </StackLayout>
 </ContentPage>

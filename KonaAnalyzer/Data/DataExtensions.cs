@@ -8,32 +8,34 @@ namespace KonaAnalyzer.Data
 {
     public static class DataExtensions
     {
-        public static string GetCSV(string url)
+        public static string GetStringFromUrl(string url)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+            var results = string.Empty;
+            var req = (HttpWebRequest)WebRequest.Create(url);
+            var resp = (HttpWebResponse)req.GetResponse();
 
-            StreamReader sr = new StreamReader(resp.GetResponseStream());
-            string results = sr.ReadToEnd();
-            sr.Close();
-
+            var stream = resp.GetResponseStream();
+            if (stream == null) return results;
+            var sr = new StreamReader(stream);
+            results = sr.ReadToEnd();
+            sr.Close(); 
             return results;
         }
 
         public static List<T> GetListFromUrl<T>(string url)
         {
             var returnList = new List<T>();
-            var text = GetCSV(url);//.Replace("\n",";");
+            var text = GetStringFromUrl(url);//.Replace("\n",";");
 
-           // Console.WriteLine(text);
+            // Console.WriteLine(text);
             using (TextReader sr = new StringReader(text))
             {
-                CsvReader csv = new CsvReader(sr, CultureInfo.CurrentCulture);
+                var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
                 csv.Configuration.Delimiter = ",";
                 csv.Configuration.MissingFieldFound = null;
                 while (csv.Read())
                 {
-                    T Record = csv.GetRecord<T>();
+                    var Record = csv.GetRecord<T>();
                     returnList.Add(Record);
                 }
             }

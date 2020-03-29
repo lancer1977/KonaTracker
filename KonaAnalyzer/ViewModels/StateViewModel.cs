@@ -25,11 +25,13 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double CurrentChangeRate { get; set; }
         [Reactive] public int DeadChange { get; set; }
         [Reactive] public double DeadChangeRate { get; set; }
+        [Reactive] public double DeathRisk { get; set; }
+        [Reactive] public double IllnessRisk { get; set; }
         [Reactive] public List<DateTime> Dates { get; set; } = new List<DateTime>();
 
         public StateViewModel()
         {
-
+            Title = "NA";
             this.WhenAnyValue(x => x.Date).Skip(1).Subscribe(x => UpdateValues(State, County, x));
             this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
             this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false).Subscribe(x =>
