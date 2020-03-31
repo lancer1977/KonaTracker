@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using KonaAnalyzer.Data;
+using Microsoft.AppCenter.Crashes;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(InMemoryCovidSource))]
@@ -16,10 +18,22 @@ namespace KonaAnalyzer.Data
         public DateTime MostRecent => _lastDate.Date;
         public void Load()
         {
+
+            try
+            {
+                Changes = DataExtensions.GetListFromUrl<DayChange>(url);
+                _lastDate = Changes.OrderBy(x => x.date).Select(x => x.date)
+                    .LastOrDefault(); //?? (DateTime.Today - TimeSpan.FromDays(1));
+                States = Changes.Select(x => x.state).Distinct().OrderBy(x => x).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                Crashes.TrackError(ex);
+            }
+
             //var text =  DataExtensions.GetCSV();
-            Changes = DataExtensions.GetListFromUrl<DayChange>(url);
-            _lastDate = Changes.OrderBy(x => x.date).Select(x => x.date).LastOrDefault();//?? (DateTime.Today - TimeSpan.FromDays(1));
-            States = Changes.Select(x => x.state).Distinct().OrderBy(x => x).ToList();
+
         }
 
         public int GetPopulation(string state)
@@ -46,22 +60,22 @@ namespace KonaAnalyzer.Data
             if (date == null) date = Yesterday;
             return Changes.Where(x => x.state == state)
                 .Where(x => county == "All" || x.county == county)
-                .Where(x=>x.date == date)
+                .Where(x => x.date == date)
                 .Select(x => x.cases).Sum();
         }
 
- 
-        public int Deaths(string state, string county,DateTime? date)
+
+        public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
             var items = Changes.Where(x => x.state == state)
-                .Where(x=> county == "All" || x.county == county)
+                .Where(x => county == "All" || x.county == county)
                 .Where(x => x.date == date)
                 .Select(x => x.deaths).Sum();
             return items;
         }
 
- 
+
 
         public double ChangeRateByCounty(string state, string county)
         {

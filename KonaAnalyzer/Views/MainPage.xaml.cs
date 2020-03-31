@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
-
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data;
+using Xamarin.Forms; 
 
 namespace KonaAnalyzer.Views
 {
@@ -14,33 +12,48 @@ namespace KonaAnalyzer.Views
     [DesignTimeVisible(false)]
     public partial class MainPage : MasterDetailPage
     {
-        StatePage _statePage = new StatePage();
-        OverviewPage _overviewPage = new OverviewPage();
+        StatePage _statePage;
+        StatePage StatePage => _statePage ?? (_statePage = new StatePage());
+        OverviewPage _overviewPage;
+        OverviewPage OverviewPage => _overviewPage ?? (_overviewPage = new OverviewPage());
         public MainPage()
         {
             InitializeComponent();
 
-            MasterBehavior = MasterBehavior.Popover; 
-            Detail = new NavigationPage(_statePage);
+            MasterBehavior = MasterBehavior.Popover;
+
+
+            Detail = new NavigationPage(new Page()) { Title = "Welcome - Load an Option from the side Menu" };
+
         }
 
         public async Task NavigateFromMenu(string id)
         {
             //if (Device.RuntimePlatform == Device.Android)
             //    await Task.Delay(100);
-            if (id == "Overview")
+            switch (id)
             {
-                Detail = new NavigationPage(_overviewPage);
-            }
-            else
-            {
-                Detail = new NavigationPage(_statePage);
-                _statePage.ViewModel.LoadState(id);
+                case "Overview":
+                    Detail = new NavigationPage(OverviewPage);
+                    break;
+                case "Reload Data":
+                    Detail = new NavigationPage(new LoadingPage());
+                    //DependencyService.Get<ICovidSource>().Load();
+                    break;
+                case "About":
+                    await DisplayAlert("About", "Data sourced from (Copyright 2020) The New York Times Company. Written by Christopher Richmond","OK");
+                    break;
+                default:
+                    Detail = new NavigationPage(StatePage);
+                    _statePage.ViewModel.LoadState(id);
+                    break;
             }
 
-      
-            if(Device.RuntimePlatform != Device.WPF)
+
+            if (Device.RuntimePlatform != Device.WPF)
                 IsPresented = false;
         }
+
+
     }
 }

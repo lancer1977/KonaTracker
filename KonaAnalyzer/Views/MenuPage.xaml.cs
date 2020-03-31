@@ -21,6 +21,9 @@ namespace KonaAnalyzer.Views
             InitializeComponent();
             menuItems = DependencyService.Get<ICovidSource>().States.Select(x=>new HomeMenuItem(){Title=x}).ToList();
             menuItems.Insert(0,new HomeMenuItem(){Title="Overview"});
+            menuItems.Insert(1,new HomeMenuItem(){Title="Reload Data"});
+            menuItems.Insert(2, new HomeMenuItem() { Title = "About" });
+            menuItems.Insert(3, new HomeMenuItem() { Title = "------------------" });
             ListViewMenu.ItemsSource = menuItems;
 
             ListViewMenu.SelectedItem = menuItems[0];
