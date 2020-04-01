@@ -41,7 +41,7 @@ namespace KonaAnalyzer.Views
                     //DependencyService.Get<ICovidSource>().Load();
                     break;
                 case "About":
-                    await DisplayAlert("About", "Data sourced from (Copyright 2020) The New York Times Company. Written by Christopher Richmond","OK");
+                    Detail = new NavigationPage(new AboutPage());
                     break;
                 default:
                     Detail = new NavigationPage(StatePage);
