@@ -1,9 +1,12 @@
 ﻿using KonaAnalyzer.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using DynamicData;
 using KonaAnalyzer.Data;
+using ReactiveUI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,15 +18,26 @@ namespace KonaAnalyzer.Views
     public partial class MenuPage : ContentPage
     {
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-        List<HomeMenuItem> menuItems;
+        private ICovidSource Source => DependencyService.Get<ICovidSource>();
+        ObservableCollection<HomeMenuItem> menuItems = new ObservableCollection<HomeMenuItem>();
+
         public MenuPage()
         {
             InitializeComponent();
-            menuItems = DependencyService.Get<ICovidSource>().States.Select(x=>new HomeMenuItem(){Title=x}).ToList();
-            menuItems.Insert(0,new HomeMenuItem(){Title="Overview"});
-            menuItems.Insert(1,new HomeMenuItem(){Title="Reload Data"});
-            menuItems.Insert(2, new HomeMenuItem() { Title = "About" });
-            menuItems.Insert(3, new HomeMenuItem() { Title = "------------------" });
+            Source.WhenAnyValue(x => x.Loaded).Subscribe(loaded =>
+            {
+                if (loaded == false) return;
+                menuItems.AddRange(DependencyService.Get<ICovidSource>().States
+                    .Select(x => new HomeMenuItem() { Title = x }));
+            });
+
+            menuItems.AddRange(new[]{
+                new HomeMenuItem() {Title = "Overview"},
+            new HomeMenuItem() {Title = "Reload Data"},
+            new HomeMenuItem() {Title = "About"},
+            new HomeMenuItem() {Title = "------------------"}
+        });
+
             ListViewMenu.ItemsSource = menuItems;
 
             ListViewMenu.SelectedItem = menuItems[0];
@@ -32,9 +46,11 @@ namespace KonaAnalyzer.Views
                 if (e.SelectedItem == null)
                     return;
 
-               // var id = (int)((HomeMenuItem)e.SelectedItem).Id;
-               await RootPage.NavigateFromMenu(e.SelectedItem.ToString());
+                // var id = (int)((HomeMenuItem)e.SelectedItem).Id;
+                await RootPage.NavigateFromMenu(e.SelectedItem.ToString());
             };
         }
+
+
     }
 }

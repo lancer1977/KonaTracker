@@ -17,12 +17,11 @@ namespace KonaAnalyzer
             AppCenter.Start("9d772b2e-8b42-4cf9-9204-fbc30a462e71",
                 typeof(Analytics), typeof(Crashes), typeof(Microsoft.AppCenter.Distribute.Distribute)); 
             DependencyService.Register<InMemoryCovidSource>();
-            MainPage = new LoadingPage();
+            MainPage = new MainPage();;
         }
 
         protected override void OnStart()
         {
-            var loading = MainPage as LoadingPage; 
       
         }
 

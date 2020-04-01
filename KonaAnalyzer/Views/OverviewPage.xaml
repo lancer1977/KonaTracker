@@ -12,36 +12,55 @@
         <vm:OverviewViewModel />
     </ContentPage.BindingContext>
 
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Color x:Key="Primary">#2196F3</Color>
-            <Color x:Key="Accent">#96d1ff</Color>
-            <Color x:Key="LightTextColor">#999999</Color>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+ 
+
+<StackLayout BackgroundColor="Bisque">
+        <Grid Margin="5,0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackLayout Grid.Column="0">
+                <Label Text="Cases"/>
+                <Label Text="{Binding Cases}"/>
+            </StackLayout>
+            <StackLayout Grid.Column="1">
+                <Label Text="Deaths"/>
+                <Label Text="{Binding Deaths}"/>
+            </StackLayout>
+
+        </Grid >    
 
 
-    <ListView ItemsSource="{Binding Items}">
+<ListView ItemsSource="{Binding Items}"   SeparatorColor="Black" Margin="5,0">
         <ListView.ItemTemplate>
             <DataTemplate>
-                <ViewCell>
-
-                    <StackLayout Orientation="Horizontal" >
-                        <StackLayout>
-                            <Label Text="State"/>
-                            <Label Text="{Binding state}"/>
-                        </StackLayout>
-                        <StackLayout>
-                            <Label Text="Total"/>
-                            <Label Text="{Binding cases}"/>
-                        </StackLayout>
-                        <StackLayout>
-                            <Label Text="Deaths"/>
-                            <Label Text="{Binding deaths}"/>
-                        </StackLayout>
-                    </StackLayout>
+                    <ViewCell > 
+                        <Grid BackgroundColor="Bisque" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout Grid.Column="0">
+                                <Label Text="State"/>
+                                <Label Text="{Binding state}"/>
+                            </StackLayout>
+                            <StackLayout Grid.Column="1">
+                                <Label Text="Total"/>
+                                <Label Text="{Binding cases}"/>
+                            </StackLayout>
+                            <StackLayout Grid.Column="2">
+                                <Label Text="Deaths"/>
+                                <Label Text="{Binding deaths}"/>
+                            </StackLayout>
+                        </Grid>
+ 
+       
                 </ViewCell>
             </DataTemplate>
         </ListView.ItemTemplate>
     </ListView>
+    </StackLayout>
+
 </ContentPage>

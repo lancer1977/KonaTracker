@@ -23,7 +23,7 @@ namespace KonaAnalyzer.Views
             MasterBehavior = MasterBehavior.Popover;
 
 
-            Detail = new NavigationPage(new Page()) { Title = "Welcome - Load an Option from the side Menu" };
+            Detail = new NavigationPage(new LoadingPage());
 
         }
 

@@ -4,19 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
 using Microsoft.AppCenter.Crashes;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(InMemoryCovidSource))]
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryCovidSource : ICovidSource
+    public class InMemoryCovidSource : ReactiveObject, ICovidSource
     {
         string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
         DateTime _lastDate;
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
-
+        [Reactive] public bool Loaded { get; private set; }
         public DateTime MostRecent => _lastDate.Date;
-        public void Load()
+        public  void Load()
         {
 
             try
@@ -32,6 +34,7 @@ namespace KonaAnalyzer.Data
                 Crashes.TrackError(ex);
             }
 
+            Loaded = true;
             //var text =  DataExtensions.GetCSV();
 
         }
@@ -52,14 +55,14 @@ namespace KonaAnalyzer.Data
 
         public List<string> Counties(string state)
         {
-            return Changes.Where(x => x.state == state).Select(x => x.county).Distinct().ToList();
+            return Changes.Where(x => x.state == state).Select(x => x.county).OrderBy(x => x).Distinct().ToList();
         }
 
         public int Total(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Changes.Where(x => x.state == state)
-                .Where(x => county == "All" || x.county == county)
+            return Changes.Where(x => state == "All" || x.state == state)
+             .Where(x => county == "All" || x.county == county)
                 .Where(x => x.date == date)
                 .Select(x => x.cases).Sum();
         }
@@ -68,7 +71,7 @@ namespace KonaAnalyzer.Data
         public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Changes.Where(x => x.state == state)
+            var items = Changes.Where(x => state == "All" || x.state == state)
                 .Where(x => county == "All" || x.county == county)
                 .Where(x => x.date == date)
                 .Select(x => x.deaths).Sum();

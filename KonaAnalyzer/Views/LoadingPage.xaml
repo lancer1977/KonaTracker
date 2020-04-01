@@ -7,21 +7,20 @@
              mc:Ignorable="d"
              Title="{Binding Title}"
              x:Class="KonaAnalyzer.Views.LoadingPage">
+    <ContentPage.BindingContext>
+        <viewModels:LoadingViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+  
 
-            <ActivityIndicator  IsRunning="{Binding IsBusy}" />
-
+            <ActivityIndicator  IsRunning="{Binding IsBusy}" Color="Black"/>
+<Label Text="{Binding Status}"/>
             <Label>
                 Data Copyright 2020 by The New York Times Company
             </Label>
 </StackLayout>
     </ContentPage.Content>
-    <ContentPage.BindingContext>
-        <viewModels:LoadingViewModel />
-    </ContentPage.BindingContext>
+
 
 </ContentPage>

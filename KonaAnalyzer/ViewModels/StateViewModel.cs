@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Windows.Input;
-using KonaAnalyzer.Data;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Essentials;
@@ -11,28 +10,6 @@ using Xamarin.Forms;
 
 namespace KonaAnalyzer.ViewModels
 {
-    public class OverviewViewModel : BaseViewModel
-    {
-        [Reactive] public List<DayChange> Items { get; set; }
-        public OverviewViewModel()
-        {
-            Title = "Overview";
-            var items = new List<DayChange>();
-            foreach (var item in DataStore.States)
-            {
-                var lastDay = DataStore.LastDate(item);
-                items.Add(new DayChange()
-                {date = lastDay,
-                    state = item,
-                    cases = DataStore.Total(item,"All",lastDay),
-                    deaths =  DataStore.Deaths(item,"All",lastDay)
-                });
-            }
-
-            Items = items;
-
-        }
-    }
     public class StateViewModel : BaseViewModel
     {
         //[Reactive] public ChangeModel Model { get; set; }

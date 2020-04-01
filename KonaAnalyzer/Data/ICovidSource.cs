@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using ReactiveUI;
 
 namespace KonaAnalyzer.Data
 {
-    public interface ICovidSource
+    public interface ICovidSource : IReactiveObject
     {
         List<DayChange> Changes { get; }
         List<string> States { get; }
@@ -14,5 +15,6 @@ namespace KonaAnalyzer.Data
         double ChangeRateByState(string state);
         void Load();
         DateTime LastDate(string state);
+        bool Loaded { get; }
     }
 }
