@@ -26,7 +26,10 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double DeadChangeRate { get; set; }
         [Reactive] public double DeathRisk { get; set; }
         [Reactive] public double IllnessRisk { get; set; }
+        [Reactive] public double TwoWeekProjectionCases { get; set; }
+        [Reactive] public double TwoWeekProjectionDeaths { get; set; }
         [Reactive] public List<DateTime> Dates { get; set; } = new List<DateTime>();
+
 
         public StateViewModel()
         {
@@ -61,17 +64,19 @@ namespace KonaAnalyzer.ViewModels
             try
             {
                 var yesterdayDate = date - TimeSpan.FromDays(1);
-                Current = DataStore.Total(state, county, date);
-                var yesterdayTotal = DataStore.Total(state, county, yesterdayDate);
-                CurrentChange = Current - yesterdayTotal;
+      
+                var todayRates = GetCurrentAndChange(state, county, date);
+                Current = todayRates.current;
+                CurrentChange = todayRates.change;
+                CurrentChangeRate = todayRates.rate;
+                var yesterday = GetCurrentAndChange(state, county, yesterdayDate);
+                TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate - yesterday.rate);
 
-                CurrentChangeRate = RateChange(CurrentChange, yesterdayTotal);
-
-
-                Dead = DataStore.Deaths(state, county, date);
-                var yesterdayDeathTotal = DataStore.Deaths(state, county, yesterdayDate);
-                DeadChange = Dead - yesterdayDeathTotal;
-                DeadChangeRate = RateChange(DeadChange, yesterdayDeathTotal);
+                var todayDeathRates = GetDeathsCurrentAndChange(state, county, date);
+                Dead = todayDeathRates.current; 
+                DeadChange = todayDeathRates.change; 
+                DeadChangeRate = todayDeathRates.rate; 
+                TwoWeekProjectionDeaths = GetTwoWeekProjectionCases(todayDeathRates, todayDeathRates.rate - GetDeathsCurrentAndChange(state, county, yesterdayDate).rate);
             }
             catch (Exception ex)
             {
@@ -79,6 +84,40 @@ namespace KonaAnalyzer.ViewModels
             }
 
 
+        }
+
+        private (int current,int change, double rate) GetCurrentAndChange(string state, string county, DateTime? date)
+        {
+            var yesterdayDate = date - TimeSpan.FromDays(1);
+            var current = DataStore.Total(state, county, date);
+            var yesterdayTotal = DataStore.Total(state, county, yesterdayDate);
+            var currentChange = current - yesterdayTotal;
+            var currentChangeRate = RateChange(currentChange, yesterdayTotal);
+            return (current, currentChange, currentChangeRate);
+        }
+
+        private (int current, int change, double rate) GetDeathsCurrentAndChange(string state, string county, DateTime? date)
+        {
+            var yesterdayDate = date - TimeSpan.FromDays(1);
+            var current = DataStore.Deaths(state, county, date);
+            var yesterdayTotal = DataStore.Deaths(state, county, yesterdayDate);
+            var currentChange = current - yesterdayTotal;
+            var currentChangeRate = RateChange(currentChange, yesterdayTotal);
+            return (current, currentChange, currentChangeRate);
+        }
+
+        private int GetTwoWeekProjectionCases((int current, int change, double rate) changes, double decay)
+        {
+            var total = (double) changes.current;
+            var currentRate = changes.rate;
+            for (var x = 0; x < 14; x++)
+            {
+                currentRate += decay;
+                total += (total * currentRate);
+
+            }
+
+            return (int) total;
         }
 
         private double RateChange(int change, int yesterday)

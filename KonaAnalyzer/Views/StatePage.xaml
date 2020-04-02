@@ -31,13 +31,36 @@
         <Label FontSize="12" Text="{Binding CurrentChange}" />
         <Label Text="Change Rate"/>
         <Label FontSize="12" Text="{Binding CurrentChangeRate}" />
+        <Label Text="Projections Based on 2 Day rate change"/>
+        <Label FontSize="12" Text="{Binding TwoWeekProjectionCases}" />
+        
         <BoxView HeightRequest="3" HorizontalOptions="FillAndExpand"/>
-        <Label Text="Total Deaths"/>
-        <Label FontSize="22" Text="{Binding Dead}"/>
-        <Label Text="Change"/>
-        <Label FontSize="12" Text="{Binding DeadChange}" />
-        <Label Text="Change Rate"/>
-        <Label FontSize="12" Text="{Binding DeadChangeRate}" />
+        <Grid>
+<Grid.ColumnDefinitions>
+    <ColumnDefinition Width="*"/>
+    <ColumnDefinition Width="*"/>
+    <ColumnDefinition Width="*"/>
+    <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        
+                <Label Grid.Row="0" Grid.Column="0" Text="Total"/>
+            <Label Grid.Row="1" Grid.Column="0"  FontSize="22" Text="{Binding Dead}"/>
+
+            <Label  Grid.Row="0" Grid.Column="1"  Text="Change"/>
+            <Label  Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding DeadChange}" />
+
+            <Label  Grid.Row="0" Grid.Column="2"  Text="Rate"/>
+            <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding DeadChangeRate}" />
+
+            <Label  Grid.Row="0" Grid.Column="3"  Text="Projections (2Wk)"/>
+            <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding TwoWeekProjectionDeaths}" />
+ 
+        </Grid>
+
         <StackLayout Orientation="Horizontal">
             <StackLayout>
                 <Label Text="Illness Risk"/>
