@@ -70,13 +70,13 @@ namespace KonaAnalyzer.ViewModels
                 CurrentChange = todayRates.change;
                 CurrentChangeRate = todayRates.rate;
                 var yesterday = GetCurrentAndChange(state, county, yesterdayDate);
-                TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate - yesterday.rate);
+                TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate );
 
                 var todayDeathRates = GetDeathsCurrentAndChange(state, county, date);
                 Dead = todayDeathRates.current; 
                 DeadChange = todayDeathRates.change; 
                 DeadChangeRate = todayDeathRates.rate; 
-                TwoWeekProjectionDeaths = GetTwoWeekProjectionCases(todayDeathRates, todayDeathRates.rate - GetDeathsCurrentAndChange(state, county, yesterdayDate).rate);
+                TwoWeekProjectionDeaths = GetTwoWeekProjectionCases(todayDeathRates, todayDeathRates.rate);
             }
             catch (Exception ex)
             {
@@ -112,9 +112,9 @@ namespace KonaAnalyzer.ViewModels
             var currentRate = changes.rate;
             for (var x = 0; x < 14; x++)
             {
-                currentRate += decay;
+                currentRate += -.005;
                 total += (total * currentRate);
-
+                Console.WriteLine($"Day {x}: {total}");
             }
 
             return (int) total;

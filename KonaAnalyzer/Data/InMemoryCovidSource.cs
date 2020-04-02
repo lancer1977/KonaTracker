@@ -49,6 +49,8 @@ namespace KonaAnalyzer.Data
 
         public DateTime LastDate(string state)
         {
+            
+            if(state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
             return Changes.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }
 

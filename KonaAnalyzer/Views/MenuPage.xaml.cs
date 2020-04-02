@@ -24,20 +24,21 @@ namespace KonaAnalyzer.Views
         public MenuPage()
         {
             InitializeComponent();
+
+
+            menuItems.AddRange(new[]{
+                new HomeMenuItem() {Title = "Overview"},
+            new HomeMenuItem() {Title = "Reload Data"},
+            new HomeMenuItem() {Title = "About"},
+            new HomeMenuItem() {Title = "------------------"},
+            new HomeMenuItem() {Title = "All"}
+            });
             Source.WhenAnyValue(x => x.Loaded).Subscribe(loaded =>
             {
                 if (loaded == false) return;
                 menuItems.AddRange(DependencyService.Get<ICovidSource>().States
                     .Select(x => new HomeMenuItem() { Title = x }));
             });
-
-            menuItems.AddRange(new[]{
-                new HomeMenuItem() {Title = "Overview"},
-            new HomeMenuItem() {Title = "Reload Data"},
-            new HomeMenuItem() {Title = "About"},
-            new HomeMenuItem() {Title = "------------------"}
-        });
-
             ListViewMenu.ItemsSource = menuItems;
 
             ListViewMenu.SelectedItem = menuItems[0];
