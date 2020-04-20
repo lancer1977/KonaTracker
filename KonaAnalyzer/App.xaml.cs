@@ -5,7 +5,8 @@ using KonaAnalyzer.Views;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-
+using Xamarin.Forms.Xaml;
+ 
 namespace KonaAnalyzer
 {
     public partial class App : Application

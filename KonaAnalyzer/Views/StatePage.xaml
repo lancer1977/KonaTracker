@@ -6,8 +6,13 @@
              mc:Ignorable="d"
              x:Class="KonaAnalyzer.Views.StatePage"
              xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
+             xmlns:views="clr-namespace:KonaAnalyzer.Views;assembly=KonaAnalyzer"
              Title="{Binding Title}">
-
+<ContentPage.ToolbarItems> 
+            <ToolbarItem   Text="{Binding DateText}"  />
+            <ToolbarItem   Text="-" Command="{Binding DateDownCommand}" />
+            <ToolbarItem   Text="+" Command="{Binding DateUpCommand}" />
+</ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <vm:StateViewModel />
     </ContentPage.BindingContext>
@@ -21,76 +26,43 @@
     </ContentPage.Resources>
 
 
-    <StackLayout Orientation="Vertical" Padding="16,40,16,40" Spacing="10">
-        <Picker ItemsSource="{Binding Counties}" SelectedItem="{Binding County}"/>
-        <Picker ItemsSource="{Binding Dates}" SelectedItem="{Binding Date}"/>
+    <StackLayout Orientation="Vertical" Padding="16" Spacing="15">
+        <Grid  Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="All"/>
+            <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick"/>
+            <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths"/>
+            <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
+            <Label Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding Current}"/>
+            <Label  Grid.Row="0" Grid.Column="2"  Text="Change"/>
+            <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding CurrentChange}" />
+            <Label  Grid.Row="0" Grid.Column="3"  Text="Rate"/>
+            <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding CurrentChangeRate, StringFormat='{0}%'}" />
+            <Label Grid.Row="2" Grid.Column="1"  FontSize="12" Text="{Binding Dead}"/>
+            <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" />
+            <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0}%'}" />
+        </Grid>
+        <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
 
+        <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/>-->
+            <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <views:StateControl />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
  
-        <BoxView HeightRequest="3" HorizontalOptions="FillAndExpand"/>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" Text="Total"/>
-            <Label Grid.Row="1" Grid.Column="0"  FontSize="22" Text="{Binding Current}"/>
-
-            <Label  Grid.Row="0" Grid.Column="1"  Text="Change"/>
-            <Label  Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding CurrentChange}" />
-
-            <Label  Grid.Row="0" Grid.Column="2"  Text="Rate"/>
-            <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding CurrentChangeRate}" />
-
-            <Label  Grid.Row="0" Grid.Column="3"  Text="Projections (2Wk)"/>
-            <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding TwoWeekProjectionCases}" />
-
-        </Grid>
-
-        <BoxView HeightRequest="3" HorizontalOptions="FillAndExpand"/>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Label Grid.Row="0" Grid.Column="0" Text="Total"/>
-            <Label Grid.Row="1" Grid.Column="0"  FontSize="22" Text="{Binding Dead}"/>
-
-            <Label  Grid.Row="0" Grid.Column="1"  Text="Change"/>
-            <Label  Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding DeadChange}" />
-
-            <Label  Grid.Row="0" Grid.Column="2"  Text="Rate"/>
-            <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding DeadChangeRate}" />
-
-            <Label  Grid.Row="0" Grid.Column="3"  Text="Projections (2Wk)"/>
-            <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding TwoWeekProjectionDeaths}" />
-
-        </Grid>
-
-        <StackLayout Orientation="Horizontal">
-            <StackLayout>
-                <Label Text="Illness Risk"/>
-                <Label Text="{Binding IllnessRisk}"/>
-
-            </StackLayout>
-            <StackLayout>
-                <Label Text="Death Risk"/>
-                <Label Text="{Binding DeathRisk}"/>
-
-            </StackLayout>
-        </StackLayout>
     </StackLayout>
 </ContentPage>

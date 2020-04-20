@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KonaAnalyzer.Models
+﻿namespace KonaAnalyzer.Models
 {
     public class Item
     {

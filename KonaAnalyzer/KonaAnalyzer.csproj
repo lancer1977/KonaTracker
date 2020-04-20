@@ -29,6 +29,9 @@
     <Compile Update="Views\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\StateControl.xaml.cs">
+      <DependentUpon>StateControl.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\StatePage.xaml.cs">
       <DependentUpon>StatePage.xaml</DependentUpon>
     </Compile>
