@@ -15,8 +15,10 @@ namespace KonaAnalyzer
         public App()
         {
             InitializeComponent();
-            AppCenter.Start("9d772b2e-8b42-4cf9-9204-fbc30a462e71",
-                typeof(Analytics), typeof(Crashes), typeof(Microsoft.AppCenter.Distribute.Distribute)); 
+#if !DEBUG
+            AppCenter.Start(Configs.AppCenterSecret, typeof(Analytics), typeof(Crashes), typeof(Microsoft.AppCenter.Distribute.Distribute)); 
+#endif
+
             DependencyService.Register<InMemoryCovidSource>();
             MainPage = new MainPage();;
         }
