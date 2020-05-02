@@ -28,8 +28,9 @@
 
 
     <StackLayout Orientation="Vertical" Padding="16" Spacing="15">
-        <Grid  Padding="10">
+        <Grid>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -39,20 +40,38 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="All"/>
+            <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding County}"/>
+            <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
+            <Label  Grid.Row="0" Grid.Column="2"  Text="Change"/>
+            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc."/>
+            <Label  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk"/>
+
             <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick"/>
             <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths"/>
-            <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
+            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population"/>
+
+
+
             <Label Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding Current}"/>
-            <Label  Grid.Row="0" Grid.Column="2"  Text="Change"/>
             <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding CurrentChange}" />
-            <Label  Grid.Row="0" Grid.Column="3"  Text="Rate"/>
+
+
             <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding CurrentChangeRate, StringFormat='{0}%'}" />
+            <Label  Grid.Row="1" Grid.Column="4"  FontSize="12" Text="{Binding CurrentRiskRate, StringFormat='{0:0.##}%'}" />
+
             <Label Grid.Row="2" Grid.Column="1"  FontSize="12" Text="{Binding Dead}"/>
             <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" />
             <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0}%'}" />
+            <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.##}%'}" />
+
+            <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality"/>
+            <Label  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.##}%'}" />
+
+            <Label  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding Population}" />
         </Grid>
+
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
 
         <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/>-->
