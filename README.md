@@ -12,5 +12,11 @@ A Xamarin Forms application written in C# that pulls a data set of date/county/s
 # Why
 I found myself reading a ton of websites that were causing me more anxiety when I just wanted to know how the daily trends were progressing. Initially I started with a console app and ended up with a mobile app instead due to the deploy anywhere nature of Xamarin (forms).
 
+# Latest Build
+ ### Android
+   https://install.appcenter.ms/users/lancer1977/apps/kona-viewer/distribution_groups/everyone
+ ### iOS
+   contact me for an invite to the beta at lancer1977@gmail.com
+
 # Data Sources
 https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv
