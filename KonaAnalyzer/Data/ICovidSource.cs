@@ -4,6 +4,11 @@ using ReactiveUI;
 
 namespace KonaAnalyzer.Data
 {
+    public interface IPopulationSource
+    {
+        int Population(string state, string county);
+        void Load();
+    }
     public interface ICovidSource : IReactiveObject
     {
         List<DayChange> Changes { get; }

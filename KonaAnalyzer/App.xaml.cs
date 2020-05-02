@@ -20,6 +20,7 @@ namespace KonaAnalyzer
 #endif
 
             DependencyService.Register<InMemoryCovidSource>();
+            DependencyService.Register<InMemoryPopulationSource>();
             MainPage = new MainPage();;
         }
 

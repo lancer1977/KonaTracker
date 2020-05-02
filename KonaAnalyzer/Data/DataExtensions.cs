@@ -18,7 +18,7 @@ namespace KonaAnalyzer.Data
             if (stream == null) return results;
             var sr = new StreamReader(stream);
             results = sr.ReadToEnd();
-            sr.Close(); 
+            sr.Close();
             return results;
         }
 

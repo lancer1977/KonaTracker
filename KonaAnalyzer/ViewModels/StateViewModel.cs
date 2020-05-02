@@ -39,10 +39,10 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public DateTime Date { get; set; } = DateTime.Today;
 
         [Reactive] public int CurrentChange { get; set; }
-        [Reactive] public int CurrentChangeRate { get; set; }
+        [Reactive] public double CurrentChangeRate { get; set; }
         [Reactive] public int DeadChange { get; set; }
-        [Reactive] public int DeadChangeRate { get; set; }
-        [Reactive] public int MortalityRate { get; set; }
+        [Reactive] public double DeadChangeRate { get; set; }
+        [Reactive] public double MortalityRate { get; set; }
         
         [Reactive] public double DeathRisk { get; set; }
         [Reactive] public double IllnessRisk { get; set; }
@@ -166,6 +166,7 @@ namespace KonaAnalyzer.ViewModels
             if (date == default(DateTime?) || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
             try
             {
+                Population = PopulationDataStore.Population(State, County);
                 var yesterdayDate = date - TimeSpan.FromDays(1);
 
                 var todayRates = await GetCurrentAndChangeAsync(state, county, date);
@@ -179,7 +180,10 @@ namespace KonaAnalyzer.ViewModels
                 Dead = todayDeathRates.current;
                 DeadChange = todayDeathRates.change;
                 DeadChangeRate = (int)(todayDeathRates.rate * 100);
-                MortalityRate = (int)(((double) Dead )/ ((double)Current) * ((double)100));
+
+                DeadRiskRate = GetPercentage(Dead, Population);
+                CurrentRiskRate = GetPercentage(Current, Population);
+                MortalityRate = GetPercentage(Dead,Current);
                 if (IsSubViewModel == false)
                 {
                     TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate);
@@ -198,6 +202,17 @@ namespace KonaAnalyzer.ViewModels
 
 
         }
+
+        [Reactive] public double CurrentRiskRate { get; set; }
+
+        [Reactive]  public double DeadRiskRate { get; set; }
+
+        public static double GetPercentage(int numerator, int denominator)
+        {
+             return(((double)numerator) / ((double)denominator) * ((double)100));
+        }
+
+        [Reactive] public int Population { get; set; }
 
         public async Task UpdateValuesForSubViewModelAsync(DateTime? date)
         {

@@ -22,6 +22,7 @@ namespace KonaAnalyzer.ViewModels
         public async Task Load()
         {
             await Task.Run(() => DependencyService.Get<ICovidSource>().Load());
+            await Task.Run(() => DependencyService.Get<IPopulationSource>().Load());
             Title = "Loading ... Done";
         }
 
