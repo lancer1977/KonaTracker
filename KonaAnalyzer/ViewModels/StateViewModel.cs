@@ -166,7 +166,7 @@ namespace KonaAnalyzer.ViewModels
             if (date == default(DateTime?) || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
             try
             {
-                Population = PopulationDataStore.Population(State, County);
+                Population = PopulationDataStore.Population(State, County) / 1000;
                 var yesterdayDate = date - TimeSpan.FromDays(1);
 
                 var todayRates = await GetCurrentAndChangeAsync(state, county, date);

@@ -20,7 +20,8 @@ namespace KonaAnalyzer.Data
         {
             try
             {
-                Populations = DataExtensions.GetListFromUrl<PopulationDto>(url); 
+                var items = DataExtensions.GetListFromUrl<PopulationDto>(url);
+                Populations = items.Where(x => x != null).ToList();
             }
             catch (Exception ex)
             {

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -35,8 +37,17 @@ namespace KonaAnalyzer.Data
                 csv.Configuration.MissingFieldFound = null;
                 while (csv.Read())
                 {
-                    var record = csv.GetRecord<T>();
-                    returnList.Add(record);
+                    try
+                    {
+                        var record = csv.GetRecord<T>();
+                        returnList.Add(record);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(ex.Message);
+                    }
+                  
+         
                 }
             }
 
