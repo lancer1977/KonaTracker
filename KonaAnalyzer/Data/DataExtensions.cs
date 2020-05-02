@@ -35,8 +35,8 @@ namespace KonaAnalyzer.Data
                 csv.Configuration.MissingFieldFound = null;
                 while (csv.Read())
                 {
-                    var Record = csv.GetRecord<T>();
-                    returnList.Add(Record);
+                    var record = csv.GetRecord<T>();
+                    returnList.Add(record);
                 }
             }
 

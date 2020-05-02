@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
@@ -19,8 +20,7 @@ namespace KonaAnalyzer.Data
         [Reactive] public bool Loaded { get; private set; }
         public DateTime MostRecent => _lastDate.Date;
         public  void Load()
-        {
-
+        { 
             try
             {
                 Changes = DataExtensions.GetListFromUrl<DayChange>(url);
@@ -30,7 +30,7 @@ namespace KonaAnalyzer.Data
             }
             catch (Exception ex)
             {
-
+                Debug.WriteLine(ex.Message);
                 Crashes.TrackError(ex);
             }
 

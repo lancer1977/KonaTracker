@@ -10,9 +10,10 @@
              Title="{Binding Title}">
 <ContentPage.ToolbarItems> 
             <ToolbarItem   Text="{Binding DateText}"  />
-            <ToolbarItem   Text="-" Command="{Binding DateDownCommand}" />
-            <ToolbarItem   Text="+" Command="{Binding DateUpCommand}" />
-</ContentPage.ToolbarItems>
+            <ToolbarItem   Text=" - " Command="{Binding DateDownCommand}" />
+            <ToolbarItem   Text=" + " Command="{Binding DateUpCommand}" />
+            <ToolbarItem   Text="{Binding SortText}" Command="{Binding SortCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.BindingContext>
         <vm:StateViewModel />
     </ContentPage.BindingContext>
