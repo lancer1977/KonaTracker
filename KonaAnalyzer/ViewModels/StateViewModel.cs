@@ -172,14 +172,14 @@ namespace KonaAnalyzer.ViewModels
                 var todayRates = await GetCurrentAndChangeAsync(state, county, date);
                 Current = todayRates.current;
                 CurrentChange = todayRates.change;
-                CurrentChangeRate = (int)(todayRates.rate * 100);
+                CurrentChangeRate = todayRates.rate * 100;
               //  var yesterday = await GetCurrentAndChange(state, county, yesterdayDate);
 
 
                 var todayDeathRates = await GetDeathsCurrentAndChangeAsync(state, county, date);
                 Dead = todayDeathRates.current;
                 DeadChange = todayDeathRates.change;
-                DeadChangeRate = (int)(todayDeathRates.rate * 100);
+                DeadChangeRate = todayDeathRates.rate * 100;
 
                 DeadRiskRate = GetPercentage(Dead, Population);
                 CurrentRiskRate = GetPercentage(Current, Population);

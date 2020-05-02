@@ -38,14 +38,14 @@
             <Label Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding Current}"/>
             <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding CurrentChange}" />
 
-               
-                <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding CurrentChangeRate, StringFormat='{0}%'}" />
-            <Label  Grid.Row="1" Grid.Column="4"  FontSize="12" Text="{Binding CurrentRiskRate, StringFormat='{0:0.##}%'}" />
+
+            <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding CurrentChangeRate, StringFormat='{0:0.#}%'}" />
+            <Label  Grid.Row="1" Grid.Column="4"  FontSize="12" Text="{Binding CurrentRiskRate, StringFormat='{0:0.###}%'}" />
    
                 <Label Grid.Row="2" Grid.Column="1"  FontSize="12" Text="{Binding Dead}"/> 
-                <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" /> 
-                <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0}%'}" />
-            <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.##}%'}" />
+                <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" />
+            <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0:0.#}%'}" />
+            <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.###}%'}" />
 
             <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality"/>
             <Label  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.##}%'}" />
