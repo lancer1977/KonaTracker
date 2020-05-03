@@ -37,10 +37,16 @@ namespace KonaAnalyzer.Data
         public List<PopulationDto> Populations { get; set; }
         public int Population(string state, string county)
         {
+            if (state == "All")
+            {
+                return Populations.Sum(x => x.population);
+            }
             if (county == "All")
             {
                 return Populations.Where(x => x.state == state).Sum(x => x.population);
             }
+
+            county = county.Replace("City", "").Replace("County", "");
             return Populations.FirstOrDefault(x => x.state == state &&  x.county.Contains(county)  )?.population ?? -1;
 
         }
