@@ -27,7 +27,7 @@ namespace KonaAnalyzer.Views
         {
             base.OnAppearing();
             await (BindingContext as LoadingViewModel).Load();
-            
+            await  (Application.Current.MainPage as MainPage).NavigateFromMenu("All");
         }
     }
 }
