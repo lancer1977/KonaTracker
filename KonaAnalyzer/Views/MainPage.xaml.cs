@@ -44,8 +44,9 @@ namespace KonaAnalyzer.Views
                     Detail = new NavigationPage(new AboutPage());
                     break;
                 default:
+                    if (id.Contains("-----")) return;
                     Detail = new NavigationPage(StatePage);
-                    _statePage.ViewModel.LoadState(id);
+                    _statePage.ViewModel.Load(id);
                     break;
             }
 

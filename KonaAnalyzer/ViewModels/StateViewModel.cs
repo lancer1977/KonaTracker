@@ -41,7 +41,7 @@ namespace KonaAnalyzer.ViewModels
     }
 
     public class StateControlViewModel : BaseViewModel
-    {
+    { 
         [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
         [Reactive] public string County { get; set; } = "All";
         [Reactive] public string State { get; set; }
@@ -63,7 +63,7 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double DeadRiskRate { get; set; }
         protected async Task UpdateValuesAsync(string state, string county, DateTime? date)
         {
-            if (date == default(DateTime?) || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
+            if (date == null || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
             try
             {
                 Population = PopulationDataStore.Population(state, county);
@@ -99,12 +99,7 @@ namespace KonaAnalyzer.ViewModels
         {
             return (((double)numerator) / ((double)denominator) * ((double)100));
         }
-        public void LoadState(string state, bool isSubViewModel = false)
-        {
-            IsSubViewModel = isSubViewModel;
-            State = state;
-            Title = state;
-        }
+
 
 
 
@@ -157,12 +152,13 @@ namespace KonaAnalyzer.ViewModels
         }
 
         public void Load(string county, string state, DateTime? date)
-        {
+        { 
             IsSubViewModel = true;
             County = county;
             State = state;
-            Title = county;
-            Date = date;
+            Title = county == "All" ? state : county;
+            Date = date; 
+
         }
         protected bool IsSubViewModel;
         private readonly ObservableAsPropertyHelper<string> _populationText;
@@ -218,8 +214,9 @@ namespace KonaAnalyzer.ViewModels
                 return Unit.Default;
             });
             DateDownCommand = ReactiveCommand.Create(() => Date -= TimeSpan.FromDays(1));
-            this.WhenAnyValue(x => x.Date).Where(x=>x!= null).Delay(TimeSpan.FromMilliseconds(500)).Subscribe(x =>
-            { 
+            this.WhenAnyValue(x => x.Date).Where(x=>x!= null).Subscribe(x =>
+            {
+                if (LoadingCounties) return;
                 foreach (var item in CountyViewModels)
                 {
                     item.Date = x;
@@ -267,7 +264,11 @@ namespace KonaAnalyzer.ViewModels
 
             await base.OnStateUpdatedAsync(state);
         }
-
+        public void Load(string state)
+        {
+            State = state;
+            Title = state;
+        }
         private void PopulateCounties(string state)
         {
             var counties = DataStore.Counties(state);
@@ -304,7 +305,7 @@ namespace KonaAnalyzer.ViewModels
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
-                await Task.Run(() => { vm.LoadState(item, true); });
+                await Task.Run(() => { vm.Load("All", item, Date); });
                 _sourceViewModels.Add(vm);
             }
 
