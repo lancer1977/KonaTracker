@@ -26,12 +26,12 @@
             <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding Title}"/>
             <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
             <Label  Grid.Row="0" Grid.Column="2"  Text="Change"/>
-            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc."/>
+            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc." LineBreakMode="TailTruncation" />
             <Label  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk"/>
 
             <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick"/>
             <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths"/>
-            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population"/>
+            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population" LineBreakMode="TailTruncation" />
             
 
 
