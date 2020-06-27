@@ -128,7 +128,7 @@
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
 
         <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/>-->
-            <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True">
+            <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True" ItemSelected="ListView_ItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <views:StateControl />
