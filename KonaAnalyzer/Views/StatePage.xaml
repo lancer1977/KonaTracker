@@ -8,11 +8,28 @@
              xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
              xmlns:views="clr-namespace:KonaAnalyzer.Views;assembly=KonaAnalyzer"
              Title="{Binding Title}">
-<ContentPage.ToolbarItems> 
-            <ToolbarItem   Text="{Binding DateText}"  />
-            <ToolbarItem   Text=" - " Command="{Binding DateDownCommand}" />
-            <ToolbarItem   Text=" + " Command="{Binding DateUpCommand}" /> 
-    </ContentPage.ToolbarItems>
+       <NavigationPage.TitleView>
+           <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                       <DatePicker Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White"/>
+               <Frame BackgroundColor="Transparent" >
+                           <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
+  
+        </Label>
+                             <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DateUpCommand}" />
+            </Frame.GestureRecognizers>
+               </Frame>
+                  <Frame BackgroundColor="Transparent" >
+                     <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center"/>
+
+
+                <Frame.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding DateDownCommand}" />
+            </Frame.GestureRecognizers>
+                      </Frame>
+            </StackLayout>
+    </NavigationPage.TitleView>
+ 
     <ContentPage.BindingContext>
         <vm:StateViewModel />
     </ContentPage.BindingContext>
