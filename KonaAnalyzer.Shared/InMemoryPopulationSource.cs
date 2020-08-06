@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using KonaAnalyzer.Data;
-using Microsoft.AppCenter.Crashes;
-using ReactiveUI.Fody.Helpers;
-using Xamarin.Forms;
+using System.Runtime.CompilerServices;
 
-[assembly: Dependency(typeof(InMemoryPopulationSource))]
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryPopulationSource :  IPopulationSource
+    public class InMemoryPopulationSource :  IPopulationSource, INotifyPropertyChanged
     {
-        string url = "https://raw.githubusercontent.com/lancer1977/KonaTracker/master/countyPop.csv";
- 
-        [Reactive] public bool Loaded { get; private set; } 
+        string url = "https://raw.githubusercontent.com/lancer1977/KonaTracker/master/countyPop.csv"; 
 
         public void Load()
         {
@@ -25,8 +20,7 @@ namespace KonaAnalyzer.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                Crashes.TrackError(ex);
+                Debug.WriteLine(ex.Message); 
             }
 
             Loaded = true;
@@ -49,6 +43,26 @@ namespace KonaAnalyzer.Data
             county = county.Replace("City", "").Replace("County", "");
             return Populations.FirstOrDefault(x => x.state == state &&  x.county.Contains(county)  )?.population ?? -1;
 
+        }
+
+        private bool _loaded;
+
+        public bool Loaded
+        {
+            get => _loaded;
+            set
+            {
+                if (_loaded == value) return;
+                _loaded = value;
+                OnPropertyChanged();
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

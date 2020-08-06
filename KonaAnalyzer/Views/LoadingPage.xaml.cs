@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.ViewModels;
-using ReactiveUI;
-
+﻿using KonaAnalyzer.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

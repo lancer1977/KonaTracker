@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using Microsoft.AppCenter.Crashes;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using Xamarin.Forms;
+using System.Runtime.CompilerServices;
 
-[assembly: Dependency(typeof(InMemoryCovidSource))]
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryCovidSource : ReactiveObject, ICovidSource
+    public class InMemoryCovidSource :  ICovidSource,INotifyPropertyChanged
     {
         string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
         DateTime _lastDate;
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
-        [Reactive] public bool Loaded { get; private set; }
         public DateTime MostRecent => _lastDate.Date;
         public  void Load()
         { 
@@ -30,8 +24,7 @@ namespace KonaAnalyzer.Data
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                Crashes.TrackError(ex);
+                Debug.WriteLine(ex.Message); 
             }
 
             Loaded = true;
@@ -99,5 +92,25 @@ namespace KonaAnalyzer.Data
         public List<DayChange> Changes { get; private set; }
 
         public List<string> States { get; set; }
+         
+        private bool _loaded;
+
+        public bool Loaded
+        {
+            get => _loaded;
+            set
+            {
+                if (_loaded == value) return;
+                _loaded = value;
+                OnPropertyChanged();
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

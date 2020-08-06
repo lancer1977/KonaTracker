@@ -17,29 +17,6 @@ using Xamarin.Forms;
 
 namespace KonaAnalyzer.ViewModels
 {
-    public enum Sort
-    {
-        AlphabeticalAscending,
-        AlphabeticalDescending,
-        TotalAscending,
-        TotalDescending,
-
-        DeadAscending,
-        DeadDescending,
-
-        PercentAscending,
-        PercentDescending,
-        RiskAscending,
-        RiskDescending,
-
-        PopulationAscending,
-        PopulationDescending,
-        MortalityAscending,
-        MortalityDescending,
-        ChangeAscending,
-        ChangeDescending
-    }
-
     public class StateControlViewModel : BaseViewModel
     { 
         [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;

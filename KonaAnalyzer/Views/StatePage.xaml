@@ -55,7 +55,7 @@
                         CommandParameter="Total" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="2"  Text="Change">
+            <Label  Grid.Row="0" Grid.Column="2"  Text="Change"  FontAttributes="Italic">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"

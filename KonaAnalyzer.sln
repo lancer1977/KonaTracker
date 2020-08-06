@@ -7,9 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.Android", "Kon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.iOS", "KonaAnalyzer.iOS\KonaAnalyzer.iOS.csproj", "{EC2036C1-7887-4C1B-8BB4-385C65AC3D4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer", "KonaAnalyzer\KonaAnalyzer.csproj", "{6B63021F-82A7-41C2-AAA4-68798B04DB0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonaAnalyzer", "KonaAnalyzer\KonaAnalyzer.csproj", "{6B63021F-82A7-41C2-AAA4-68798B04DB0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoronaAnalyzer.WPF", "KonaAnalyzer.WPF\KoronaAnalyzer.WPF.csproj", "{F47EB190-73E6-4FBB-81B0-3261A31FB6AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.Data", "KonaAnalyzer.Shared\KonaAnalyzer.Data.csproj", "{D1531815-A6A8-462C-BD22-1081DB935628}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.Web", "KonaAnalyzer.Web\KonaAnalyzer.Web.csproj", "{C3195135-FF07-4440-BD18-29463C15FFA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +91,30 @@ Global
 		{F47EB190-73E6-4FBB-81B0-3261A31FB6AF}.Release|iPhone.Build.0 = Release|Any CPU
 		{F47EB190-73E6-4FBB-81B0-3261A31FB6AF}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{F47EB190-73E6-4FBB-81B0-3261A31FB6AF}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Release|iPhone.Build.0 = Release|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{D1531815-A6A8-462C-BD22-1081DB935628}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Release|iPhone.Build.0 = Release|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{C3195135-FF07-4440-BD18-29463C15FFA7}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

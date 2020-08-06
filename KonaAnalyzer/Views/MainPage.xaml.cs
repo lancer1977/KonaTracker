@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
 using Xamarin.Forms; 
 
 namespace KonaAnalyzer.Views
