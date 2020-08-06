@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
+using KonaAnalyzer.Views;
 using PolyhydraGames.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -18,7 +19,8 @@ using Xamarin.Forms;
 namespace KonaAnalyzer.ViewModels
 {
     public class StateControlViewModel : BaseViewModel
-    { 
+    {
+        public MainPage RootPage { get => Application.Current.MainPage as MainPage; }
         [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
         [Reactive] public string County { get; set; } = "All";
         [Reactive] public string State { get; set; }
@@ -76,7 +78,15 @@ namespace KonaAnalyzer.ViewModels
         {
             return (((double)numerator) / ((double)denominator) * ((double)100));
         }
+        public async void ItemSelected()
+        { 
+            var nav = (Application.Current.MainPage as MasterDetailPage).Detail.Navigation;
+            var statePage = new StatePage();
+            statePage.ViewModel.Load(State);
+            await nav.PushAsync(statePage); 
+      
 
+        }
 
 
 
@@ -288,6 +298,8 @@ namespace KonaAnalyzer.ViewModels
 
             LoadingCounties = false;
         }
+
+
     }
 
     public static class SortHelpers
