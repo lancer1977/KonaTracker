@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="KonaAnalyzer.Views.StateControl">
+    <Frame  Padding="15" BackgroundColor="{Binding BackgroundColor}">
+ 
+   
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions> 
+            <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding Title}"/>
+            <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
+            <Label  Grid.Row="0" Grid.Column="2"  Text="Change"/>
+            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc." LineBreakMode="TailTruncation" />
+            <Label  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk"/>
+
+            <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick"/>
+            <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths"/>
+            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population" LineBreakMode="TailTruncation" />
+            
+
+
+            <Label Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding Current}"/>
+            <Label  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding CurrentChange}" />
+
+
+            <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding CurrentChangeRate, StringFormat='{0:0.#}%'}" />
+            <Label  Grid.Row="1" Grid.Column="4"  FontSize="12" Text="{Binding CurrentRiskRate, StringFormat='{0:0.###}%'}" />
+   
+                <Label Grid.Row="2" Grid.Column="1"  FontSize="12" Text="{Binding Dead}"/> 
+                <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" />
+            <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0:0.#}%'}" />
+            <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.###}%'}" />
+
+            <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality"/>
+            <Label  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.##}%'}" />
+
+            <Label  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />
+        </Grid>
+
+ 
+  
+        </Frame> 
+ 
+</ViewCell>

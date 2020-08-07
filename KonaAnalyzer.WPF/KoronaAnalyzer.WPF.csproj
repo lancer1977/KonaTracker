@@ -146,12 +146,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
-      <Project>{6b63021f-82a7-41c2-aaa4-68798b04db0a}</Project>
-      <Name>KonaAnalyzer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
