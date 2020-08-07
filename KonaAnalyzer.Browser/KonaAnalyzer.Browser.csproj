@@ -40,8 +40,8 @@
     <ProjectGuid>{21c698df-d979-4cf6-b4f3-a130ad2e4967}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OpenSilverTest.Browser</RootNamespace>
-    <AssemblyName>OpenSilverTest.Browser</AssemblyName>
+    <RootNamespace>KonaAnalyzert.Browser</RootNamespace>
+    <AssemblyName>KonaAnalyzer.Browser</AssemblyName>
     <!--<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>-->
     <FileAlignment>512</FileAlignment>
     <IsCSharpXamlForHtml5>true</IsCSharpXamlForHtml5>
@@ -64,7 +64,7 @@
     <None Remove="EmptyOpenSilverMigrationApplication.Browser.csproj.vspscc" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="OpenSilver" Version="1.0.0-alpha-002" />
+    <PackageReference Include="OpenSilver" Version="1.0.0-alpha-006" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KonaAnalyzer.Silverlight\KonaAnalyzer.Silverlight.csproj" />

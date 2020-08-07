@@ -1,8 +1,8 @@
-﻿using DotNetForHtml5;
+﻿using System.Windows;
+using DotNetForHtml5;
 using Microsoft.AspNetCore.Blazor.Hosting;
-using System.Windows;
 
-namespace OpenSilverTest.Browser
+namespace KonaAnalyzert.Browser
 {
     public class Program
     {
