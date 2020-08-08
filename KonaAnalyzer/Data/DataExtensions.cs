@@ -4,52 +4,83 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 using CsvHelper;
 
 namespace KonaAnalyzer.Data
 {
     public static class DataExtensions
     {
-        public static string GetStringFromUrl(string url)
+        public static async Task<string> GetStringFromUrlAsync(string url)
         {
-            var results = string.Empty;
-            var req = (HttpWebRequest)WebRequest.Create(url);
-            var resp = (HttpWebResponse)req.GetResponse();
+            try
+            {
+                var results = string.Empty;
+                var req = WebRequest.Create(url);
+                var resp = await req.GetResponseAsync();
 
-            var stream = resp.GetResponseStream();
-            if (stream == null) return results;
-            var sr = new StreamReader(stream);
-            results = sr.ReadToEnd();
-            sr.Close();
-            return results;
+                var stream = resp.GetResponseStream();
+                if (stream == null) return results;
+                using (var sr = new StreamReader(stream))
+                {
+                    results = await sr.ReadToEndAsync();
+                }
+                return results;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return string.Empty;
+            }
+
         }
 
-        public static List<T> GetListFromUrl<T>(string url)
+        public static async Task<List<T>> GetListFromUrlAsync<T>(string url)
         {
+            int count = 0;
             var returnList = new List<T>();
-            var text = GetStringFromUrl(url);//.Replace("\n",";");
-
-            // Console.WriteLine(text);
-            using (TextReader sr = new StringReader(text))
+            var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
+            if (string.IsNullOrEmpty(text))
             {
-                var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
-                csv.Configuration.Delimiter = ",";
-                csv.Configuration.MissingFieldFound = null;
-                while (csv.Read())
+                Debug.WriteLine("Text was empty");
+                return returnList;
+            }
+            // Console.WriteLine(text);
+            try
+            {
+                using (TextReader sr = new StringReader(text))
                 {
-                    try
+                    var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
+                    csv.Configuration.Delimiter = ",";
+                    csv.Configuration.MissingFieldFound = null;
+                    await Task.Run(() =>
                     {
-                        var record = csv.GetRecord<T>();
-                        returnList.Add(record);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                    }
-                  
-         
+                        while (csv.Read())
+                        {
+                            count++;
+                            if (count % 1000 == 0)
+                                Debug.WriteLine(count);
+                            try
+                            {
+                                var record = csv.GetRecord<T>();
+                                returnList.Add(record);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine(ex.Message);
+                            }
+
+
+                        }
+                    });
+            
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
 
             return returnList;
         }

@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <WasmHead>true</WasmHead>
+    <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
+    <NoWarn>NU1701</NoWarn>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <MonoRuntimeDebuggerEnabled Condition="'$(Configuration)'=='Debug'">true</MonoRuntimeDebuggerEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\KonaAnalyzer.UWP\Assets\*.png" Link="Assets\%(FileName)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="WasmScripts\AppManifest.js" />
+  </ItemGroup>
+  <WasmShellGenerateAOTProfile>true</WasmShellGenerateAOTProfile>
+  <ItemGroup>
+    <EmbeddedResource Include="WasmScripts\AppManifest.js" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <LinkerDescriptor Include="LinkerConfig.xml" />
+  </ItemGroup>-->
+  <ItemGroup>
+    <!-- Note that for WebAssembly version 1.1.1 of the console logger required -->
+    <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="CsvHelper" Version="15.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Filter" Version="1.1.1" />
+    <PackageReference Include="Uno.Wasm.Bootstrap" Version="1.2.0" />
+    <PackageReference Include="Uno.Xamarin.Forms.Platform" Version="4.5.0-uno.569" />
+		<PackageReference Include="Uno.Wasm.Bootstrap.DevServer" Version="1.2.0" />
+		<PackageReference Include="Xamarin.Forms" Version="4.5.0.495" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj" />
+  </ItemGroup>
+  <Import Project="..\KonaAnalyzer.UWP\KonaAnalyzer.Uwp.Shared.projitems" Label="Shared" />
+</Project>

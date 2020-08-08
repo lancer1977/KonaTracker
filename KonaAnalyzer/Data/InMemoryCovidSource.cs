@@ -19,11 +19,11 @@ namespace KonaAnalyzer.Data
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
         [Reactive] public bool Loaded { get; private set; }
         public DateTime MostRecent => _lastDate.Date;
-        public  void Load()
-        { 
+        public async Task LoadAsync()
+        {
             try
             {
-                Changes = DataExtensions.GetListFromUrl<DayChange>(url);
+                Changes = await DataExtensions.GetListFromUrlAsync<DayChange>(url);
                 _lastDate = Changes.OrderBy(x => x.date).Select(x => x.date)
                     .LastOrDefault(); //?? (DateTime.Today - TimeSpan.FromDays(1));
                 States = Changes.Select(x => x.state).Distinct().OrderBy(x => x).ToList();
@@ -39,18 +39,17 @@ namespace KonaAnalyzer.Data
 
         }
 
-        public int GetPopulation(string state)
+        public async Task<int> GetPopulation(string state)
         {
-            string url =
-                "api.census.gov/data/2019/pep/population?get=COUNTY,DATE_CODE,DATE_DESC,DENSITY,POP,NAME,STATE&for=region:*&key=YOUR_KEY";
-            var censusData = DataExtensions.GetStringFromUrl(url);
+            string url = "api.census.gov/data/2019/pep/population?get=COUNTY,DATE_CODE,DATE_DESC,DENSITY,POP,NAME,STATE&for=region:*&key=YOUR_KEY";
+            //var censusData = await DataExtensions.GetListFromUrlAsync(url);
             return 0;
         }
 
         public DateTime LastDate(string state)
         {
-            
-            if(state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
+
+            if (state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
             return Changes.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }
 

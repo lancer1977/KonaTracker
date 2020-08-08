@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using KonaAnalyzer.Data;
 using Microsoft.AppCenter.Crashes;
 using ReactiveUI.Fody.Helpers;
@@ -10,17 +11,17 @@ using Xamarin.Forms;
 [assembly: Dependency(typeof(InMemoryPopulationSource))]
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryPopulationSource :  IPopulationSource
+    public class InMemoryPopulationSource : IPopulationSource
     {
         string url = "https://raw.githubusercontent.com/lancer1977/KonaTracker/master/countyPop.csv";
- 
-        [Reactive] public bool Loaded { get; private set; } 
 
-        public void Load()
+        [Reactive] public bool Loaded { get; private set; }
+
+        public async Task LoadAsync()
         {
             try
             {
-                var items = DataExtensions.GetListFromUrl<PopulationDto>(url);
+                var items = await DataExtensions.GetListFromUrlAsync<PopulationDto>(url);
                 Populations = items.Where(x => x != null).ToList();
             }
             catch (Exception ex)
@@ -47,7 +48,7 @@ namespace KonaAnalyzer.Data
             }
 
             county = county.Replace("City", "").Replace("County", "");
-            return Populations.FirstOrDefault(x => x.state == state &&  x.county.Contains(county)  )?.population ?? -1;
+            return Populations.FirstOrDefault(x => x.state == state && x.county.Contains(county))?.population ?? -1;
 
         }
     }
