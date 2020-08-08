@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using KonaAnalyzer.Annotations;
 using KonaAnalyzer.Data;
 using Microsoft.AppCenter.Crashes;
- 
+
 namespace KonaAnalyzer.Data
 {
     public class InMemoryCovidSource : INotifyPropertyChanged, ICovidSource
@@ -32,10 +32,11 @@ namespace KonaAnalyzer.Data
         {
 
         }
-        string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
+        //  string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
+        private string url = "https://raw.githubusercontent.com/lancer1977/DataSeeds/master/covid/us-counties.csv";
         DateTime _lastDate;
         private bool _loaded;
-      
+
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
         public bool Loaded
