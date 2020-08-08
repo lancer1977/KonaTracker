@@ -1,23 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using KonaAnalyzer.Annotations;
 using KonaAnalyzer.Data;
 using Microsoft.AppCenter.Crashes;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using Xamarin.Forms;
-
-[assembly: Dependency(typeof(InMemoryCovidSource))]
+ 
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryCovidSource : ReactiveObject, ICovidSource
+    public class InMemoryCovidSource : INotifyPropertyChanged, ICovidSource
     {
+        private static InMemoryCovidSource _instance;
+        public static InMemoryCovidSource Instance
+        {
+            get
+            {
+                var source = _instance;
+                if (source != null)
+                {
+                    return source;
+                }
+
+                return (_instance = new InMemoryCovidSource());
+            }
+        }
+
+        private InMemoryCovidSource()
+        {
+
+        }
         string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
         DateTime _lastDate;
+        private bool _loaded;
+      
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
-        [Reactive] public bool Loaded { get; private set; }
+
+        public bool Loaded
+        {
+            get => _loaded;
+            private set
+            {
+                _loaded = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DateTime MostRecent => _lastDate.Date;
         public async Task LoadAsync()
         {
@@ -98,5 +128,13 @@ namespace KonaAnalyzer.Data
         public List<DayChange> Changes { get; private set; }
 
         public List<string> States { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

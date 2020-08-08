@@ -5,7 +5,7 @@ using ReactiveUI;
 
 namespace KonaAnalyzer.Data
 {
-    public interface ICovidSource : IReactiveObject
+    public interface ICovidSource 
     {
         List<DayChange> Changes { get; }
         List<string> States { get; }

@@ -7,15 +7,33 @@ using KonaAnalyzer.Data;
 using Microsoft.AppCenter.Crashes;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;
-
-[assembly: Dependency(typeof(InMemoryPopulationSource))]
+ 
 namespace KonaAnalyzer.Data
 {
     public class InMemoryPopulationSource : IPopulationSource
     {
+        private static InMemoryPopulationSource _instance;
+        public static InMemoryPopulationSource Instance
+        {
+            get
+            {
+                var source = _instance;
+                if (source != null)
+                {
+                    return source;
+                }
+
+                return (_instance = new InMemoryPopulationSource());
+            }
+        }
+
+        private InMemoryPopulationSource()
+        {
+
+        }
         string url = "https://raw.githubusercontent.com/lancer1977/KonaTracker/master/countyPop.csv";
 
-        [Reactive] public bool Loaded { get; private set; }
+        public bool Loaded { get; private set; }
 
         public async Task LoadAsync()
         {

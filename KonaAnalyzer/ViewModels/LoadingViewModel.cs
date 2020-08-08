@@ -37,8 +37,8 @@ namespace KonaAnalyzer.ViewModels
             Title = "Loading ...";
 
     
-            await DependencyService.Get<IPopulationSource>().LoadAsync();
-            await DependencyService.Get<ICovidSource>().LoadAsync();
+            await InMemoryCovidSource.Instance.LoadAsync();
+            await InMemoryPopulationSource.Instance.LoadAsync();
             //await (Application.Current.MainPage as MainPage).NavigateFromMenu("All");
             Title = "Loading ... Done";
         }

@@ -6,26 +6,58 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using CsvHelper;
+using KonaAnalyzer.Services;
 
 namespace KonaAnalyzer.Data
 {
     public static class DataExtensions
     {
-        public static async Task<string> GetStringFromUrlAsync(string url)
+        public static async Task<string> GetStringFromUrlAsync_old(string url)
         {
             try
             {
                 var results = string.Empty;
                 var req = WebRequest.Create(url);
+                Debug.WriteLine("WebReqeist Create Passed");
                 var resp = await req.GetResponseAsync();
-
+                Debug.WriteLine("GetResponseAsync  Passed");
                 var stream = resp.GetResponseStream();
+                Debug.WriteLine("GetResponseStream  Passed");
                 if (stream == null) return results;
                 using (var sr = new StreamReader(stream))
                 {
                     results = await sr.ReadToEndAsync();
                 }
+                Debug.WriteLine("StreamReader  Passed");
                 return results;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return string.Empty;
+            }
+
+        }
+
+        public static async Task<string> GetStringFromUrlAsync(string url)
+        {
+            if (HttpService.GetHandler == null)
+            {
+                return await GetStringFromUrlAsync_old(url);
+            }
+            else
+            {
+                return await GetStringFromUrlAsync_new(url);
+            }
+        }
+
+        public static async Task<string> GetStringFromUrlAsync_new(string url)
+        {
+            try
+            {
+                var http = HttpService.Instance.CreateHttp();
+                var response = await http.GetAsync(url);
+                return await response.Content.ReadAsStringAsync();
             }
             catch (Exception ex)
             {
@@ -73,7 +105,7 @@ namespace KonaAnalyzer.Data
 
                         }
                     });
-            
+
                 }
             }
             catch (Exception ex)

@@ -27,7 +27,7 @@ namespace KonaAnalyzer.Views
         {
             base.OnAppearing();
             //(BindingContext as LoadingViewModel).LoadCommand.Execute(Unit.Default);
-            OnAppearing();
+            (BindingContext as LoadingViewModel).OnAppearing();
         }
 
 
