@@ -1,11 +1,13 @@
-﻿using KonaAnalyzer.Data;
+﻿using System;
+using KonaAnalyzer.Data;
+using KonaAnalyzer.Services;
 using Xamarin.Forms;
 using KonaAnalyzer.Views;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Xamarin.Forms.Xaml;
- 
+
 namespace KonaAnalyzer
 {
     public partial class App : Application
@@ -17,15 +19,13 @@ namespace KonaAnalyzer
 #if !DEBUG
             AppCenter.Start(Configs.AppCenterSecret, typeof(Analytics), typeof(Crashes), typeof(Microsoft.AppCenter.Distribute.Distribute)); 
 #endif
-
-            DependencyService.Register<InMemoryCovidSource>();
-            DependencyService.Register<InMemoryPopulationSource>();
-            MainPage = new MainPage();;
+            HttpService.Instance = new HttpService();
+            MainPage = new MainPage(); ;
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
-      
+
         }
 
         protected override void OnSleep()

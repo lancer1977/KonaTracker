@@ -7,8 +7,8 @@ namespace KonaAnalyzer.ViewModels
 {
     public class BaseViewModel : ReactiveUI.ReactiveObject
     {
-        public ICovidSource DataStore => DependencyService.Get<ICovidSource>();
-        public IPopulationSource PopulationDataStore => DependencyService.Get<IPopulationSource>();
+        public ICovidSource DataStore => InMemoryCovidSource.Instance;
+        public IPopulationSource PopulationDataStore => InMemoryPopulationSource.Instance;
         [Reactive] public bool IsBusy { get; set; }
         [Reactive] public string Title { get; set; }
 

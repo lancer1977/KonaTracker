@@ -4,27 +4,65 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using KonaAnalyzer.Annotations;
+using KonaAnalyzer.Data;
+using Microsoft.AppCenter.Crashes;
 
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryCovidSource :  ICovidSource,INotifyPropertyChanged
+    public class InMemoryCovidSource : INotifyPropertyChanged, ICovidSource
     {
-        string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
+        private static InMemoryCovidSource _instance;
+        public static InMemoryCovidSource Instance
+        {
+            get
+            {
+                var source = _instance;
+                if (source != null)
+                {
+                    return source;
+                }
+
+                return (_instance = new InMemoryCovidSource());
+            }
+        }
+
+        private InMemoryCovidSource()
+        {
+
+        }
+        //  string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
+        private string url = "https://raw.githubusercontent.com/lancer1977/DataSeeds/master/covid/us-counties.csv";
         DateTime _lastDate;
+        private bool _loaded;
+
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
+
+        public bool Loaded
+        {
+            get => _loaded;
+            private set
+            {
+                _loaded = value;
+                OnPropertyChanged();
+            }
+        }
+
         public DateTime MostRecent => _lastDate.Date;
-        public  void Load()
-        { 
+        public async Task LoadAsync()
+        {
             try
             {
-                Changes = DataExtensions.GetListFromUrl<DayChange>(url);
+                Changes = await DataExtensions.GetListFromUrlAsync<DayChange>(url);
                 _lastDate = Changes.OrderBy(x => x.date).Select(x => x.date)
                     .LastOrDefault(); //?? (DateTime.Today - TimeSpan.FromDays(1));
                 States = Changes.Select(x => x.state).Distinct().OrderBy(x => x).ToList();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message); 
+                Debug.WriteLine(ex.Message);
+                Crashes.TrackError(ex);
             }
 
             Loaded = true;
@@ -32,18 +70,17 @@ namespace KonaAnalyzer.Data
 
         }
 
-        public int GetPopulation(string state)
+        public async Task<int> GetPopulation(string state)
         {
-            string url =
-                "api.census.gov/data/2019/pep/population?get=COUNTY,DATE_CODE,DATE_DESC,DENSITY,POP,NAME,STATE&for=region:*&key=YOUR_KEY";
-            var censusData = DataExtensions.GetStringFromUrl(url);
+            string url = "api.census.gov/data/2019/pep/population?get=COUNTY,DATE_CODE,DATE_DESC,DENSITY,POP,NAME,STATE&for=region:*&key=YOUR_KEY";
+            //var censusData = await DataExtensions.GetListFromUrlAsync(url);
             return 0;
         }
 
         public DateTime LastDate(string state)
         {
-            
-            if(state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
+
+            if (state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
             return Changes.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }
 
@@ -92,24 +129,12 @@ namespace KonaAnalyzer.Data
         public List<DayChange> Changes { get; private set; }
 
         public List<string> States { get; set; }
-         
-        private bool _loaded;
-
-        public bool Loaded
-        {
-            get => _loaded;
-            set
-            {
-                if (_loaded == value) return;
-                _loaded = value;
-                OnPropertyChanged();
-            }
-        }
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }

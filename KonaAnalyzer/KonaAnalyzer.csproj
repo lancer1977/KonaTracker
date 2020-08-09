@@ -18,7 +18,7 @@
     <PackageReference Include="PolyhydraGames.Extensions" Version="2.0.8" />
     <PackageReference Include="ReactiveUI" Version="11.2.3" />
     <PackageReference Include="ReactiveUI.Fody" Version="11.2.3" />
-    <PackageReference Include="Xamarin.Forms" Version="4.5.0.495" />  
+    <PackageReference Include="Xamarin.Forms" Version="4.5.0.356" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
   </ItemGroup>
 

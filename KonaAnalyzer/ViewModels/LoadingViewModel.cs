@@ -4,6 +4,8 @@ using KonaAnalyzer.Data;
 using ReactiveUI;
 using Xamarin.Forms;
 using System;
+using System.Diagnostics;
+using KonaAnalyzer.Views;
 
 namespace KonaAnalyzer.ViewModels
 {
@@ -11,18 +13,33 @@ namespace KonaAnalyzer.ViewModels
     {
         public LoadingViewModel()
         {
-            Title = "Loading ..."; 
+            Title = "Loading ...";
 
-            LoadCommand = ReactiveCommand.CreateFromTask(Load);
+            LoadCommand = ReactiveCommand.CreateFromTask(async x=>await LoadAsync());
             LoadCommand.IsExecuting.Subscribe(x => IsBusy = x);
+            LoadCommand.ThrownExceptions.Subscribe(OnException);
         }
 
-        private ReactiveCommand<Unit, Unit> LoadCommand;
-
-        public async Task Load()
+        private void OnException(Exception ex)
         {
-            await Task.Run(() => DependencyService.Get<ICovidSource>().Load());
-            await Task.Run(() => DependencyService.Get<IPopulationSource>().Load());
+            Debug.WriteLine(ex.Message);
+        }
+
+        public async void OnAppearing()
+        {
+            await LoadAsync();
+        }
+        
+        public ReactiveCommand<Unit, Unit> LoadCommand;
+
+        private async Task LoadAsync()
+        {
+            Title = "Loading ...";
+
+    
+            await InMemoryCovidSource.Instance.LoadAsync();
+            await InMemoryPopulationSource.Instance.LoadAsync();
+            //await (Application.Current.MainPage as MainPage).NavigateFromMenu("All");
             Title = "Loading ... Done";
         }
 

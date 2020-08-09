@@ -16,7 +16,7 @@ namespace KonaAnalyzer.Views
     public partial class MenuPage : ContentPage
     {
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-        private ICovidSource Source => DependencyService.Get<ICovidSource>();
+        private ICovidSource Source => InMemoryCovidSource.Instance;
         ObservableCollection<HomeMenuItem> menuItems = new ObservableCollection<HomeMenuItem>();
 
         public MenuPage()
@@ -34,7 +34,7 @@ namespace KonaAnalyzer.Views
             Source.WhenAnyValue(x => x.Loaded).Subscribe(loaded =>
             {
                 if (loaded == false) return;
-                menuItems.AddRange(DependencyService.Get<ICovidSource>().States
+                menuItems.AddRange(Source.States
                     .Select(x => new HomeMenuItem() { Title = x }));
             });
             ListViewMenu.ItemsSource = menuItems;
