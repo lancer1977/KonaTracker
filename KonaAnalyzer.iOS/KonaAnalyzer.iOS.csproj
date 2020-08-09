@@ -141,11 +141,11 @@
     <PackageReference Include="Xamarin.Forms" Version="4.5.0.495" />
     <PackageReference Include="Xamarin.Essentials" Version="1.3.1" />
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer.Forms\KonaAnalyzer.Forms.csproj">
-      <Project>{513F16DA-7E05-4A3F-B5B8-2C45B9C3BC87}</Project>
-      <Name>KonaAnalyzer.Forms</Name>
+    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
+      <Project>{C7C48A8D-3F16-4DA1-80FE-9B78B1DEFF0B}</Project>
+      <Name>KonaAnalyzer</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

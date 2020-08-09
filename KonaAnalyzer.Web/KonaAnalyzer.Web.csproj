@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer.Data\KonaAnalyzer.Data.csproj" />
+    <ProjectReference Include="..\KonaAnalyzer.Shared\KonaAnalyzer.Data.csproj" />
   </ItemGroup>
 
 </Project>

@@ -91,13 +91,13 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
+    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
+      <Project>{6B63021F-82A7-41C2-AAA4-68798B04DB0A}</Project>
+      <Name>KonaAnalyzer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer.Forms\KonaAnalyzer.Forms.csproj">
-      <Project>{513f16da-7e05-4a3f-b5b8-2c45b9c3bc87}</Project>
-      <Name>KonaAnalyzer.Forms</Name>
-    </ProjectReference>
+    <AndroidResource Include="Resources\drawable\xamarin_logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>

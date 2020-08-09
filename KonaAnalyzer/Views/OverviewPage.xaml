@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="KonaAnalyzer.Views.OverviewPage"
+             xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:OverviewViewModel />
+    </ContentPage.BindingContext>
+
+ 
+
+<StackLayout  >
+ 
+
+    <Grid  >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label  Grid.Row="1" Grid.Column="0" Text="Total"/>
+
+        <Label  Grid.Row="0" Grid.Column="1" Text="Sick"/>
+        <Label  Grid.Row="1" Grid.Column="1" Text="{Binding Cases}"/>
+        <Label  Grid.Row="0" Grid.Column="2" Text="Deaths"/>
+        <Label  Grid.Row="1" Grid.Column="2" Text="{Binding Deaths}"/>
+    </Grid>
+    <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
+        <ListView ItemsSource="{Binding Items}"   SeparatorColor="Black" Margin="5,0">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                    <ViewCell > 
+                        <Grid  >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>  
+                            <Label  Grid.Row="1" Grid.Column="0" Text="{Binding state}"/>
+
+                            <Label  Grid.Row="0" Grid.Column="1" Text="Sick"/>
+                            <Label  Grid.Row="1" Grid.Column="1" Text="{Binding cases}"/>
+                            <Label  Grid.Row="0" Grid.Column="2" Text="Deaths"/>
+                            <Label  Grid.Row="1" Grid.Column="2" Text="{Binding deaths}"/> 
+                        </Grid>
+ 
+       
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+    </StackLayout>
+
+</ContentPage>
