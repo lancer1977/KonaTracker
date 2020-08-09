@@ -3,11 +3,6 @@ using Autofac;
 using KonaAnalyzer.Core.ViewModels;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Services;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq; 
-using System.Windows.Controls;
 
 namespace KonaAnalyzer.Silverlight
 {

@@ -14,7 +14,12 @@
         </ResourceDictionary>
     </Page.Resources>
     <Canvas>
- 
+        <StackPanel>
+            <TextBlock Text="Hello World2 22 22!" x:Name="TextBlock1" Canvas.Left="20" Canvas.Top="30"/>
+            <Button> Button1</Button>
+            <TextBlock Text="{Binding BindedText}" />
+            <Button Content = "_Show..." Click = "Button_Click" />
+
 
 
 
@@ -34,66 +39,66 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding County}">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Alphabetical" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="Total">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Total" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock  Grid.Row="0" Grid.Column="2"  Text="Change"  FontAttributes="Italic">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Change" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock  Grid.Row="0" Grid.Column="3"  Text="Daily Inc.">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Percent" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Risk" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
 
                     <TextBlock Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Total" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Dead" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Population" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
 
 
 
-                    <!--<TextBlock Grid.Row="1" Grid.Column="1"  FontSize="12" Content="{Binding Current}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1"  FontSize="12" Content="{Binding Current}"/>
                     <TextBlock  Grid.Row="1" Grid.Column="2"  FontSize="12" Text="{Binding CurrentChange}" />
 
 
@@ -106,18 +111,18 @@
                     <TextBlock  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.###}%'}" />
 
                     <TextBlock Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality">
-                        <TextBlock.InputBindings>
-                            <MouseBinding 
+                        <TextBlock.GestureRecognizers>
+                            <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Mortality" />
-                        </TextBlock.InputBindings>
+                        </TextBlock.GestureRecognizers>
                     </TextBlock>
                     <TextBlock  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.#}%'}" />
 
-                    <TextBlock  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />-->
+                    <TextBlock  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />
                 </Grid>
 
-                <ViewBox Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></ViewBox>
+                <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
 
                 <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/>
                 <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True" ItemSelected="ListView_ItemSelected">
@@ -130,7 +135,8 @@
 -->
 
             </StackPanel>
- 
+
+        </StackPanel>
  
     </Canvas>
     

@@ -1,16 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<UserControl 
+<ViewCell xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:controls="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              mc:Ignorable="d"
-             x:Class="KonaAnalyzer.Views.StateControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:CSHTML5.Samples.Showcase"
-             >
-    <ContentControl Style="{StaticResource Card_Style}" Width="245">
-        <controls:Frame  Padding="15" BackgroundColor="{Binding BackgroundColor}">
+             x:Class="KonaAnalyzer.Views.StateControl">
+    <Frame  Padding="15" BackgroundColor="{Binding BackgroundColor}">
  
    
 
@@ -60,6 +55,6 @@
 
  
   
-        </controls:Frame>
-        </ContentControl >
-</UserControl>
+        </Frame> 
+ 
+</ViewCell>

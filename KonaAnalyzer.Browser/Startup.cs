@@ -1,8 +1,7 @@
-using KonaAnalyzert.Browser;
 using Microsoft.AspNetCore.Components.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace KonaAnalyzer.Browser
+namespace OpenSilverTest.Browser
 {
     public class Startup
     {
@@ -12,7 +11,7 @@ namespace KonaAnalyzer.Browser
 
         public void Configure(IComponentsApplicationBuilder app)
         {
-            app.AddComponent<KonaAnalyzer.Silverlight.App>("app");
+            app.AddComponent<App>("app");
         }
     }
 }
