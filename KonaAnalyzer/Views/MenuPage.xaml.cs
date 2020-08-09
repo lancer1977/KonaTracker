@@ -1,5 +1,6 @@
 ﻿using KonaAnalyzer.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -7,6 +8,7 @@ using DynamicData;
 using KonaAnalyzer.Data;
 using ReactiveUI;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace KonaAnalyzer.Views
 {
