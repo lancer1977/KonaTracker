@@ -66,7 +66,51 @@ namespace KonaAnalyzer.Data
             }
 
         }
+        //public static async IAsyncEnumerable<T> GetListFromUrlAsyncEnumerable<T>(string url)
+        //{
+        //    int count = 0;
+        //    var returnList = new List<T>();
+        //    var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
+        //    if (string.IsNullOrEmpty(text))
+        //    {
+        //        Debug.WriteLine("Text was empty");
 
+        //    }
+        //    else
+        //    {
+
+
+        //        // Console.WriteLine(text);
+        //        try
+        //        {
+        //            using (TextReader sr = new StringReader(text))
+        //            {
+        //                var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
+        //                csv.Configuration.Delimiter = ",";
+        //                csv.Configuration.MissingFieldFound = null;
+
+        //                while (await csv.ReadAsync())
+        //                {
+        //                    count++;
+        //                    if (count % 1000 == 0)
+        //                        Debug.WriteLine(count);
+
+        //                    var record = csv.GetRecord<T>();
+        //                    yield return record;
+
+
+        //                }
+
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            Debug.WriteLine(ex.Message);
+        //        }
+        //    }
+
+
+        //}
         public static async Task<List<T>> GetListFromUrlAsync<T>(string url)
         {
             int count = 0;

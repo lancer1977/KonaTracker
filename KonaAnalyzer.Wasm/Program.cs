@@ -1,16 +1,18 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using Windows.UI.Xaml;
+using KonaAnalyzer.Services;
+using Uno.UI.Wasm;
 
-namespace KonaAnalyzer.Wasm
+namespace RpnCalculator.Wasm
 {
     public class Program
     {
         static int Main(string[] args)
         {
             ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
-
-            Windows.UI.Xaml.Application.Start(_ => new KonaAnalyzer.UWP.App());
+            HttpService.GetHandler = () => new WasmHttpHandler();
+            Windows.UI.Xaml.Application.Start(_ => new RpnCalculator.UWP.App());
 
             return 0;
         }

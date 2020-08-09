@@ -1,28 +1,15 @@
 ﻿<linker>
   <assembly fullname="KonaAnalyzer.Wasm" />
   <assembly fullname="KonaAnalyzer" />
-
-  <assembly fullname="Xamarin.Forms.Platform.Uno" />
-  <assembly fullname="Xamarin.Forms.Core" />
-  <assembly fullname="Xamarin.Forms.Platform" />
-  <assembly fullname="Xamarin.Forms.Xaml" />
-  
   <assembly fullname="Uno.UI" />
-  <assembly fullname="Uno.Xaml" />
-  <assembly fullname="Uno.Core" />
-  
-
-
+  <assembly fullname="Xamarin.Forms.Platform.Uno" />
   <assembly fullname="ReactiveUI" />
+  <assembly fullname="CsvHelper" />
+  <assembly fullname="System.Reactive" />
+  <assembly fullname="System.Reactive.Wasm" />
+  <assembly fullname="ReactiveUI.Uno" />
   <assembly fullname="System.Core">
-	<!-- 
-    <assembly fullname="Autofac" />
-    <assembly fullname="Uno.UI.Toolkit" />
-  <assembly fullname="Uno.UI.Runtime.WebAssembly" />
-  <assembly fullname="Uno.Foundation.Runtime.WebAssembly" />
-    This is required by JSon.NET and any expression.Compile caller
-  
-  -->
+	<!-- This is required by JSon.NET and any expression.Compile caller -->
 	<type fullname="System.Linq.Expressions*" />
   </assembly>
 </linker>

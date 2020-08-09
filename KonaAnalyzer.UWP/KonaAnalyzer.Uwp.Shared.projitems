@@ -6,7 +6,7 @@
     <SharedGUID>d511fa0b-8efd-4e0c-b84f-910558b282da</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>KonaAnalyzer.Uwp.Shared</Import_RootNamespace>
+    <Import_RootNamespace>RpnCalculator.Uwp.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Assets\LockScreenLogo.scale-100.png" />
