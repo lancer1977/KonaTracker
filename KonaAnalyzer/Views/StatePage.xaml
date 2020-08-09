@@ -8,28 +8,26 @@
              xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
              xmlns:views="clr-namespace:KonaAnalyzer.Views;assembly=KonaAnalyzer"
              Title="{Binding Title}">
-       <NavigationPage.TitleView>
-           <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                       <DatePicker Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White"/>
-               <Frame BackgroundColor="Transparent" >
-                           <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
-  
-        </Label>
-                             <Frame.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding DateUpCommand}" />
-            </Frame.GestureRecognizers>
-               </Frame>
-                  <Frame BackgroundColor="Transparent" >
-                     <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center"/>
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+            <DatePicker Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White"/>
+            <Frame BackgroundColor="Transparent" >
+                <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
 
-
+                </Label>
                 <Frame.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding DateDownCommand}" />
-            </Frame.GestureRecognizers>
-                      </Frame>
-            </StackLayout>
+                    <TapGestureRecognizer Command="{Binding DateUpCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+            <Frame BackgroundColor="Transparent" >
+                <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DateDownCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+        </StackLayout>
     </NavigationPage.TitleView>
- 
+
     <ContentPage.BindingContext>
         <vm:StateViewModel />
     </ContentPage.BindingContext>
@@ -145,14 +143,14 @@
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
 
         <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/>-->
-            <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True" ItemSelected="ListView_ItemSelected">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <views:StateControl />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
- 
+        <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True" ItemSelected="ListView_ItemSelected">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <views:StateControl />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
 
     </StackLayout>
 </ContentPage>
