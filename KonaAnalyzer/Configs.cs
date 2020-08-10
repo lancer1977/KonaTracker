@@ -12,7 +12,5 @@ namespace KonaAnalyzer
         public static string url = "https://raw.githubusercontent.com/lancer1977/DataSeeds/master/covid/us-counties.csv";
 
         public static string SyncfusionKey = "MzAxNzA3QDMxMzgyZTMyMmUzMGxqWURDSGJWTUxuWVVDcU5RcHBRWFJYWUFISTRaUERCR2o1VmJWZkZqblE9";
-
-        //public static string SyncfusionKey = "MzAwMTM5QDMxMzgyZTMyMmUzMFh1NTZPUlVGS2YzQi92RzhSRFR1NEhQOUdZVWNUeUh6SlNmRGh0SzhRVGM9";
     }
 }
