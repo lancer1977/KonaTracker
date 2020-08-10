@@ -11,31 +11,17 @@ using Microsoft.AppCenter.Crashes;
 
 namespace KonaAnalyzer.Data
 {
-    public class InMemoryCovidSource : INotifyPropertyChanged, ICovidSource
+
+    public class InMemoryCovidSource_old : INotifyPropertyChanged, ICovidSource
     {
-        private static InMemoryCovidSource _instance;
-        public static InMemoryCovidSource Instance
+        public InMemoryCovidSource_old(ILocationSource locationService)
         {
-            get
-            {
-                var source = _instance;
-                if (source != null)
-                {
-                    return source;
-                }
-
-                return (_instance = new InMemoryCovidSource());
-            }
+            _locationService = locationService;
+            States = _locationService.States().ToList();
         }
-
-        private InMemoryCovidSource()
-        {
-
-        }
-        //  string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
-        private string url = "https://raw.githubusercontent.com/lancer1977/DataSeeds/master/covid/us-counties.csv";
         DateTime _lastDate;
         private bool _loaded;
+        private ILocationSource _locationService;
 
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
@@ -54,10 +40,9 @@ namespace KonaAnalyzer.Data
         {
             try
             {
-                Changes = await DataExtensions.GetListFromUrlAsync<DayChange>(url);
-                _lastDate = Changes.OrderBy(x => x.date).Select(x => x.date)
-                    .LastOrDefault(); //?? (DateTime.Today - TimeSpan.FromDays(1));
-                States = Changes.Select(x => x.state).Distinct().OrderBy(x => x).ToList();
+                _changes.Clear();
+                _changes.AddRange(  await DataExtensions.GetListFromUrlAsync<DayChange>(Configs.ChangesAddress));
+                _lastDate = Changes.OrderBy(x => x.Date).Select(x => x.Date) .LastOrDefault(); 
             }
             catch (Exception ex)
             {
@@ -69,31 +54,26 @@ namespace KonaAnalyzer.Data
             //var text =  DataExtensions.GetCSV();
 
         }
-
-        public async Task<int> GetPopulation(string state)
-        {
-            string url = "api.census.gov/data/2019/pep/population?get=COUNTY,DATE_CODE,DATE_DESC,DENSITY,POP,NAME,STATE&for=region:*&key=YOUR_KEY";
-            //var censusData = await DataExtensions.GetListFromUrlAsync(url);
-            return 0;
-        }
+ 
 
         public DateTime LastDate(string state)
         {
 
-            if (state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
-            return Changes.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
+            if (state == "All") return Changes.Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
+            return _changes.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }
 
 
         public List<string> Counties(string state)
         {
-            return Changes.Where(x => x.state == state).Select(x => x.county).OrderBy(x => x).Distinct().ToList();
+            //return Changes.Where(x => x.state == state).Select(x => x.county).OrderBy(x => x).Distinct().ToList();
+            return _locationService.Counties(state).ToList();
         }
 
         public int Total(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Changes.Where(x => state == "All" || x.state == state)
+            return _changes.Where(x => state == "All" || x.state == state)
              .Where(x => county == "All" || x.county == county)
                 .Where(x => x.date == date)
                 .Select(x => x.cases).Sum();
@@ -103,7 +83,7 @@ namespace KonaAnalyzer.Data
         public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Changes.Where(x => state == "All" || x.state == state)
+            var items = _changes.Where(x => state == "All" || x.state == state)
                 .Where(x => county == "All" || x.county == county)
                 .Where(x => x.date == date)
                 .Select(x => x.deaths).Sum();
@@ -126,7 +106,9 @@ namespace KonaAnalyzer.Data
         {
             return days.date.Date == MostRecent;
         }
-        public List<DayChange> Changes { get; private set; }
+
+        private List<DayChange> _changes { get; } 
+        public IEnumerable<IChange> Changes { get; } = new List<DayChange>();
 
         public List<string> States { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;

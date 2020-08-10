@@ -7,18 +7,17 @@
              mc:Ignorable="d"
              Title="{Binding Title}"
              x:Class="KonaAnalyzer.Views.LoadingPage">
-    <ContentPage.BindingContext>
-        <viewModels:LoadingViewModel />
-    </ContentPage.BindingContext>
+
     <ContentPage.Content>
         <StackLayout>
   
-
-            <ActivityIndicator  IsRunning="{Binding IsBusy}" Color="Black"/>
-<Label Text="{Binding Status}"/>
+             
+            <Label Text="{Binding IsBusy}"/>
             <Label>
                 Data Copyright 2020 by The New York Times Company
             </Label>
+
+            <ActivityIndicator Margin="0,40,0,0" IsRunning="{Binding IsBusy}"  IsVisible="{Binding IsBusy}" Color="Red" />
 </StackLayout>
     </ContentPage.Content>
 

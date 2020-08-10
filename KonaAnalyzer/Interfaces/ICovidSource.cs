@@ -7,7 +7,7 @@ namespace KonaAnalyzer.Data
 {
     public interface ICovidSource 
     {
-        List<DayChange> Changes { get; }
+        IEnumerable<IChange> Changes { get; }
         List<string> States { get; }
         List<string> Counties(string state);
         int Total(string state, string county, DateTime? date);
@@ -18,4 +18,5 @@ namespace KonaAnalyzer.Data
         DateTime LastDate(string state);
         bool Loaded { get; }
     }
+ 
 }

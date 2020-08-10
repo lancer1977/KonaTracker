@@ -7,7 +7,7 @@ namespace Corona.Gtk
     {
         protected virtual void Build()
         {
-            global::Corona.Gtk.Gui.Initialize(this);
+            //global::Gtk.Gui.Initialize(this);
             // Widget MainWindow
             this.Name = "MainWindow";
             this.Title = global::Mono.Unix.Catalog.GetString("MainWindow");

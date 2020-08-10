@@ -7,9 +7,7 @@
              mc:Ignorable="d"
              Title="About"
              x:Class="KonaAnalyzer.Views.AboutPage">
-    <ContentPage.BindingContext>
-        <viewModels:LoadingViewModel />
-    </ContentPage.BindingContext>
+
     <ContentPage.Content>
         <StackLayout>
 

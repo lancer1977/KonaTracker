@@ -18,7 +18,7 @@ namespace KonaAnalyzer.Views
     public partial class MenuPage : ContentPage
     {
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-        private ICovidSource Source => InMemoryCovidSource.Instance;
+        private ICovidSource Source => IOC.Get<ICovidSource>();// InMemoryCovidSource.Instance;
         ObservableCollection<HomeMenuItem> menuItems = new ObservableCollection<HomeMenuItem>();
 
         public MenuPage()
@@ -31,13 +31,13 @@ namespace KonaAnalyzer.Views
             new HomeMenuItem() {Title = "Reload Data"},
             new HomeMenuItem() {Title = "About"},
             new HomeMenuItem() {Title = "------------------"},
-            new HomeMenuItem() {Title = "All"}
+           
             });
             Source.WhenAnyValue(x => x.Loaded).Subscribe(loaded =>
             {
                 if (loaded == false) return;
-                menuItems.AddRange(Source.States
-                    .Select(x => new HomeMenuItem() { Title = x }));
+                menuItems.Add(new HomeMenuItem() { Title = "All" });
+                menuItems.AddRange(Source.States .Select(x => new HomeMenuItem() { Title = x }));
             });
             ListViewMenu.ItemsSource = menuItems;
 
@@ -48,7 +48,7 @@ namespace KonaAnalyzer.Views
                     return;
 
                 // var id = (int)((HomeMenuItem)e.SelectedItem).Id;
-                await RootPage.NavigateFromMenu(e.SelectedItem.ToString());
+                  RootPage.NavigateFromMenu(e.SelectedItem.ToString());
             };
         }
 

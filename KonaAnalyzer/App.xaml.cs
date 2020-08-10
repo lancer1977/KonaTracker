@@ -15,27 +15,17 @@ namespace KonaAnalyzer
 
         public App()
         {
+            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule) });
             InitializeComponent();
 #if !DEBUG
             AppCenter.Start(Configs.AppCenterSecret, typeof(Analytics), typeof(Crashes), typeof(Microsoft.AppCenter.Distribute.Distribute)); 
 #endif
+       
             HttpService.Instance = new HttpService();
             MainPage = new MainPage(); ;
         }
 
-        protected override async void OnStart()
-        {
-
-        }
-
-        protected override void OnSleep()
-        {
-        }
-
-        protected override async void OnResume()
-        {
-
-        }
+ 
 
         public void GotoMainPage()
         {

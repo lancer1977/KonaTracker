@@ -2,6 +2,7 @@
   <assembly fullname="KonaAnalyzer.Wasm" />
   <assembly fullname="KonaAnalyzer" />
   <assembly fullname="Uno.UI" />
+     <assembly fullname="Autofac" />
   <assembly fullname="Xamarin.Forms.Platform.Uno" />
   <assembly fullname="ReactiveUI" />
   <assembly fullname="CsvHelper" />

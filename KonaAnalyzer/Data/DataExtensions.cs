@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using CsvHelper;
 using KonaAnalyzer.Services;
+using Newtonsoft.Json;
 
 namespace KonaAnalyzer.Data
 {
@@ -66,54 +67,19 @@ namespace KonaAnalyzer.Data
             }
 
         }
-        //public static async IAsyncEnumerable<T> GetListFromUrlAsyncEnumerable<T>(string url)
-        //{
-        //    int count = 0;
-        //    var returnList = new List<T>();
-        //    var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
-        //    if (string.IsNullOrEmpty(text))
-        //    {
-        //        Debug.WriteLine("Text was empty");
-
-        //    }
-        //    else
-        //    {
-
-
-        //        // Console.WriteLine(text);
-        //        try
-        //        {
-        //            using (TextReader sr = new StringReader(text))
-        //            {
-        //                var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
-        //                csv.Configuration.Delimiter = ",";
-        //                csv.Configuration.MissingFieldFound = null;
-
-        //                while (await csv.ReadAsync())
-        //                {
-        //                    count++;
-        //                    if (count % 1000 == 0)
-        //                        Debug.WriteLine(count);
-
-        //                    var record = csv.GetRecord<T>();
-        //                    yield return record;
-
-
-        //                }
-
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            Debug.WriteLine(ex.Message);
-        //        }
-        //    }
-
-
-        //}
-        public static async Task<List<T>> GetListFromUrlAsync<T>(string url)
+        public static async Task<List<T>> GetListFromUrlAsync<T>(string url, Serialize type = Serialize.CSV)
         {
-            int count = 0;
+            switch (type)
+            {
+                case Serialize.Json:return await GetListFromJsonUrlAsync<T>(url);
+                case Serialize.XML:
+                    break;
+                case Serialize.CSV: return await GetListFromUrlAsyncCSV<T>(url);
+            }
+            return null;
+        }
+        private static async Task<List<T>> GetListFromUrlAsyncCSV<T>(string url )
+        { 
             var returnList = new List<T>();
             var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
             if (string.IsNullOrEmpty(text))
@@ -128,14 +94,9 @@ namespace KonaAnalyzer.Data
                 {
                     var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
                     csv.Configuration.Delimiter = ",";
-                    csv.Configuration.MissingFieldFound = null;
-                    await Task.Run(() =>
-                    {
-                        while (csv.Read())
-                        {
-                            count++;
-                            if (count % 1000 == 0)
-                                Debug.WriteLine(count);
+                    csv.Configuration.MissingFieldFound = null; 
+                        while (await csv.ReadAsync())
+                        { 
                             try
                             {
                                 var record = csv.GetRecord<T>();
@@ -147,8 +108,7 @@ namespace KonaAnalyzer.Data
                             }
 
 
-                        }
-                    });
+                        } 
 
                 }
             }
@@ -159,6 +119,19 @@ namespace KonaAnalyzer.Data
 
 
             return returnList;
+        }
+
+        private static async Task<List<T>> GetListFromJsonUrlAsync<T>(string url)
+        { 
+            var returnList = new List<T>();
+            var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
+            if (string.IsNullOrEmpty(text))
+            {
+                Debug.WriteLine("Text was empty");
+                return returnList;
+            }
+            var items = JsonConvert.DeserializeObject<List<T>>(text);
+            return items; 
         }
     }
 }

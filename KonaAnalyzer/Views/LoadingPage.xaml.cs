@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.ViewModels;
-using ReactiveUI;
-
+﻿
+using KonaAnalyzer.ViewModels; 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -21,12 +12,12 @@ namespace KonaAnalyzer.Views
         public LoadingPage()
         {
             InitializeComponent();
+            BindingContext = IOC.Get<LoadingViewModel>();
         }
 
         protected override async void OnAppearing()
         {
-            base.OnAppearing();
-            //(BindingContext as LoadingViewModel).LoadCommand.Execute(Unit.Default);
+            base.OnAppearing(); 
             (BindingContext as LoadingViewModel).OnAppearing();
         }
 

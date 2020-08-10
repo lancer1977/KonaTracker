@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using KonaAnalyzer;
 using Xamarin.Forms.Platform.GTK;
 
 namespace Corona.Gtk
@@ -13,20 +14,19 @@ namespace Corona.Gtk
         //    win.Show();
         //    Application.Run();
         //}
- 
-            [STAThread]
-            public static void Main(string[] args)
-            {
-                Gtk.Application.Init();
-            Xamarin.Forms.Init();
 
-                var app = new App();
-                var window = new FormsWindow();
-                window.LoadApplication(app);
-                window.SetApplicationTitle("Game of Life");
-                window.Show();
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            Application.Init(); 
+            global::Xamarin.Forms.Forms.Init();
+            var app = new App();
+            var window = new FormsWindow();
+            window.LoadApplication(app);
+            window.SetApplicationTitle("Game of Life");
+            window.Show();
 
-                Gtk.Application.Run();
-            }
+            Application.Run();
         }
-    
+    }
+}
