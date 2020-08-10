@@ -16,12 +16,13 @@ namespace KonaAnalyzer.ViewModels
 
             foreach (var item in DataStore.States)
             {
-                var lastDay = DataStore.LastDate(item);
+                var lastDay = DataStore.Latest;
                 items.Add(new DayChange()
-                {date = lastDay,
+                {
+                    date = lastDay,
                     state = item,
-                    cases = DataStore.Total(item,"All",lastDay),
-                    deaths =  DataStore.Deaths(item,"All",lastDay)
+                    cases = DataStore.Total(item, "All", lastDay),
+                    deaths = DataStore.Deaths(item, "All", lastDay)
                 });
             }
 

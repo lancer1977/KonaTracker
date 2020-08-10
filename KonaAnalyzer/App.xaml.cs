@@ -2,25 +2,21 @@
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Services;
 using Xamarin.Forms;
-using KonaAnalyzer.Views;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
-using Xamarin.Forms.Xaml;
+using KonaAnalyzer.Views; 
 
 namespace KonaAnalyzer
 {
     public partial class App : Application
     {
 
-        public App()
+        public App( )
         {
-            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule) });
+  
             InitializeComponent();
 #if !DEBUG
             AppCenter.Start(Configs.AppCenterSecret, typeof(Analytics), typeof(Crashes), typeof(Microsoft.AppCenter.Distribute.Distribute)); 
 #endif
-       
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configs.SyncfusionKey);
             HttpService.Instance = new HttpService();
             MainPage = new MainPage(); ;
         }

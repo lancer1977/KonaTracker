@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Syncfusion.SfChart.XForms.WPF;
 
 namespace Covid.WPF
 {
@@ -24,9 +23,11 @@ namespace Covid.WPF
         {
             InitializeComponent();
             //WPFBootstrapper.Run();
+            Bootstrapper.Initialize();
+            SfChartRenderer.Init(); 
             Xamarin.Forms.Forms.Init();
             LoadApplication(new KonaAnalyzer.App());
         }
     }
-    }
+}
 

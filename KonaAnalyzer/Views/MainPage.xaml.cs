@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
-using Xamarin.Forms; 
+using Xamarin.Forms;
 
 namespace KonaAnalyzer.Views
 {
@@ -23,11 +23,11 @@ namespace KonaAnalyzer.Views
             MasterBehavior = MasterBehavior.Popover;
 
 
-          //  Detail = new NavigationPage(new LoadingPage());
+            //  Detail = new NavigationPage(new LoadingPage());
 
         }
 
-        public void   NavigateFromMenu(string id)
+        public void NavigateFromMenu(string id)
         {
             //if (Device.RuntimePlatform == Device.Android)
             //    await Task.Delay(100);
@@ -39,6 +39,9 @@ namespace KonaAnalyzer.Views
                 case "Reload Data":
                     Detail = new NavigationPage(new LoadingPage());
                     //DependencyService.Get<ICovidSource>().Load();
+                    break;
+                case "Change Charts":
+                    Detail = new NavigationPage(new ChangeChartPage());
                     break;
                 case "About":
                     Detail = new NavigationPage(new AboutPage());

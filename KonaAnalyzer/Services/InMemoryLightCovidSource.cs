@@ -15,24 +15,19 @@ namespace KonaAnalyzer.Data
         public InMemoryLiteCovidSource(ILocationSource locationService)
         {
             _locationService = locationService;
-        }
-        DateTime _lastDate;
+
+        } 
         private bool _loaded;
         private ILocationSource _locationService;
 
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
-        public bool Loaded
-        {
-            get => _loaded;
-            private set
-            {
-                _loaded = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public DateTime MostRecent => _lastDate.Date;
+        DateTime _lastDate;
+        DateTime _earliestDate;
+        public DateTime Latest => _lastDate.Date;
+        public DateTime Earliest => _earliestDate.Date;
+         
   
         private Location NoLocation = new Location() { };
         private void AddFromNoLocation(IEnumerable<DayChange> changes )
@@ -72,21 +67,29 @@ namespace KonaAnalyzer.Data
                 throw new NullReferenceException(nameof(location));
             return new LiteDayChange()
             {
-                Date = change.date,
+                date = change.date,
                 Location = location,
-                Cases = change.cases,
-                Deaths = change.deaths,
+                cases = change.cases,
+                deaths = change.deaths,
 
             };
         }
 
+        public IEnumerable<IChange> CountyChanges(string state, string countyName, DateTime startDay, DateTime endDay)
+        {
+            var location = _locationService.GetLocation(state, countyName);
+            return _changes.Where(x => x.date > startDay && x.date <= endDay).Where(x => x.Location == location).ToList();
+        }
+
+
         public DateTime LastDate(string state)
         {
 
-            if (state == "All") return Changes.Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
-            return _changes.Where(x => x.Location.State == state).Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
+            if (state == "All") return Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
+            return _changes.Where(x => x.Location.State == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }
 
+ 
 
         public List<string> Counties(string state)
         {
@@ -97,14 +100,14 @@ namespace KonaAnalyzer.Data
         public int Total(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, county, date).Select(x => x.Cases).Sum();  
+            return Matching(state, county, date).Select(x => x.cases).Sum();  
         }
 
 
         public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, county, date).Select(x => x.Deaths).Sum(); 
+            return Matching(state, county, date).Select(x => x.deaths).Sum(); 
         }
 
         public IEnumerable<LiteDayChange> Matching(string state, string county, DateTime? date)
@@ -112,7 +115,7 @@ namespace KonaAnalyzer.Data
             var stateAll = state == "All"  ;
             var countyAll = county == "All";
             if (date == null) date = Yesterday;
-            var subset = _changes.Where(x => x.Date == date);
+            var subset = _changes.Where(x => x.date == date);
             if (stateAll && countyAll)
             {
                 return subset;
@@ -146,7 +149,7 @@ namespace KonaAnalyzer.Data
 
         private bool MostRecentDay(DayChange days)
         {
-            return days.date.Date == MostRecent;
+            return days.date.Date == Latest;
         }
         private List<LiteDayChange> _changes= new List<LiteDayChange>();
         public IEnumerable<IChange> Changes => _changes;
@@ -162,6 +165,10 @@ namespace KonaAnalyzer.Data
                 var items = await DataExtensions.GetListFromUrlAsync<DayChange>(Configs.ChangesAddress);
                 _locationService.Locations.ForEach(x => AddFromLocation(items, x));
                 AddFromNoLocation(items);
+
+                var ordered = Changes.OrderBy(x => x.date).Select(x => x.date).Distinct().ToList();
+                _lastDate = ordered.LastOrDefault();
+                _earliestDate = ordered.FirstOrDefault();
             }
             catch (Exception ex)
             {
@@ -170,7 +177,7 @@ namespace KonaAnalyzer.Data
             }
 
             _changes.RemoveAll(x => x == null);
-            _lastDate = Changes.OrderBy(x => x.Date).Select(x => x.Date).LastOrDefault();
+            _lastDate = Changes.OrderBy(x => x.date).Select(x => x.date).LastOrDefault();
         }
     }
 }

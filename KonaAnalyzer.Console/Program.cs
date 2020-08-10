@@ -1,5 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using Autofac;
+using Covid.WPF;
+using PolyhydraGames.SQLite;
+using PolyhydraGames.SQLite.Interfaces;
 
 namespace KonaAnalyzer.Console
 {
@@ -8,8 +13,11 @@ namespace KonaAnalyzer.Console
         public static   void Main(string[] args)
         {
             Debug.WriteLine("Hello World!");
+            Bootstrapper.Initialize();
             var tools = new CovidTools();
               tools.StartPump();
         }
     }
+
+ 
 }

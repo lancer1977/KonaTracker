@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using DynamicData;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Services;
 using ReactiveUI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -27,18 +28,24 @@ namespace KonaAnalyzer.Views
 
 
             menuItems.AddRange(new[]{
-                new HomeMenuItem() {Title = "Overview"},
+
             new HomeMenuItem() {Title = "Reload Data"},
             new HomeMenuItem() {Title = "About"},
             new HomeMenuItem() {Title = "------------------"},
-           
+
             });
-            Source.WhenAnyValue(x => x.Loaded).Subscribe(loaded =>
+            Source.PropertyChanged += (sender, args) =>
             {
-                if (loaded == false) return;
-                menuItems.Add(new HomeMenuItem() { Title = "All" });
-                menuItems.AddRange(Source.States .Select(x => new HomeMenuItem() { Title = x }));
-            });
+                if (args.PropertyName == "LoadState" && Source.LoadState == LoadedState.Loaded)
+                {
+                    menuItems.Add(new HomeMenuItem() { Title = "Overview" });
+                    menuItems.Add(new HomeMenuItem() { Title = "Change Charts" });
+                    menuItems.Add(new HomeMenuItem() { Title = "All" });
+                    menuItems.AddRange(Source.States.Select(x => new HomeMenuItem() { Title = x }));
+                }
+
+
+            };
             ListViewMenu.ItemsSource = menuItems;
 
             ListViewMenu.SelectedItem = menuItems[0];
@@ -48,7 +55,7 @@ namespace KonaAnalyzer.Views
                     return;
 
                 // var id = (int)((HomeMenuItem)e.SelectedItem).Id;
-                  RootPage.NavigateFromMenu(e.SelectedItem.ToString());
+                RootPage.NavigateFromMenu(e.SelectedItem.ToString());
             };
         }
 

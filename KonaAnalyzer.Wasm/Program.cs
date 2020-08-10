@@ -1,10 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using Windows.UI.Xaml;
+using KonaAnalyzer;
 using KonaAnalyzer.Services;
 using Uno.UI.Wasm;
 
-namespace RpnCalculator.Wasm
+namespace KonaAnalyzer.Wasm
 {
     public class Program
     {
@@ -12,7 +13,9 @@ namespace RpnCalculator.Wasm
         {
             ConfigureFilters(Uno.Extensions.LogExtensionPoint.AmbientLoggerFactory);
             HttpService.GetHandler = () => new WasmHttpHandler();
-            Windows.UI.Xaml.Application.Start(_ => new RpnCalculator.UWP.App());
+
+            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule),  typeof(InMemoryCovidModule) });
+            Windows.UI.Xaml.Application.Start(param => new RpnCalculator.UWP.App());
 
             return 0;
         }

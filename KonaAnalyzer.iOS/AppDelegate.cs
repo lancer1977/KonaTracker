@@ -1,6 +1,8 @@
 ﻿ 
 
 using Foundation;
+using KonaAnalyzer.iOS.Setup;
+using Syncfusion.SfChart.XForms.iOS.Renderers;
 using UIKit;
 
 namespace KonaAnalyzer.iOS
@@ -21,6 +23,8 @@ namespace KonaAnalyzer.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            SfChartRenderer.Init();
+            Bootstrapper.Initialize();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

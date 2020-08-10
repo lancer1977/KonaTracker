@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using KonaAnalyzer.Services;
 using ReactiveUI;
 
 namespace KonaAnalyzer.Data
 {
-    public interface ICovidSource 
+    public interface ICovidSource : INotifyPropertyChanged, IDataSource
     {
         IEnumerable<IChange> Changes { get; }
         List<string> States { get; }
@@ -15,8 +17,11 @@ namespace KonaAnalyzer.Data
         double ChangeRateByCounty(string state, string county);
         double ChangeRateByState(string state);
         Task LoadAsync();
-        DateTime LastDate(string state);
-        bool Loaded { get; }
+        //DateTime LastDate(string state);
+        IEnumerable<IChange> CountyChanges(string state, string countyName, DateTime startDay, DateTime endDay);
+        //DateTime EarliestDate(string first);
+        DateTime Latest { get; }
+        DateTime Earliest { get; }
     }
- 
+
 }

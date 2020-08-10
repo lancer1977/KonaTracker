@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
+using KonaAnalyzer.Data;
 using KonaAnalyzer.Views;
 using PolyhydraGames.Extensions;
 using ReactiveUI;
@@ -18,32 +19,8 @@ using Xamarin.Forms;
 
 namespace KonaAnalyzer.ViewModels
 {
-    public enum Sort
-    {
-        AlphabeticalAscending,
-        AlphabeticalDescending,
-        TotalAscending,
-        TotalDescending,
-
-        DeadAscending,
-        DeadDescending,
-
-        PercentAscending,
-        PercentDescending,
-        RiskAscending,
-        RiskDescending,
-
-        PopulationAscending,
-        PopulationDescending,
-        MortalityAscending,
-        MortalityDescending,
-        ChangeAscending,
-        ChangeDescending
-    }
-
     public class StateControlViewModel : BaseViewModel
-    {
-        public MainPage RootPage { get => Application.Current.MainPage as MainPage; }
+    { 
         [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
         [Reactive] public string County { get; set; } = "All";
         [Reactive] public string State { get; set; }
@@ -102,15 +79,23 @@ namespace KonaAnalyzer.ViewModels
             return (((double)numerator) / ((double)denominator) * ((double)100));
         }
         public async void ItemSelected()
-        { 
+        {
             var nav = (Application.Current.MainPage as MasterDetailPage).Detail.Navigation;
             var statePage = new StatePage();
             statePage.ViewModel.Load(State);
-            await nav.PushAsync(statePage); 
-      
+            await nav.PushAsync(statePage);
+
 
         }
-
+        public async void CountySelected()
+        {
+            var nav = (Application.Current.MainPage as MasterDetailPage).Detail.Navigation;
+            var statePage = new ChangeChartPage();
+            var startDay = DateTime.Today - TimeSpan.FromDays(30);
+            var endDay = DataStore.Latest;
+            statePage.ViewModel.Load(State, County, startDay, endDay);
+            await nav.PushAsync(statePage);
+        }
 
 
         private async Task<(int current, int change, double rate)> GetCurrentAndChangeAsync(string state, string county,
@@ -124,8 +109,8 @@ namespace KonaAnalyzer.ViewModels
                 var currentChange = current - yesterdayTotal;
                 var currentChangeRate = RateChange(currentChange, yesterdayTotal);
                 return (current, currentChange, currentChangeRate);
-            });
 
+            });
         }
 
         private async Task<(int current, int change, double rate)> GetDeathsCurrentAndChangeAsync(string state,
@@ -140,6 +125,8 @@ namespace KonaAnalyzer.ViewModels
                 var currentChangeRate = RateChange(currentChange, yesterdayTotal);
                 return (current, currentChange, currentChangeRate);
             });
+
+
         }
 
         protected int GetTwoWeekProjectionCases((int current, int change, double rate) changes, double decay)
@@ -162,12 +149,12 @@ namespace KonaAnalyzer.ViewModels
         }
 
         public void Load(string county, string state, DateTime? date)
-        { 
+        {
             IsSubViewModel = true;
             County = county;
             State = state;
             Title = county == "All" ? state : county;
-            Date = date; 
+            Date = date;
 
         }
         protected bool IsSubViewModel;
@@ -190,6 +177,8 @@ namespace KonaAnalyzer.ViewModels
         {
             await UpdateValuesAsync(state, County, Date);
         }
+
+
     }
     public class StateViewModel : StateControlViewModel
     {
@@ -224,15 +213,15 @@ namespace KonaAnalyzer.ViewModels
                 return Unit.Default;
             });
             DateDownCommand = ReactiveCommand.Create(() => Date -= TimeSpan.FromDays(1));
-            this.WhenAnyValue(x => x.Date).Where(x=>x!= null).Subscribe(x =>
-            {
-                if (LoadingCounties) return;
-                foreach (var item in CountyViewModels)
-                {
-                    item.Date = x;
+            this.WhenAnyValue(x => x.Date).Where(x => x != null).Subscribe(x =>
+               {
+                   if (LoadingCounties) return;
+                   foreach (var item in CountyViewModels)
+                   {
+                       item.Date = x;
 
-                }
-            });
+                   }
+               });
             var sortChanged = this.WhenAnyValue(x => x.Sort).Select(x => x.GetSorter());
             //this.WhenAnyValue(x => x.Sort).Select(x => x.ToFriendlyString()).ToProperty(this, x => x.SortText, out _sortText);
             _sourceViewModels = new SourceList<StateControlViewModel>();
@@ -247,8 +236,8 @@ namespace KonaAnalyzer.ViewModels
         }
 
         public override async Task OnStateUpdatedAsync(string state)
-        { 
-            Date = DataStore.LastDate(state);
+        {
+            Date = DataStore.Latest;
             if (State == "All")
             {
                 PopulateStates();
@@ -260,7 +249,7 @@ namespace KonaAnalyzer.ViewModels
                 PopulateCountyViewModels();
                 County = "All";
             }
-       
+
             var dateRange = new List<DateTime>();
             for (var y = 0; y < 30; y++)
             {
@@ -270,7 +259,7 @@ namespace KonaAnalyzer.ViewModels
             Dates = dateRange;
             MinDate = dateRange.Last();
             MaxDate = dateRange.First();
-        
+
 
             await base.OnStateUpdatedAsync(state);
         }

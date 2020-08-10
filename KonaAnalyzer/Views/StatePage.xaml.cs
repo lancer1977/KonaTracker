@@ -12,7 +12,7 @@ namespace KonaAnalyzer.Views
     public partial class StatePage : ContentPage
     {
 
-        public StateViewModel ViewModel => (StateViewModel) BindingContext;
+        public StateViewModel ViewModel => (StateViewModel)BindingContext;
         public StatePage()
         {
             InitializeComponent();
@@ -20,10 +20,21 @@ namespace KonaAnalyzer.Views
 
         void ListView_ItemSelected(System.Object sender, Xamarin.Forms.SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem == null || ViewModel.State != "All") return;
-           var vm =  e.SelectedItem as StateControlViewModel;
-            vm.ItemSelected();
+            if (e.SelectedItem == null) return;
+            var vm = e.SelectedItem as StateControlViewModel;
             (sender as ListView).SelectedItem = null;
+   
+           
+            if (ViewModel.State != "All")
+            {
+                vm.CountySelected();
+
+            }
+            else
+            { 
+                vm.ItemSelected(); 
+            }
+
         }
     }
 }

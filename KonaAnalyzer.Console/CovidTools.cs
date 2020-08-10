@@ -27,8 +27,8 @@ namespace KonaAnalyzer.Console
             var locationService = new LocationSource();
             await locationService.LoadAsync();
 
-            var change = new InMemoryLiteCovidSource(locationService);
-            await change.LoadAsync();
+            
+            await IOC.Get<ICovidSource>().LoadAsync();
         }
         public async Task WriteCountyMap()
         {
