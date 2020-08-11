@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using KonaAnalyzer.Services;
-using ReactiveUI;
+using System.ComponentModel; 
+using KonaAnalyzer.Services; 
 
 namespace KonaAnalyzer.Data
 {
@@ -16,7 +14,6 @@ namespace KonaAnalyzer.Data
         int Deaths(string state, string county, DateTime? date);
         double ChangeRateByCounty(string state, string county);
         double ChangeRateByState(string state);
-        Task LoadAsync();
         //DateTime LastDate(string state);
         IEnumerable<IChange> CountyChanges(string state, string countyName, DateTime startDay, DateTime endDay);
         //DateTime EarliestDate(string first);

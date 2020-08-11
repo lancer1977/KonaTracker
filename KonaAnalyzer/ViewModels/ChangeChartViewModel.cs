@@ -122,7 +122,7 @@ namespace KonaAnalyzer.ViewModels
                 var firstChange = changeorder[1].Change;
                 if (firstChange == 0) firstChange = 1;
                 Maximum = changeorder.Last().Change;
-                Interval = Maximum / firstChange;
+                Interval = (Maximum - firstChange) /10;
             }
             catch (Exception ex)
             {
