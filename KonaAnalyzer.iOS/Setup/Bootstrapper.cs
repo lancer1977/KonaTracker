@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Autofac;
+using KonaAnalyzer.Setup;
 using KonaAnalyzer.SqlData;
 using PolyhydraGames.SQLite;
 using PolyhydraGames.SQLite.Interfaces;

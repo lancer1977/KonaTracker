@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace KonaAnalyzer.Services
+namespace KonaAnalyzer.Interfaces
 {
     public interface IDataStore<T>
     {

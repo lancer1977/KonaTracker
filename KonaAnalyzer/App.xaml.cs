@@ -1,5 +1,6 @@
 ﻿using System;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
 using Xamarin.Forms;
 using KonaAnalyzer.Views;

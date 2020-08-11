@@ -7,26 +7,47 @@
              x:Class="KonaAnalyzer.Views.StatePage"
              xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
              xmlns:views="clr-namespace:KonaAnalyzer.Views;assembly=KonaAnalyzer"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              Title="{Binding Title}">
-    <NavigationPage.TitleView>
-        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-            <DatePicker Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White"/>
-            <Frame BackgroundColor="Transparent" >
-                <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center">
-
-                </Label>
+    <NavigationPage.TitleView >
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto"  HorizontalOptions="FillAndExpand"  >
+            <Label Text="{Binding Title}" VerticalTextAlignment="Center" TextColor="White" FontSize="Large" HorizontalOptions="StartAndExpand">
+                <Label.IsVisible>
+                    <OnPlatform x:TypeArguments="system:Boolean" Default="True">
+                        <On Platform="UWP" Value="False"/> 
+                    </OnPlatform>
+                </Label.IsVisible>
+            </Label>
+            <DatePicker Grid.Column="1" Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White" HorizontalOptions="End"/>
+            <Frame  Grid.Column="2" BackgroundColor="Transparent" HorizontalOptions="End" >
+                <Frame.IsVisible>
+                    <OnPlatform x:TypeArguments="system:Boolean" Default="True">
+                        <On Platform="UWP" Value="False"/>
+                    </OnPlatform>
+                </Frame.IsVisible>
+                <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center"/>
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DateUpCommand}" />
                 </Frame.GestureRecognizers>
             </Frame>
-            <Frame BackgroundColor="Transparent" >
-                <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Frame  Grid.Column="3" BackgroundColor="Transparent"  HorizontalOptions="End" >
+                <Frame.IsVisible>
+                    <OnPlatform x:TypeArguments="system:Boolean" Default="True">
+                        <On Platform="UWP" Value="False"/>
+                    </OnPlatform>
+                </Frame.IsVisible>
+                <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="End" VerticalOptions="Center"/>
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DateDownCommand}" />
                 </Frame.GestureRecognizers>
             </Frame>
-        </StackLayout>
+        </Grid>
     </NavigationPage.TitleView>
+    
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text=" + "  Command="{Binding DateUpCommand}"  /> 
+            <ToolbarItem   Text=" - "  Command="{Binding DateDownCommand}" />
+    </ContentPage.ToolbarItems>
 
     <ContentPage.BindingContext>
         <vm:StateViewModel />

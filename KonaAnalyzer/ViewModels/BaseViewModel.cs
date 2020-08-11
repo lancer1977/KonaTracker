@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Setup;
 using Xamarin.Forms;
 using ReactiveUI.Fody.Helpers;
 

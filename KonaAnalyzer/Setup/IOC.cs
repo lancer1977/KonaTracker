@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Autofac;
 using Autofac.Core;
 
-namespace KonaAnalyzer
+namespace KonaAnalyzer.Setup
 {
     public class IOC
     {
@@ -48,4 +48,4 @@ namespace KonaAnalyzer
         }
     }
 }
-
+ 

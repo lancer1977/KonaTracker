@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using CsvHelper;
+using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
 using Newtonsoft.Json;
 

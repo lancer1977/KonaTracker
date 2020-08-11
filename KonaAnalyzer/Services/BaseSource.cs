@@ -1,15 +1,15 @@
-﻿using System.Threading.Tasks;
-using KonaAnalyzer.Services;
-
-using System.ComponentModel;
-using DynamicData.Annotations;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using KonaAnalyzer.Interfaces;
+using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
-namespace KonaAnalyzer.Data
+namespace KonaAnalyzer.Services
 {
-    public abstract class BaseSource : IDataSource, INotifyPropertyChanged
+    public abstract class BaseSource : ReactiveObject, IDataSource, INotifyPropertyChanged
     {
-        private LoadedState _loadState;
+
 
         public async Task Reload()
         {
@@ -26,24 +26,25 @@ namespace KonaAnalyzer.Data
 
         }
         protected abstract Task UpdateItems();
-
-        public LoadedState LoadState
-        {
-            get
-            {
-                return _loadState;
-            }
-            set
-            {
-                if (_loadState == value) return;
-                _loadState = value;
-                OnPropertyChanged();
-            }
-        }
+        [Reactive] public LoadedState LoadState { get; set; }
+        //public LoadedState LoadState
+        //{
+        //    get
+        //    {
+        //        return _loadState;
+        //    }
+        //    set
+        //    {
+        //        if (_loadState == value) return;
+        //        _loadState = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
+        //private LoadedState _loadState;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        [NotifyPropertyChangedInvocator]
+        [DynamicData.Annotations.NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
 

@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using KonaAnalyzer.Services;
-
-namespace KonaAnalyzer.Data
+﻿namespace KonaAnalyzer.Interfaces
 {
     public interface IPopulationSource : IDataSource
     {

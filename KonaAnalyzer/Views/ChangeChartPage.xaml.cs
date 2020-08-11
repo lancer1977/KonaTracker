@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using KonaAnalyzer.Setup;
 using KonaAnalyzer.ViewModels;
 using ReactiveUI;
 using Xamarin.Forms;

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq; 
+using System.Linq;
 using System.Threading.Tasks;
+using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Models;
 using Microsoft.AppCenter.Crashes;
 
-namespace KonaAnalyzer.Data
+namespace KonaAnalyzer.Services
 {
     public class LocationSource : BaseSource, ILocationSource
     {

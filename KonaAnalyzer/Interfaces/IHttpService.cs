@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace KonaAnalyzer.Services
+namespace KonaAnalyzer.Interfaces
 {
     public interface IHttpService
     {

@@ -1,4 +1,5 @@
 ﻿
+using KonaAnalyzer.Setup;
 using KonaAnalyzer.ViewModels; 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

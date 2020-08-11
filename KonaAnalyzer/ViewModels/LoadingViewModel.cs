@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using KonaAnalyzer.Views;
 using System.Windows.Input;
+using KonaAnalyzer.Interfaces;
 
 namespace KonaAnalyzer.ViewModels
 {

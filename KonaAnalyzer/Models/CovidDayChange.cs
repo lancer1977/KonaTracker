@@ -1,4 +1,4 @@
-﻿namespace KonaAnalyzer.Data
+﻿namespace KonaAnalyzer.Models
 {
     public class CovidDayChange
     {

@@ -20,10 +20,7 @@ namespace KonaAnalyzer.Views
         {
             InitializeComponent();
 
-            MasterBehavior = MasterBehavior.Popover;
-
-
-            //  Detail = new NavigationPage(new LoadingPage());
+            MasterBehavior = MasterBehavior.Popover; 
 
         }
 

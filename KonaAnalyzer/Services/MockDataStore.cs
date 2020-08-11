@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Models;
 
 namespace KonaAnalyzer.Services

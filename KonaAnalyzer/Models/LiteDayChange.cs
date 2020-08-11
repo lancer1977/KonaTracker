@@ -1,6 +1,7 @@
 ﻿using System;
+using KonaAnalyzer.Data;
 
-namespace KonaAnalyzer.Data
+namespace KonaAnalyzer.Models
 {
     public class LiteDayChange : IChange
     {

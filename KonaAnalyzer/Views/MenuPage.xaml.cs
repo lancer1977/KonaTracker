@@ -4,9 +4,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using DynamicData;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
+using KonaAnalyzer.Setup;
 using ReactiveUI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -34,18 +37,25 @@ namespace KonaAnalyzer.Views
             new HomeMenuItem() {Title = "------------------"},
 
             });
-            Source.PropertyChanged += (sender, args) =>
+            Source.WhenAnyValue(x => x.LoadState).Where(x => x == LoadedState.Loaded).ObserveOn(RxApp.MainThreadScheduler).Subscribe(state =>
             {
-                if (args.PropertyName == "LoadState" && Source.LoadState == LoadedState.Loaded)
-                {
-                    menuItems.Add(new HomeMenuItem() { Title = "Overview" });
-                    menuItems.Add(new HomeMenuItem() { Title = "Change Charts" });
-                    menuItems.Add(new HomeMenuItem() { Title = "All" });
-                    menuItems.AddRange(Source.States.Select(x => new HomeMenuItem() { Title = x }));
-                }
+                menuItems.Add(new HomeMenuItem() { Title = "Overview" });
+                menuItems.Add(new HomeMenuItem() { Title = "Change Charts" });
+                menuItems.Add(new HomeMenuItem() { Title = "All" });
+                menuItems.AddRange(Source.States.Select(x => new HomeMenuItem() { Title = x }));
+            });
+            //Source.PropertyChanged += (sender, args) =>
+            //{
+            //    if (args.PropertyName == "LoadState" && Source.LoadState == LoadedState.Loaded)
+            //    {
+            //        menuItems.Add(new HomeMenuItem() { Title = "Overview" });
+            //        menuItems.Add(new HomeMenuItem() { Title = "Change Charts" });
+            //        menuItems.Add(new HomeMenuItem() { Title = "All" });
+            //        menuItems.AddRange(Source.States.Select(x => new HomeMenuItem() { Title = x }));
+            //    }
 
 
-            };
+            //};
             ListViewMenu.ItemsSource = menuItems;
 
             ListViewMenu.SelectedItem = menuItems[0];

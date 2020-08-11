@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using SQLite;
+using KonaAnalyzer.Data;
 
-namespace KonaAnalyzer.Data
+namespace KonaAnalyzer.Models
 {
     [DataContract]
     public class DayChange: IChange

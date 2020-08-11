@@ -4,6 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Models;
+using KonaAnalyzer.Services;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
@@ -33,6 +36,8 @@ namespace KonaAnalyzer.SqlData
             }
         }
 
+ 
+
         public TableQuery<DayChange> Table => Connection.Table<DayChange>();
 
 
@@ -55,8 +60,8 @@ namespace KonaAnalyzer.SqlData
             if (lastDay.Date != RealYesterday)
             {
                 var items = await DataExtensions.GetListFromUrlAsync<DayChange>(Configs.ChangesAddress);
-                var newItems = items.Where(x => x.date > lastDay);
-                _connection.InsertAll(newItems);
+                var newItems = items.Where(x => x.date > lastDay).ToList();
+                Connection.InsertAll(newItems);
             }
 
 
@@ -81,8 +86,8 @@ namespace KonaAnalyzer.SqlData
 
         public IEnumerable<IChange> CountyChanges(string state, string county, DateTime startDay, DateTime endDay)
         {
-            var stateAll = string.IsNullOrEmpty(state);
-            var countyAll = string.IsNullOrEmpty(county);
+            var stateAll = state == "All";
+            var countyAll = county == "All";
             var subset = Table.Where(x => startDay <= x.date && x.date <= endDay);
 
 
@@ -121,8 +126,7 @@ namespace KonaAnalyzer.SqlData
         public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Matching(state, county, date)
-                .Select(x => x.deaths).Sum();
+            var items = Matching(state, county, date).Select(x => x.deaths).Sum();
             return items;
         }
 
@@ -131,15 +135,9 @@ namespace KonaAnalyzer.SqlData
             var stateAll = state == "All";
             var countyAll = county == "All";
             var datevalue = date ?? Yesterday;
-            var subset = Table.Where(x => x.date == datevalue).ToList();
+            var subset = Table.Where(x => x.date == datevalue);
 
-
-
-            if (stateAll && countyAll)
-            {
-                return subset;
-            }
-            else if (stateAll)
+            if (stateAll)
             {
                 return subset;
             }
@@ -149,25 +147,13 @@ namespace KonaAnalyzer.SqlData
             }
             else
             {
-                var location = _locationService.GetLocation(state, county);
+                //var location = _locationService.GetLocation(state, county);
                 return subset.Where(x => x.state == state && x.county == county);
             }
         }
 
-
-
-        public double ChangeRateByCounty(string state, string county)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public double ChangeRateByState(string state)
-        {
-            throw new System.NotImplementedException();
-        }
-
-
-        public IEnumerable<DayChange> DayChanges => Table;
+         
+         
         public IEnumerable<IChange> Changes => Table.ToList();
 
         public List<string> States { get; set; }

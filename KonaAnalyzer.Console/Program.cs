@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using Autofac;
-using Covid.WPF;
+using KonaAnalyzer.Console.Setup;
 using PolyhydraGames.SQLite;
 using PolyhydraGames.SQLite.Interfaces;
 

@@ -6,100 +6,102 @@
     xmlns:xForms="clr-namespace:Syncfusion.SfChart.XForms;assembly=Syncfusion.SfChart.XForms"
     Title="Covid Charts"
     xmlns:viewModels="clr-namespace:KonaAnalyzer.ViewModels;assembly=KonaAnalyzer">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding ToggleControls}" Text="Toggle Controls" ></ToolbarItem>
+    </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label" >
+                <Setter Property="FontSize" Value="Small" />
+                <Setter Property="VerticalTextAlignment" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ScrollView>
+        <StackLayout>
+ 
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,*,*,*" IsVisible="{Binding ShowControls}">
 
-    <StackLayout>
-        <Label Text="Type" />
-        <Picker ItemsSource="{Binding DataTypes}" SelectedItem="{Binding DataType}"/>
-        <Label Text=" State" />
-        <Picker ItemsSource="{Binding States}" SelectedItem="{Binding State}"/>
-        <Label Text=" County" />
-        <Picker ItemsSource="{Binding Counties}" SelectedItem="{Binding County}"/>
+            <Label Grid.Row="0" Grid.Column="0"  Text=" State"/>
+            <Picker  Grid.Row="0" Grid.Column="1"  ItemsSource="{Binding States}" SelectedItem="{Binding State}"/>
+            <Label Grid.Row="0" Grid.Column="2"  Text=" County" />
+            <Picker  Grid.Row="0" Grid.Column="3"  ItemsSource="{Binding Counties}" SelectedItem="{Binding County}"/>
 
-        <Label Text="Start Date" />
-        <DatePicker Date="{Binding StartDate}" MinimumDate="{Binding EarliestDate}" MaximumDate="{Binding LatestDate}" />
-        <Label Text="End Date" />
-        <DatePicker Date="{Binding EndDate}" MinimumDate="{Binding EarliestDate}" MaximumDate="{Binding LatestDate}" />
-        
+            <Label  Grid.Row="1" Grid.Column="0"  Text="Start Date" />
+            <DatePicker  Grid.Row="1" Grid.Column="1" Date="{Binding StartDate}" MinimumDate="{Binding EarliestDate}" MaximumDate="{Binding LatestDate}" />
+            <Label  Grid.Row="1" Grid.Column="2" Text="End Date" />
+            <DatePicker  Grid.Row="1" Grid.Column="3" Date="{Binding EndDate}" MinimumDate="{Binding EarliestDate}" MaximumDate="{Binding LatestDate}" />
+            <Label  Grid.Row="2" Grid.Column="0" Text="Markers"  />
+                <Switch  Grid.Row="2" Grid.Column="1" IsToggled="{Binding ShowMarkers}"  HorizontalOptions="End"/>
+            <Label  Grid.Row="2" Grid.Column="2" Text="Labels"  />
+            <Switch  Grid.Row="2" Grid.Column="3" IsToggled="{Binding ShowLabels}" HorizontalOptions="EndAndExpand" BackgroundColor="DodgerBlue"/>
 
-<!--<ListView ItemsSource="{Binding Items}" HasUnevenRows="True" HeightRequest="200" IsVisible="False">
-    <ListView.ItemTemplate>
-        <DataTemplate>
-            <ViewCell>
-                <StackLayout BackgroundColor="#eee"
-                             Orientation="Vertical">
-                    <StackLayout Orientation="Vertical">
-                  
-                        <Label Text="{Binding date}"
-                               TextColor="#f35e20" />
-                                <Label Text="{Binding cases}"
-                               HorizontalOptions="EndAndExpand"
-                               TextColor="#503026" />
-                        <Label Text="{Binding deaths}"
-                               HorizontalOptions="EndAndExpand"
-                               TextColor="#503026" />
-                            </StackLayout>
-                </StackLayout>
-            </ViewCell>
-        </DataTemplate>
-    </ListView.ItemTemplate>
-</ListView>-->
-        <xForms:SfChart
-                 x:Name="Chart" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <chart:SfChart.Margin>
-                <OnPlatform x:TypeArguments="Thickness" WinPhone="0,0,15,0" />
-            </chart:SfChart.Margin>
-            <chart:SfChart.Title>
-                <xForms:ChartTitle Text="{Binding DataType} " />
-            </chart:SfChart.Title>
 
-            <chart:SfChart.PrimaryAxis>
-                <xForms:DateTimeAxis PlotOffset="6"
-                          LabelRotationAngle="-45"
+
+            <Label Grid.Row="3" Grid.Column="0" Text="Type"  />
+            <Picker  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding DataTypes}" SelectedItem="{Binding DataType}"/>
+            <BoxView Grid.Row="4" Grid.ColumnSpan="4" HeightRequest="2" Color="DodgerBlue" ></BoxView>
+        </Grid>
+        <xForms:SfChart  
+                             x:Name="Chart" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <chart:SfChart.Margin>
+                    <OnPlatform x:TypeArguments="Thickness" WinPhone="0,0,15,0" />
+                </chart:SfChart.Margin>
+                <chart:SfChart.Title>
+                    <xForms:ChartTitle Text="{Binding DataType} " />
+                </chart:SfChart.Title>
+
+                <chart:SfChart.PrimaryAxis>
+                    <xForms:DateTimeAxis PlotOffset="6"
+                          LabelRotationAngle="-75"
                           ShowMajorGridLines = "false" ShowMinorGridLines ="false">
-                    <xForms:DateTimeAxis.LabelStyle>
-                        <xForms:ChartAxisLabelStyle LabelFormat="MMM dd" />
-                    </xForms:DateTimeAxis.LabelStyle>
-                </xForms:DateTimeAxis>
-            </chart:SfChart.PrimaryAxis>
-            <chart:SfChart.SecondaryAxis>
-                <xForms:NumericalAxis Maximum="{Binding Maximum}" Interval="{Binding Interval}" >
-                    <chart:NumericalAxis.AxisLineStyle>
-                        <chart:ChartLineStyle StrokeWidth="0">
-                        </chart:ChartLineStyle>
-                    </chart:NumericalAxis.AxisLineStyle>
-                    <chart:NumericalAxis.MajorTickStyle>
-                        <chart:ChartAxisTickStyle TickSize="0" />
-                    </chart:NumericalAxis.MajorTickStyle>
-                    <chart:NumericalAxis.LabelStyle>
-                        <chart:ChartAxisLabelStyle x:Name="secondaryAxisLabelStyle" />
-                    </chart:NumericalAxis.LabelStyle>
-                </xForms:NumericalAxis>
-            </chart:SfChart.SecondaryAxis>
-            <!--  LabelFormat="#.#'%'" -->
-            <chart:SfChart.Series>
-                <chart:SplineAreaSeries x:Name="Series"  ItemsSource="{Binding Items}" XBindingPath="Date" YBindingPath="Change" StrokeColor="#FF0080DF" StrokeWidth="2">
-                    <chart:SplineAreaSeries.DataMarker>
-                        <chart:ChartDataMarker MarkerWidth="8" MarkerHeight="8" MarkerColor="White" MarkerBorderColor="#FF0080DF" MarkerBorderWidth="2" ShowMarker="true" ShowLabel="true" >
-                            <chart:ChartDataMarker.LabelStyle>
-                                <chart:DataMarkerLabelStyle OffsetY="-10" BackgroundColor="#FF0080DF"/>
-                            </chart:ChartDataMarker.LabelStyle>
-                        </chart:ChartDataMarker>
-                    </chart:SplineAreaSeries.DataMarker>
-                    <chart:SplineAreaSeries.ColorModel>
-                        <chart:ChartColorModel Palette="Custom">
-                            <chart:ChartColorModel.CustomGradientColors>
-                                <chart:ChartGradientColor StartPoint="0.5,1" EndPoint="0.5,0">
-                                    <chart:ChartGradientColor.GradientStops>
-                                        <chart:ChartGradientStop Color="White" Offset= "0"/>
-                                        <chart:ChartGradientStop Color="#FF0080DF" Offset= "1"/>
-                                    </chart:ChartGradientColor.GradientStops>
-                                </chart:ChartGradientColor>
-                            </chart:ChartColorModel.CustomGradientColors>
-                        </chart:ChartColorModel>
-                    </chart:SplineAreaSeries.ColorModel>
-                </chart:SplineAreaSeries>
-            </chart:SfChart.Series>
-        </xForms:SfChart>
-    </StackLayout>
+                        <xForms:DateTimeAxis.LabelStyle>
+                            <xForms:ChartAxisLabelStyle LabelFormat="MMM dd" />
+                        </xForms:DateTimeAxis.LabelStyle>
+                    </xForms:DateTimeAxis>
+                </chart:SfChart.PrimaryAxis>
+                <chart:SfChart.SecondaryAxis>
+                    <xForms:NumericalAxis Maximum="{Binding Maximum}" Interval="{Binding Interval}" >
+                        <chart:NumericalAxis.AxisLineStyle>
+                            <chart:ChartLineStyle StrokeWidth="0">
+                            </chart:ChartLineStyle>
+                        </chart:NumericalAxis.AxisLineStyle>
+                        <chart:NumericalAxis.MajorTickStyle>
+                            <chart:ChartAxisTickStyle TickSize="0" />
+                        </chart:NumericalAxis.MajorTickStyle>
+                        <chart:NumericalAxis.LabelStyle>
+                            <chart:ChartAxisLabelStyle x:Name="secondaryAxisLabelStyle" />
+                        </chart:NumericalAxis.LabelStyle>
+                    </xForms:NumericalAxis>
+                </chart:SfChart.SecondaryAxis>
+                <!--  LabelFormat="#.#'%'" -->
+                <chart:SfChart.Series>
+                    <chart:SplineAreaSeries x:Name="Series"  ItemsSource="{Binding Items}" XBindingPath="Date" YBindingPath="Change" StrokeColor="#FF0080DF" StrokeWidth="1">
+                        <chart:SplineAreaSeries.DataMarker>
+                            <chart:ChartDataMarker MarkerWidth="8" MarkerHeight="8" MarkerColor="White" MarkerBorderColor="#FF0080DF" MarkerBorderWidth="2" ShowMarker="{Binding ShowMarkers}" ShowLabel="{Binding ShowLabels}" >
+                                <chart:ChartDataMarker.LabelStyle>
+                                    <chart:DataMarkerLabelStyle OffsetY="-10" BackgroundColor="#FF0080DF"/>
+                                </chart:ChartDataMarker.LabelStyle>
+                            </chart:ChartDataMarker>
+                        </chart:SplineAreaSeries.DataMarker>
+                        <chart:SplineAreaSeries.ColorModel>
+                            <chart:ChartColorModel Palette="Custom">
+                                <chart:ChartColorModel.CustomGradientColors>
+                                    <chart:ChartGradientColor StartPoint="0.5,1" EndPoint="0.5,0">
+                                        <chart:ChartGradientColor.GradientStops>
+                                            <chart:ChartGradientStop Color="White" Offset= "0"/>
+                                            <chart:ChartGradientStop Color="#FF0080DF" Offset= "1"/>
+                                        </chart:ChartGradientColor.GradientStops>
+                                    </chart:ChartGradientColor>
+                                </chart:ChartColorModel.CustomGradientColors>
+                            </chart:ChartColorModel>
+                        </chart:SplineAreaSeries.ColorModel>
+                    </chart:SplineAreaSeries>
+                </chart:SfChart.Series>
+            </xForms:SfChart>
+        </StackLayout>
+
+    </ScrollView>
+
 
 </ContentPage>

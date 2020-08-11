@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Models;
 using ReactiveUI.Fody.Helpers;
 
 namespace KonaAnalyzer.ViewModels

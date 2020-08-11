@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using KonaAnalyzer.Models;
 
-namespace KonaAnalyzer.Data
+namespace KonaAnalyzer.Interfaces
 {
     public interface ILocationSource
     {

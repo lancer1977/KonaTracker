@@ -16,6 +16,23 @@ namespace KonaAnalyzer.Views
         public StatePage()
         {
             InitializeComponent();
+            if (Device.RuntimePlatform == Device.UWP)
+            {
+                ToolbarItems.Add(new ToolbarItem()
+                {
+                    Text = " + ",
+                    Command = ViewModel.DateUpCommand
+                });
+
+                ToolbarItems.Add(new ToolbarItem()
+                {
+                    Text = " - ",
+                    Command = ViewModel.DateDownCommand
+                });
+                //< ToolbarItem Text = " + "  Command = "{Binding DateUpCommand}" />
+   
+                  //  < ToolbarItem   Text = " - "  Command = "{Binding DateDownCommand}" />
+            }
         }
 
         void ListView_ItemSelected(System.Object sender, Xamarin.Forms.SelectedItemChangedEventArgs e)
