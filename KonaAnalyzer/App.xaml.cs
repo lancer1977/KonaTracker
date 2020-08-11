@@ -4,9 +4,12 @@ using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
 using Xamarin.Forms;
 using KonaAnalyzer.Views;
+#if !DEBUG
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.AppCenter.Distribute;
+
+#endif
 
 namespace KonaAnalyzer
 {
