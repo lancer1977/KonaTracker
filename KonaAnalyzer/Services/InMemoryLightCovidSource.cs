@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using KonaAnalyzer.Annotations;
 using Microsoft.AppCenter.Crashes;
 
 namespace KonaAnalyzer.Data
@@ -16,9 +13,8 @@ namespace KonaAnalyzer.Data
         {
             _locationService = locationService;
 
-        } 
-        private bool _loaded;
-        private ILocationSource _locationService;
+        }
+        private readonly ILocationSource _locationService;
 
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
@@ -27,15 +23,15 @@ namespace KonaAnalyzer.Data
         DateTime _earliestDate;
         public DateTime Latest => _lastDate.Date;
         public DateTime Earliest => _earliestDate.Date;
-         
-  
+
+
         private Location NoLocation = new Location() { };
-        private void AddFromNoLocation(IEnumerable<DayChange> changes )
+        private void AddFromNoLocation(IEnumerable<DayChange> changes)
         {
             try
-            { 
-                var localItems = changes.Where(x => x != null && (string.IsNullOrEmpty(x.county) && string.IsNullOrEmpty(x.state)  ));
-                var converted = localItems.Select(x => ToDayChange(x, NoLocation)); 
+            {
+                var localItems = changes.Where(x => x != null && (string.IsNullOrEmpty(x.county) && string.IsNullOrEmpty(x.state)));
+                var converted = localItems.Select(x => ToDayChange(x, NoLocation));
                 _changes.AddRange(converted);
             }
             catch (Exception ex)
@@ -43,14 +39,14 @@ namespace KonaAnalyzer.Data
                 Debug.WriteLine(ex.Message);
             }
         }
-         
-            private void AddFromLocation(IEnumerable<DayChange> changes, Location location)
+
+        private void AddFromLocation(IEnumerable<DayChange> changes, Location location)
         {
             try
             {
                 if (location == null) throw new Exception("location was null");
                 var localItems = changes.Where(x => x != null && x.county == location.County && x.state == location.State);
-                var converted = localItems.Select(x => ToDayChange(x, location)); 
+                var converted = localItems.Select(x => ToDayChange(x, location));
                 _changes.AddRange(converted);
             }
             catch (Exception ex)
@@ -89,7 +85,7 @@ namespace KonaAnalyzer.Data
             return _changes.Where(x => x.Location.State == state).Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
         }
 
- 
+
 
         public List<string> Counties(string state)
         {
@@ -100,19 +96,19 @@ namespace KonaAnalyzer.Data
         public int Total(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, county, date).Select(x => x.cases).Sum();  
+            return Matching(state, county, date).Select(x => x.cases).Sum();
         }
 
 
         public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, county, date).Select(x => x.deaths).Sum(); 
+            return Matching(state, county, date).Select(x => x.deaths).Sum();
         }
 
         public IEnumerable<LiteDayChange> Matching(string state, string county, DateTime? date)
         {
-            var stateAll = state == "All"  ;
+            var stateAll = state == "All";
             var countyAll = county == "All";
             if (date == null) date = Yesterday;
             var subset = _changes.Where(x => x.date == date);
@@ -124,14 +120,14 @@ namespace KonaAnalyzer.Data
             {
                 return subset;
             }
-            else if ( countyAll)
+            else if (countyAll)
             {
-                return subset.Where(x=> x.Location.State == state);
+                return subset.Where(x => x.Location.State == state);
             }
             else
             {
                 var location = _locationService.GetLocation(state, county);
-                return subset.Where(x => x.Location == location) ; 
+                return subset.Where(x => x.Location == location);
             }
         }
 
@@ -151,10 +147,10 @@ namespace KonaAnalyzer.Data
         {
             return days.date.Date == Latest;
         }
-        private List<LiteDayChange> _changes= new List<LiteDayChange>();
+        private List<LiteDayChange> _changes = new List<LiteDayChange>();
         public IEnumerable<IChange> Changes => _changes;
         public List<string> States { get; set; }
-   
+
 
         protected override async Task UpdateItems()
         {
