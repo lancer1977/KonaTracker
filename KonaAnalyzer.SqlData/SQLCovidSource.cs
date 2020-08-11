@@ -154,7 +154,7 @@ namespace KonaAnalyzer.SqlData
 
          
          
-        public IEnumerable<IChange> Changes => Table.ToList();
+        public IEnumerable<IChange> Changes => Table;
 
         public List<string> States { get; set; }
 
