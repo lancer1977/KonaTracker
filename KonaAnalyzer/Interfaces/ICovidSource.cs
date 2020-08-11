@@ -16,6 +16,7 @@ namespace KonaAnalyzer.Data
         double ChangeRateByState(string state);
         //DateTime LastDate(string state);
         IEnumerable<IChange> CountyChanges(string state, string countyName, DateTime startDay, DateTime endDay);
+
         //DateTime EarliestDate(string first);
         DateTime Latest { get; }
         DateTime Earliest { get; }

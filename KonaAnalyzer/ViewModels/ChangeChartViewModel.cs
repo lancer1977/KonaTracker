@@ -98,6 +98,10 @@ namespace KonaAnalyzer.ViewModels
                     });
 
                 }
+                else
+                {
+
+                }
 
                 var sorted = change.OrderBy(x => x.date).ToList();
 

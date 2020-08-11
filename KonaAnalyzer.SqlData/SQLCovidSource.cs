@@ -10,7 +10,7 @@ using SQLite;
 namespace KonaAnalyzer.SqlData
 {
 
-    public class SQLCovidSource : BaseSource,  ICovidSource
+    public class SQLCovidSource : BaseSource, ICovidSource
     {
         private readonly ISQLiteFactory _factory;
         public SQLCovidSource(ILocationSource locationService, ISQLiteFactory factory)
@@ -79,9 +79,26 @@ namespace KonaAnalyzer.SqlData
         //    return DayChanges.Where(x => x.state == state).Select(x => x.date).Distinct().OrderBy(x => x).FirstOrDefault();
         //}
 
-        public IEnumerable<IChange> CountyChanges(string state, string countyName, DateTime startDay, DateTime endDay)
+        public IEnumerable<IChange> CountyChanges(string state, string county, DateTime startDay, DateTime endDay)
         {
-            return Table.Where(x => x.date > startDay && x.date <= endDay).Where(x => string.IsNullOrEmpty(state) || x.state == state).Where(x=>string.IsNullOrEmpty(countyName) || x.county == countyName);
+            var stateAll = string.IsNullOrEmpty(state);
+            var countyAll = string.IsNullOrEmpty(county);
+            var subset = Table.Where(x => startDay <= x.date && x.date <= endDay);
+
+
+            if (stateAll)
+            {
+                return subset;
+            }
+            else if (countyAll)
+            {
+                return subset.Where(x => x.state == state);
+            }
+            else
+            {
+                //var location = _locationService.GetLocation(state, county);
+                return subset.Where(x => x.state == state && x.county == county);
+            }
         }
 
 

@@ -105,6 +105,12 @@
     <PackageReference Include="CsvHelper">
       <Version>15.0.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter">
+      <Version>3.4.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AppCenter.Crashes">
+      <Version>3.4.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.12" />
     <PackageReference Include="PolyhydraGames.Core.SQLite">
       <Version>2.0.0.17</Version>
@@ -127,6 +133,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -183,6 +190,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.SqlData.csproj">
+      <Project>{E12FE939-3037-4C4F-B114-C150DC5DDF1D}</Project>
+      <Name>KonaAnalyzer.SqlData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
       <Project>{6b63021f-82a7-41c2-aaa4-68798b04db0a}</Project>
       <Name>KonaAnalyzer</Name>
