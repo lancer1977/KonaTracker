@@ -35,7 +35,7 @@ namespace KonaAnalyzer.ViewModels
             States.Insert(0, string.Empty);
             LastestDate = covidSource.Latest;
             EarliestDate = covidSource.Earliest;
-            StartDate = new DateTime(2020, 6, 1);
+            StartDate = DateTime.Today- TimeSpan.FromDays(30);
             EndDate = LastestDate;
             this.WhenAnyValue(x => x.State).Subscribe(async x =>
             {
@@ -77,7 +77,7 @@ namespace KonaAnalyzer.ViewModels
             if (IsUpdating ||
                 //string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county) ||
                 startDay == default ||
-                endDay == default || startDay == endDay) return;
+                endDay == default ||  startDay >= endDay) return;
             IsUpdating = true;
             try
             {

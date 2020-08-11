@@ -4,8 +4,10 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
-using Syncfusion.SfChart.XForms.UWP;
 
+#if __WASM__ == false
+using Syncfusion.SfChart.XForms.UWP;
+#endif
 namespace KonaAnalyzer.UWP
 {
     /// <summary>
@@ -50,6 +52,7 @@ namespace KonaAnalyzer.UWP
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 #if __WASM__ == false
                 Xamarin.Forms.Forms.Init(e);
+
                 #endif
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

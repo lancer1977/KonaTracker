@@ -107,7 +107,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.12" />
     <PackageReference Include="PolyhydraGames.Core.SQLite">
-      <Version>2.0.0.15</Version>
+      <Version>2.0.0.17</Version>
     </PackageReference>
     <PackageReference Include="PolyhydraGames.Extensions">
       <Version>2.1.0.5</Version>

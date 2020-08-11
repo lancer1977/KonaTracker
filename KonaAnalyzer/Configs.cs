@@ -11,6 +11,6 @@ namespace KonaAnalyzer
         //  string url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
         public static string url = "https://raw.githubusercontent.com/lancer1977/DataSeeds/master/covid/us-counties.csv";
 
-        public static string SyncfusionKey = "__syncfusionKey__";
+        public static string SyncfusionKey = "MzAxNzg0QDMxMzgyZTMyMmUzMGxqWURDSGJWTUxuWVVDcU5RcHBRWFJYWUFISTRaUERCR2o1VmJWZkZqblE9";
     }
 }
