@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models; 
+using KonaAnalyzer.Models;
 using PolyhydraGames.Extensions;
 
 namespace KonaAnalyzer.Services
@@ -136,15 +136,7 @@ namespace KonaAnalyzer.Services
 
 
 
-        public double ChangeRateByCounty(string state, string county)
-        {
-            throw new System.NotImplementedException();
-        }
 
-        public double ChangeRateByState(string state)
-        {
-            throw new System.NotImplementedException();
-        }
 
         private bool MostRecentDay(DayChange days)
         {
@@ -171,7 +163,7 @@ namespace KonaAnalyzer.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message); 
+                Debug.WriteLine(ex.Message);
             }
 
             _changes.RemoveAll(x => x == null);
