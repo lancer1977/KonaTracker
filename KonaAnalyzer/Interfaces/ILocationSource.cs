@@ -4,7 +4,7 @@ using KonaAnalyzer.Models;
 
 namespace KonaAnalyzer.Interfaces
 {
-    public interface ILocationSource
+    public interface ILocationSource : IDataSource
     {
         IEnumerable<Location> Locations { get; }
         int GetId(string state, string county);

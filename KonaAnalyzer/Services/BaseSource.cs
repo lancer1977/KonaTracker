@@ -17,6 +17,7 @@ namespace KonaAnalyzer.Services
             await LoadAsync();
         }
 
+   
         public async Task LoadAsync()
         {
             if (LoadState != LoadedState.Unloaded) return;
@@ -27,28 +28,7 @@ namespace KonaAnalyzer.Services
         }
         protected abstract Task UpdateItems();
         [Reactive] public LoadedState LoadState { get; set; }
-        //public LoadedState LoadState
-        //{
-        //    get
-        //    {
-        //        return _loadState;
-        //    }
-        //    set
-        //    {
-        //        if (_loadState == value) return;
-        //        _loadState = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-        //private LoadedState _loadState;
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
-        [DynamicData.Annotations.NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

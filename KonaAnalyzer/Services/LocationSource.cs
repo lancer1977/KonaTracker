@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models; 
+using KonaAnalyzer.Models;
 
 namespace KonaAnalyzer.Services
 {
@@ -47,7 +48,7 @@ namespace KonaAnalyzer.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message); 
+                Debug.WriteLine(ex.Message);
             }
         }
     }

@@ -18,6 +18,9 @@
             </Label>
 
             <ActivityIndicator Margin="0,40,0,0" IsRunning="{Binding IsBusy}"  IsVisible="{Binding IsBusy}" Color="Red" />
+
+            <Button Text="Reload All" Command="{Binding Refresh}" Margin="0,100,0,0" HorizontalOptions="Center"/>
+            <Label  Text="{Binding TimerText}"/> 
 </StackLayout>
     </ContentPage.Content>
 

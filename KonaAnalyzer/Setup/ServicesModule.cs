@@ -30,7 +30,7 @@ namespace KonaAnalyzer.Setup
     {
         protected override void Load(ContainerBuilder builder)
         { 
-            builder.RegisterType<InMemoryLiteCovidSource>().AsImplementedInterfaces().AsSelf().SingleInstance();
+            builder.RegisterType<InMemoryCovidSource>().AsImplementedInterfaces().AsSelf().SingleInstance();
         }
     }
 }

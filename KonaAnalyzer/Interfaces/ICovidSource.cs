@@ -7,8 +7,6 @@ namespace KonaAnalyzer.Interfaces
 {
     public interface ICovidSource : INotifyPropertyChanged, IDataSource
     { 
-        List<string> States { get; }
-        List<string> Counties(string state);
         int Total(string state, string county, DateTime? date);
         int Deaths(string state, string county, DateTime? date);
         //DateTime LastDate(string state);

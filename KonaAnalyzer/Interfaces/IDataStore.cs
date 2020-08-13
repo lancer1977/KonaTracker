@@ -12,13 +12,6 @@ namespace KonaAnalyzer.Interfaces
         Task<IEnumerable<T>> GetItemsAsync(bool forceRefresh = false);
     }
 
-    public interface IDataSource
-    {
-        LoadedState LoadState { get; }
-        Task LoadAsync();
-        Task Reload();
-    }
-
     public enum LoadedState
     {
         Unloaded,

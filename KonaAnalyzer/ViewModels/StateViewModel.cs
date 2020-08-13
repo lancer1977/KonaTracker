@@ -272,9 +272,9 @@ namespace KonaAnalyzer.ViewModels
         }
         private void PopulateCounties(string state)
         {
-            var counties = DataStore.Counties(state);
+            var counties = LocationStore.Counties(state);
             //counties.Insert(0, "All");
-            Counties = counties;
+            Counties = counties.ToList();
         }
 
         private async void PopulateCountyViewModels()
@@ -294,7 +294,7 @@ namespace KonaAnalyzer.ViewModels
 
         private void PopulateStates()
         {
-            var counties = DataStore.States;
+            var counties = LocationStore.States().ToList();
             Counties = counties;
         }
 

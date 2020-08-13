@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
 using Autofac;
-using KonaAnalyzer.Setup;
-using KonaAnalyzer.SqlData;
+using KonaAnalyzer.Setup; 
 using PolyhydraGames.SQLite;
 using PolyhydraGames.SQLite.Interfaces;
 
@@ -25,7 +24,7 @@ namespace KonaAnalyzer.iOS.Setup
 
         public static void Initialize()
         {
-            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule), typeof(Bootstrapper), typeof(SQlCovidModule) });
+            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule), typeof(Bootstrapper), typeof(InMemoryCovidModule) });
         }
     }
 }

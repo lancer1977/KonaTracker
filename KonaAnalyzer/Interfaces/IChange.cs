@@ -7,5 +7,7 @@ namespace KonaAnalyzer.Data
         DateTime date { get; }
         int cases { get; }
         int deaths { get; }
+        string state { get; }
+        string county { get;  }
     }
 }

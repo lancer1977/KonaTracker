@@ -42,7 +42,7 @@ namespace KonaAnalyzer.Views
                 menuItems.Add(new HomeMenuItem() { Title = "Overview" });
                 menuItems.Add(new HomeMenuItem() { Title = "Change Charts" });
                 menuItems.Add(new HomeMenuItem() { Title = "All" });
-                menuItems.AddRange(Source.States.Select(x => new HomeMenuItem() { Title = x }));
+                menuItems.AddRange(IOC.Get<ILocationSource>().States().Select(x => new HomeMenuItem() { Title = x }));
             });
             //Source.PropertyChanged += (sender, args) =>
             //{

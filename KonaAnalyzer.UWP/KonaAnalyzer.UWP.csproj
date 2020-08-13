@@ -115,6 +115,9 @@
     <PackageReference Include="ReactiveUI">
       <Version>11.5.17</Version>
     </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.7.335</Version>
+    </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfChart">
       <Version>18.2.0.44</Version>
     </PackageReference>

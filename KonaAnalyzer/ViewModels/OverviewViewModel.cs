@@ -15,7 +15,7 @@ namespace KonaAnalyzer.ViewModels
             Title = "Overview";
             var items = new List<DayChange>();
 
-            foreach (var item in DataStore.States)
+            foreach (var item in LocationStore.States())
             {
                 var lastDay = DataStore.Latest;
                 items.Add(new DayChange()

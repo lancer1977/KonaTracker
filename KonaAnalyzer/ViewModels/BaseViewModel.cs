@@ -7,13 +7,21 @@ using ReactiveUI.Fody.Helpers;
 
 namespace KonaAnalyzer.ViewModels
 {
-    public class BaseViewModel : ReactiveUI.ReactiveObject
+    public abstract class BaseViewModel : ReactiveUI.ReactiveObject
     {
-        public ICovidSource DataStore => IOC.Get<ICovidSource>();
-        public IPopulationSource PopulationDataStore => IOC.Get<IPopulationSource>();// InMemoryPopulationSource.Instance;
-        [Reactive] public bool IsBusy { get; set; }
-        [Reactive] public string Title { get; set; }
+        public   BaseViewModel()
+        {
+            DataStore = IOC.Get<ICovidSource>();
+            LocationStore = IOC.Get<ILocationSource>();
+            PopulationDataStore = IOC.Get<IPopulationSource>();
+        }
+
+    public ICovidSource DataStore { get; }
+    public ILocationSource LocationStore { get; }
+    public IPopulationSource PopulationDataStore { get; }
+    [Reactive] public bool IsBusy { get; set; }
+    [Reactive] public string Title { get; set; }
 
 
-    }
+}
 }
