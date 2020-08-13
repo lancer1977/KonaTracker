@@ -5,8 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
-using Microsoft.AppCenter.Crashes;
+using KonaAnalyzer.Models; 
 
 namespace KonaAnalyzer.Services
 {
@@ -40,8 +39,7 @@ namespace KonaAnalyzer.Services
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message);
-                Crashes.TrackError(ex);
+                Debug.WriteLine(ex.Message); 
             }
         }
     }

@@ -6,7 +6,6 @@ using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Models;
 using KonaAnalyzer.Services;
-using Microsoft.AppCenter.Crashes;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
@@ -43,7 +42,6 @@ namespace KonaAnalyzer.SqlData
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                Crashes.TrackError(ex);
             }
         }
 
