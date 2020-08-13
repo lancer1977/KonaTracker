@@ -1,21 +1,21 @@
-﻿using System.Reactive;
-using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using ReactiveUI;
-using Xamarin.Forms;
+﻿
+
 using System;
 using System.Diagnostics;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
-using KonaAnalyzer.Views;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using KonaAnalyzer.Interfaces;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace KonaAnalyzer.ViewModels
 {
     public class LoadingViewModel : BaseViewModel
     {
+        private static bool _runOnce;
         public LoadingViewModel(ICovidSource covidSource, IPopulationSource populationSource, ILocationSource locationSource)
         {
             Title = "Loading ...";
@@ -30,12 +30,15 @@ namespace KonaAnalyzer.ViewModels
             _locationSource = locationSource;
             _populationSource = populationSource;
             _covidSource = covidSource;
-            Refresh = ReactiveCommand.CreateFromTask(async x =>
-            {
-                await _locationSource.Reload();
-                await _covidSource.Reload();
-                await _populationSource.Reload();
-            }, this.WhenAnyValue(x => x.IsBusy, x => !x));
+            this.WhenAnyValue(x => x.IsBusy).Select(x => !x).ToPropertyEx(this, x => x.ShowRefresh);
+            var refresh = ReactiveCommand.CreateFromTask(async x =>
+             {
+                 await _locationSource.Reload();
+                 await _covidSource.Reload();
+                 await _populationSource.Reload();
+             });
+            refresh.InvokeCommand(LoadCommand);
+            Refresh = refresh;
         }
 
 
@@ -46,10 +49,13 @@ namespace KonaAnalyzer.ViewModels
 
         public void OnAppearing()
         {
-            LoadCommand.Execute().Subscribe();
+            if (_runOnce == false)
+                LoadCommand.Execute().Subscribe();
         }
         Stopwatch _stopwatch = new Stopwatch();
+        public string Version => Configs.Version;
         [Reactive] public string TimerText { get; set; }
+        public bool ShowRefresh { [ObservableAsProperty] get; }
         public ReactiveCommand<Unit, Unit> LoadCommand;
         public ICommand Refresh { get; }
         private readonly ILocationSource _locationSource;
@@ -59,28 +65,40 @@ namespace KonaAnalyzer.ViewModels
         private async Task LoadAsync()
         {
             Title = "Loading ...";
+            _runOnce = true;
             var cts = new CancellationTokenSource();
 
+
+            var token = cts.Token;
+            StartWatch(token);
+            await Task.Run(async () =>
+             {
+                 await _locationSource.LoadAsync();
+                 await _covidSource.LoadAsync();
+                 await _populationSource.LoadAsync();
+                 Title = "Loading ... Done";  
+             }, cts.Token);
+            cts.Cancel();
+        }
+
+        private async void StartWatch(CancellationToken token)
+        {
             var watch = Stopwatch.StartNew();
-            Task.Run(() =>
+            await Task.Run(() =>
             {
-                while (true)
+                while (token.IsCancellationRequested == false)
                 {
                     TimerText = watch.Elapsed.ToString();
                     Thread.Sleep(200);
+                    if (token.IsCancellationRequested)
+                    {
+                        Debug.WriteLine("cancelled");
+                    }
                 }
-            }, cts.Token);
-            watch.Start();
-            await Task.Run(async () =>
-            {
-                await _locationSource.LoadAsync();
-                await _covidSource.LoadAsync();
-                await _populationSource.LoadAsync();
-            });
+                //
+            }, token);
+            Debug.WriteLine("leaving");
             watch.Stop();
-            cts.Cancel();
-            //await (Application.Current.MainPage as MainPage).NavigateFromMenu("All");
-            Title = "Loading ... Done";
         }
 
     }

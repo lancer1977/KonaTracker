@@ -4,6 +4,7 @@ namespace KonaAnalyzer
 {
     public static class Configs
     {
+        public static string Version = "__version__";
         public static string AppCenterSecret = "__appCenterSecret__";
         public static string PopulationAddress = "https://raw.githubusercontent.com/lancer1977/KonaTracker/master/countyPop.csv";
         public static string ChangesAddress = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv"; 

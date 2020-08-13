@@ -10,18 +10,19 @@
 
     <ContentPage.Content>
         <StackLayout>
-  
-             
-            <Label Text="{Binding IsBusy}"/>
-            <Label>
-                Data Copyright 2020 by The New York Times Company
-            </Label>
+
+
+
+            <Label Text="Data Copyright 2020 by The New York Times Company" />
+
+
+            <Label Text="{Binding Version,StringFormat='Version: {0}'}" />
 
             <ActivityIndicator Margin="0,40,0,0" IsRunning="{Binding IsBusy}"  IsVisible="{Binding IsBusy}" Color="Red" />
 
-            <Button Text="Reload All" Command="{Binding Refresh}" Margin="0,100,0,0" HorizontalOptions="Center"/>
-            <Label  Text="{Binding TimerText}"/> 
-</StackLayout>
+            <Button Text="Reload All" Command="{Binding Refresh}" IsVisible="{Binding ShowRefresh}" Margin="0,100,0,0" HorizontalOptions="Center"/>
+            <Label  Text="{Binding TimerText,StringFormat='Load Time: {0}'}"/>
+        </StackLayout>
     </ContentPage.Content>
 
 

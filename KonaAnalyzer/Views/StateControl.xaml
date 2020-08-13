@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="KonaAnalyzer.Views.StateControl">
-    <Frame  Padding="15" BackgroundColor="{Binding BackgroundColor}">
+    <Frame  Padding="15" >
  
    
 

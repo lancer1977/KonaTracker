@@ -13,8 +13,7 @@ namespace KonaAnalyzer.Services
 
         public async Task Reload()
         {
-            LoadState = LoadedState.Unloaded;
-            await LoadAsync();
+            LoadState = LoadedState.Unloaded; 
         }
 
    

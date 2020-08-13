@@ -63,7 +63,7 @@
                         </xForms:DateTimeAxis>
                     </chart:SfChart.PrimaryAxis>
                     <chart:SfChart.SecondaryAxis>
-                        <xForms:NumericalAxis Maximum="{Binding Maximum}" Interval="{Binding Interval}" >
+                        <xForms:NumericalAxis Maximum="{Binding Maximum}" Interval="{Binding Interval}" Minimum="{Binding Minimum}" >
                             <chart:NumericalAxis.AxisLineStyle>
                                 <chart:ChartLineStyle StrokeWidth="0">
                                 </chart:ChartLineStyle>
