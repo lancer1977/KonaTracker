@@ -25,7 +25,7 @@
                         <On Platform="UWP" Value="False"/>
                     </OnPlatform>
                 </Frame.IsVisible>
-                <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center" />
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DateUpCommand}" />
                 </Frame.GestureRecognizers>
@@ -36,7 +36,7 @@
                         <On Platform="UWP" Value="False"/>
                     </OnPlatform>
                 </Frame.IsVisible>
-                <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="End" VerticalOptions="Center"/>
+                <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="End" VerticalOptions="Center" />
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding DateDownCommand}" />
                 </Frame.GestureRecognizers>
@@ -77,35 +77,35 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding County}">
+            <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding County}" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Alphabetical" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="0" Grid.Column="1" Text="Total">
+            <Label Grid.Row="0" Grid.Column="1" Text="Total" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Total" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="2"  Text="Change">
+            <Label  Grid.Row="0" Grid.Column="2"  Text="Change" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Change" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc.">
+            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc." TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Percent" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk">
+            <Label  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
@@ -113,21 +113,21 @@
                 </Label.GestureRecognizers>
             </Label>
 
-            <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick">
+            <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Total" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths">
+            <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Dead" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population">
+            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
@@ -149,7 +149,7 @@
             <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0:0.#}%'}" />
             <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.###}%'}" />
 
-            <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality">
+            <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"

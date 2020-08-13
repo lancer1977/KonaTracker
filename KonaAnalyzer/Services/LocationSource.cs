@@ -14,15 +14,15 @@ namespace KonaAnalyzer.Services
     {
  
 
-        public List<Location> Locations { get; private set; }
+        public IEnumerable<Location> Locations { get; private set; }
         public int GetId(string state, string county)
         {
-            return Locations.First(x => x.State == state && x.County == county).Id;
+            return Locations.First(x => x.State == state && x.County == county).LocationId;
         }
 
         public Location GetLocation(int id)
         {
-            return Locations.First(x => x.Id == id);
+            return Locations.First(x => x.LocationId == id);
         }
   
         public IEnumerable<string> Counties(string state)

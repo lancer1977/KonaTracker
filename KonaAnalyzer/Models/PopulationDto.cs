@@ -1,4 +1,6 @@
-﻿namespace KonaAnalyzer.Models
+﻿using System.Runtime.Serialization;
+
+namespace KonaAnalyzer.Models
 {
     public class PopulationDto
     {

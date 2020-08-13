@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Models;
 using ReactiveUI.Fody.Helpers;
 
@@ -15,7 +16,7 @@ namespace KonaAnalyzer.ViewModels
             Title = "Overview";
             var items = new List<DayChange>();
 
-            foreach (var item in DataStore.States)
+            foreach (var item in LocationSource.States())
             {
                 var lastDay = DataStore.Latest;
                 items.Add(new DayChange()

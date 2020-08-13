@@ -10,10 +10,10 @@ using Microsoft.AppCenter.Crashes;
 
 namespace KonaAnalyzer.Services
 {
-    public class InMemoryPopulationSource : BaseSource,IPopulationSource
-    {    
+    public class InMemoryPopulationSource : BaseSource, IPopulationSource
+    {
 
-        public List<PopulationDto> Populations { get; set; } 
+        public List<PopulationDto> Populations { get; set; }
 
         public int Population(string state, string county)
         {

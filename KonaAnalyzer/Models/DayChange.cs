@@ -4,7 +4,6 @@ using KonaAnalyzer.Data;
 
 namespace KonaAnalyzer.Models
 {
-    [DataContract]
     public class DayChange: IChange
     { 
         public DateTime date { get; set; } 
@@ -22,7 +21,7 @@ namespace KonaAnalyzer.Models
     {
         public DateTime Date { get; set; }
 
-        public int Change { get; set; }
+        public double Change { get; set; }
 
         //[PrimaryKey,AutoIncrement]
         //public int Id { get; set; }

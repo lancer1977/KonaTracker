@@ -9,6 +9,7 @@ namespace KonaAnalyzer.ViewModels
 {
     public class BaseViewModel : ReactiveUI.ReactiveObject
     {
+        public ILocationSource LocationSource => IOC.Get<ILocationSource>();
         public ICovidSource DataStore => IOC.Get<ICovidSource>();
         public IPopulationSource PopulationDataStore => IOC.Get<IPopulationSource>();// InMemoryPopulationSource.Instance;
         [Reactive] public bool IsBusy { get; set; }

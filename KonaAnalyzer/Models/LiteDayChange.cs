@@ -9,5 +9,7 @@ namespace KonaAnalyzer.Models
         public Location Location { get; set; }
         public int cases { get; set; }
         public int deaths { get; set; }
+        public string county => Location.County;
+        public string state => Location.State;
     }
 }

@@ -7,6 +7,7 @@ using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Models;
 using Microsoft.AppCenter.Crashes;
+using PolyhydraGames.Extensions;
 
 namespace KonaAnalyzer.Services
 {

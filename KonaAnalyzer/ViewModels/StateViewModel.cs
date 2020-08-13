@@ -10,6 +10,7 @@ using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
 using KonaAnalyzer.Data;
+using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Views;
 using PolyhydraGames.Extensions;
 using ReactiveUI;
@@ -181,7 +182,7 @@ namespace KonaAnalyzer.ViewModels
 
     }
     public class StateViewModel : StateControlViewModel
-    {
+    { 
         [Reactive] public bool LoadingCounties { get; set; }
 
         //[Reactive] public ChangeModel Model { get; set; }
@@ -200,7 +201,7 @@ namespace KonaAnalyzer.ViewModels
         private readonly ReadOnlyObservableCollection<StateControlViewModel> _countyViewModels;
         public IEnumerable<StateControlViewModel> CountyViewModels => _countyViewModels;
         public StateViewModel()
-        {
+        { 
             Title = "NA";
             DateUpCommand = ReactiveCommand.Create(() =>
             {
@@ -271,12 +272,12 @@ namespace KonaAnalyzer.ViewModels
         }
         private void PopulateCounties(string state)
         {
-            var counties = DataStore.Counties(state);
+            var counties = LocationSource.Counties(state).ToList();
             //counties.Insert(0, "All");
             Counties = counties;
         }
 
-        private async void PopulateCountyViewModels()
+        private void PopulateCountyViewModels()
         {
             LoadingCounties = true;
             _sourceViewModels.Clear();
@@ -293,7 +294,7 @@ namespace KonaAnalyzer.ViewModels
 
         private void PopulateStates()
         {
-            var counties = DataStore.States;
+            var counties = LocationSource.States().ToList();
             Counties = counties;
         }
 
@@ -342,8 +343,8 @@ namespace KonaAnalyzer.ViewModels
                 case Sort.DeadDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.Dead);
                 case Sort.TotalAscending: return SortExpressionComparer<StateControlViewModel>.Ascending(vm => vm.Current);
                 case Sort.TotalDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.Current);
-                case Sort.AlphabeticalAscending: return SortExpressionComparer<StateControlViewModel>.Ascending(vm => vm.County);
-                case Sort.AlphabeticalDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.County);
+                case Sort.AlphabeticalAscending: return SortExpressionComparer<StateControlViewModel>.Ascending(vm => vm.State == "State" ? vm.State:   vm.County);
+                case Sort.AlphabeticalDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.State == "State" ? vm.State : vm.County);
                 case Sort.MortalityAscending: return SortExpressionComparer<StateControlViewModel>.Ascending(vm => vm.MortalityRate);
                 case Sort.MortalityDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.MortalityRate);
 
@@ -364,21 +365,6 @@ namespace KonaAnalyzer.ViewModels
             }
         }
 
-        //public static string ToFriendlyString(this Sort x)
-        //{
-        //    switch (x)
-        //    {
-        //        case Sort.DeadAscending: return "Deaths Asc.";
-        //        case Sort.DeadDescending: return "Deaths Desc.";
-        //        case Sort.TotalAscending: return "Total Asc.";
-        //        case Sort.TotalDescending: return "Total Desc.";
-        //        case Sort.AlphabeticalAscending: return "Alpha Asc.";
-        //        case Sort.AlphabeticalDescending: return "Alpha Desc.";
-        //        case Sort.MortalityAscending: return "Mort Asc.";
-        //        case Sort.MortalityDeccending: return "Mort Desc.";
-        //        default:
-        //            throw new ArgumentOutOfRangeException(nameof(x), x, null);
-        //    }
-        //}
+ 
     }
 }

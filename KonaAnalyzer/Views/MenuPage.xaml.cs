@@ -22,27 +22,25 @@ namespace KonaAnalyzer.Views
     public partial class MenuPage : ContentPage
     {
         MainPage RootPage { get => Application.Current.MainPage as MainPage; }
-        private ICovidSource Source => IOC.Get<ICovidSource>();// InMemoryCovidSource.Instance;
+        private ILocationSource Source => IOC.Get<ILocationSource>();// InMemoryCovidSource.Instance;
         ObservableCollection<HomeMenuItem> menuItems = new ObservableCollection<HomeMenuItem>();
 
         public MenuPage()
         {
             InitializeComponent();
 
+            menuItems.Add(new HomeMenuItem() { Title = "Reload Data" });
 
-            menuItems.AddRange(new[]{
-
-            new HomeMenuItem() {Title = "Reload Data"},
-            new HomeMenuItem() {Title = "About"},
-            new HomeMenuItem() {Title = "------------------"},
-
-            });
             Source.WhenAnyValue(x => x.LoadState).Where(x => x == LoadedState.Loaded).ObserveOn(RxApp.MainThreadScheduler).Subscribe(state =>
             {
+              
+                menuItems.Add(new HomeMenuItem() { Title = "About" });
+                menuItems.Add(new HomeMenuItem() { Title = "------------------" });
                 menuItems.Add(new HomeMenuItem() { Title = "Overview" });
                 menuItems.Add(new HomeMenuItem() { Title = "Change Charts" });
                 menuItems.Add(new HomeMenuItem() { Title = "All" });
-                menuItems.AddRange(Source.States.Select(x => new HomeMenuItem() { Title = x }));
+                var states = Source.States().ToList();
+                menuItems.AddRange(states.Select(x => new HomeMenuItem() { Title = x }));
             });
             //Source.PropertyChanged += (sender, args) =>
             //{
