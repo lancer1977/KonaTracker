@@ -4,12 +4,12 @@ using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
 using Xamarin.Forms;
 using KonaAnalyzer.Views;
-#if !DEBUG
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Crashes;
-using Microsoft.AppCenter.Distribute;
+//#if !DEBUG
+//using Microsoft.AppCenter;
+//using Microsoft.AppCenter.Crashes;
+//using Microsoft.AppCenter.Distribute;
 
-#endif
+//#endif
 
 namespace KonaAnalyzer
 {
@@ -20,9 +20,9 @@ namespace KonaAnalyzer
         {
   
             InitializeComponent(); 
-            #if !DEBUG
-            AppCenter.Start(Configs.AppCenterSecret,  typeof(Crashes), typeof(Distribute));  
-            #endif
+            //#if !DEBUG
+            //AppCenter.Start(Configs.AppCenterSecret,  typeof(Crashes), typeof(Distribute));  
+            //#endif
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configs.SyncfusionKey);
             HttpService.Instance = new HttpService();
             MainPage = new MainPage(); ;
