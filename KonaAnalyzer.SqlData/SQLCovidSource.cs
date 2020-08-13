@@ -12,7 +12,6 @@ using SQLite;
 
 namespace KonaAnalyzer.SqlData
 {
-
     public class SQLCovidSource : BaseSource, ICovidSource
     {
         private readonly ISQLiteFactory _factory;

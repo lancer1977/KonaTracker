@@ -18,7 +18,7 @@ namespace KonaAnalyzer.ViewModels
         private readonly ILocationSource _locationSource;
         private readonly ICovidSource _covidSource;
         public ICommand ToggleControls { get; }
-        [Reactive] public bool ShowControls  { get; set; }
+        [Reactive] public bool ShowControls { get; set; }
         [Reactive] public IList<ChartModel> Items { get; set; }
         [Reactive] public DateTime StartDate { get; set; }
         [Reactive] public DateTime EndDate { get; set; }
@@ -29,8 +29,9 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public bool ShowMarkers { get; set; }
         [Reactive] public int Interval { get; set; }
         [Reactive] public DataType DataType { get; set; }
-        public List<DataType> DataTypes { get; } = new List<DataType>() { DataType.Death, DataType.Total };
+        public List<DataType> DataTypes { get; } = new List<DataType>() { DataType.Death, DataType.Cases, DataType.DeathPercent, DataType.CasesPercent };
         [Reactive] public bool IsUpdating { get; set; }
+        [Reactive] public string LabelFormat { get; set; }
 
         public ChangeChartViewModel(ILocationSource locationSource, ICovidSource covidSource)
         {
@@ -43,7 +44,7 @@ namespace KonaAnalyzer.ViewModels
             LastestDate = covidSource.Latest;
             EarliestDate = covidSource.Earliest;
             ShowControls = true;
-            StartDate = DateTime.Today- TimeSpan.FromDays(30);
+            StartDate = DateTime.Today - TimeSpan.FromDays(30);
             EndDate = LastestDate;
             this.WhenAnyValue(x => x.State).Subscribe(async x =>
             {
@@ -57,7 +58,27 @@ namespace KonaAnalyzer.ViewModels
             this.WhenAnyValue(x => x.StartDate).Subscribe(async x => { await Update(State, County, x, EndDate); }, OnException);
             this.WhenAnyValue(x => x.EndDate).Subscribe(async x => { await Update(State, County, StartDate, x); }, OnException);
             this.WhenAnyValue(x => x.DataType).Subscribe(async x => { await Update(State, County, StartDate, EndDate); }, OnException);
+            this.WhenAnyValue(x => x.DataType).Subscribe(x =>
+            {
 
+                switch (x)
+                {
+                    case DataType.Death:
+                        LabelFormat = "#";
+                        break;
+                    case DataType.Cases:
+                        LabelFormat = "#";
+                        break;
+                    case DataType.CasesPercent:
+                        LabelFormat = "#.#'%'";
+                        break;
+                    case DataType.DeathPercent:
+                        LabelFormat = "#.#'%'";
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }, OnException);
             ToggleControls = ReactiveCommand.Create(() => ShowControls = !ShowControls);
         }
 
@@ -82,10 +103,11 @@ namespace KonaAnalyzer.ViewModels
         private int _updates;
         private async Task Update(string state, string county, DateTime startDay, DateTime endDay)
         {
+            if (county == null) county = "All";
             if (IsUpdating ||
                 //string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county) ||
                 startDay == default ||
-                endDay == default ||  startDay >= endDay) return;
+                endDay == default || startDay >= endDay) return;
             IsUpdating = true;
             try
             {
@@ -106,31 +128,55 @@ namespace KonaAnalyzer.ViewModels
                     });
 
                 }
-             
+
                 var sorted = change.OrderBy(x => x.date).ToList();
 
                 for (var x = 0; x < sorted.Count; x++)
                 {
                     var current = sorted[x];
                     var last = x > 0 ? sorted[x - 1] : null;
+                    var localChange = 0.0;
+
+
+                    if (last != null)
+                    {
+                        var changeCases = current.cases - last.cases;
+                        var changeDeaths = current.deaths - last.deaths;
+                        switch (DataType)
+                        {
+                            case DataType.Death:
+                                localChange = changeDeaths;
+                                break;
+                            case DataType.Cases:
+                                localChange = changeCases;
+                                break;
+                            case DataType.CasesPercent:
+
+                                localChange = 100 * ((double)changeCases / (double)current.cases);
+                                break;
+                            case DataType.DeathPercent:
+                                localChange = 100 * ((double)changeDeaths / (double)current.deaths);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+
                     changes.Add(new ChartModel()
                     {
                         Date = sorted[x].date,
-                        Change = last != null ?
-                            DataType == DataType.Death ? current.deaths - last.deaths : current.cases - last.cases
-                            : 0
+                        Change = localChange
                     });
+
                 }
-
-
 
                 Items = changes;
                 var changeorder = changes.OrderBy(x => x.Change).ToList();
 
                 var firstChange = changeorder[1].Change;
                 if (firstChange == 0) firstChange = 1;
-                Maximum = changeorder.Last().Change;
-                Interval = (Maximum - firstChange) /10;
+                Maximum = 1 + (int)changeorder.Last().Change;
+                Interval = 1 + (int)((Maximum - firstChange) / 10);
             }
             catch (Exception ex)
             {
@@ -147,6 +193,8 @@ namespace KonaAnalyzer.ViewModels
     public enum DataType
     {
         Death,
-        Total
+        CasesPercent,
+        DeathPercent,
+        Cases
     }
 }

@@ -21,7 +21,7 @@ namespace KonaAnalyzer.ViewModels
 {
     public class StateControlViewModel : BaseViewModel
     {
-        [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
+       // [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
         [Reactive] public string County { get; set; } = "All";
         [Reactive] public string State { get; set; }
         [Reactive] public int Current { get; set; }
@@ -43,6 +43,7 @@ namespace KonaAnalyzer.ViewModels
         protected async Task UpdateValuesAsync(string state, string county, DateTime date)
         {
             if (date == default || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
+            IsBusy = true;
             try
             {
                 Population = PopulationDataStore.Population(state, county);
@@ -65,14 +66,14 @@ namespace KonaAnalyzer.ViewModels
                     TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate);
                     TwoWeekProjectionDeaths = GetTwoWeekProjectionCases(todayDeathRates, todayDeathRates.rate);
                 }
-                BackgroundColor = Color.Default;
+               // BackgroundColor = Color.Default;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
             }
 
-
+            IsBusy = false;
         }
         public static double GetPercentage(int numerator, int denominator)
         {

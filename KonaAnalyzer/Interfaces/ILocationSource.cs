@@ -6,7 +6,7 @@ namespace KonaAnalyzer.Interfaces
 {
     public interface ILocationSource
     {
-        List<Location> Locations { get; }
+        IEnumerable<Location> Locations { get; }
         int GetId(string state, string county);
 
         Location GetLocation(int id);
