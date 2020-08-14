@@ -8,7 +8,11 @@ namespace KonaAnalyzer.Mac
         {
             NSApplication.Init();
             NSApplication.SharedApplication.Delegate = new AppDelegate();
+            Bootstrapper.Initialize();
             NSApplication.Main(args);
         }
     }
+
 }
+
+
