@@ -21,3 +21,6 @@ I found myself reading a ton of websites that were causing me more anxiety when 
 # Data Sources
 Data from The New York Times, based on reports from state and local health agencies.
 https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv
+
+#Contact Us
+lancer1977@gmail.com
