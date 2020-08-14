@@ -38,8 +38,14 @@ namespace KonaAnalyzer.ViewModels
                  await _populationSource.Reload();
              });
             refresh.InvokeCommand(LoadCommand);
+            LaunchNyTimesCommand = ReactiveCommand.Create(async () =>
+            {
+                await Xamarin.Essentials.Browser.OpenAsync(Configs.nytimesAddress);
+            });
             Refresh = refresh;
         }
+
+        public ReactiveCommand<Unit, Task> LaunchNyTimesCommand { get; set; }
 
 
         private void OnException(Exception ex)
@@ -76,7 +82,7 @@ namespace KonaAnalyzer.ViewModels
                  await _locationSource.LoadAsync();
                  await _covidSource.LoadAsync();
                  await _populationSource.LoadAsync();
-                 Title = "Loading ... Done";  
+                 Title = "Loading ... Done";
              }, cts.Token);
             cts.Cancel();
         }

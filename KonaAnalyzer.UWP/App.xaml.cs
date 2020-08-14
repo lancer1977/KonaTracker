@@ -52,7 +52,6 @@ namespace KonaAnalyzer.UWP
                 Bootstrapper.Initialize();
                 #if __WASM__ == false
                 Xamarin.Forms.Forms.Init(e);
-
                 #endif
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
