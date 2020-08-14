@@ -9,12 +9,19 @@
     <Application.Resources>
         <ResourceDictionary>
             <!--Global Styles-->
+            <x:String x:Key="font">FuturaBold</x:String>
             <Color x:Key="NavigationPrimary">#2196F3</Color>
             <Style TargetType="NavigationPage">
                 <Setter Property="BarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
+            <Style  TargetType="Label">
+                <Setter  Property="FontFamily" Value="{DynamicResource font} "/>
+            </Style>
+            <Style  TargetType="ContentPage">
+                <Setter  Property="Visual" Value="Material" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
-    
+
 </Application>

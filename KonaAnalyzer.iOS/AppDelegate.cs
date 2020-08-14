@@ -23,6 +23,8 @@ namespace KonaAnalyzer.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            global::Xamarin.Forms.FormsMaterial.Init();
+            // 
             SfChartRenderer.Init();
             Bootstrapper.Initialize();
             LoadApplication(new App());

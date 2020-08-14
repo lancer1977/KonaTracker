@@ -58,7 +58,7 @@ namespace KonaAnalyzer.Console
                 {
                     locations.Add(new Location
                     {
-                        Id = id,
+                        LocationId = id,
                         State = county.state,
                         County = county.county,
                     });

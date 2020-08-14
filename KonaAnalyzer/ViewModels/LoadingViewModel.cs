@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -10,11 +11,14 @@ using System.Windows.Input;
 using KonaAnalyzer.Interfaces;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using Xamarin.Forms;
 
 namespace KonaAnalyzer.ViewModels
 {
     public class LoadingViewModel : BaseViewModel
     {
+        public List<string> FontNames { get; } = new List<string>() { "Default", "FuturaBold", "FuturaMedium", "ProximaNovaRegular" };
+        [Reactive] public string Font { get; set; } = "Default";
         private static bool _runOnce;
         public LoadingViewModel(ICovidSource covidSource, IPopulationSource populationSource, ILocationSource locationSource)
         {
@@ -41,6 +45,11 @@ namespace KonaAnalyzer.ViewModels
             LaunchNyTimesCommand = ReactiveCommand.Create(async () =>
             {
                 await Xamarin.Essentials.Browser.OpenAsync(Configs.nytimesAddress);
+            });
+            this.WhenAnyValue(x => x.Font).Subscribe(x =>
+            {
+                if (x == "Default") x = string.Empty;
+                Application.Current.Resources["font"] = x;
             });
             Refresh = refresh;
         }

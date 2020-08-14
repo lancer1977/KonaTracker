@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
@@ -26,6 +27,9 @@ namespace KonaAnalyzer
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configs.SyncfusionKey);
             HttpService.Instance = new HttpService();
             MainPage = new MainPage(); ;
+            foreach(var item in Application.Current.Resources.Keys)
+                Debug.WriteLine(item);
+            
         }
 
  

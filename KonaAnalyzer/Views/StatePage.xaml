@@ -44,10 +44,10 @@
         </Grid>
     </NavigationPage.TitleView>
     
-    <ContentPage.ToolbarItems>
+    <!--<ContentPage.ToolbarItems>
         <ToolbarItem Text=" + "  Command="{Binding DateUpCommand}"  /> 
             <ToolbarItem   Text=" - "  Command="{Binding DateDownCommand}" />
-    </ContentPage.ToolbarItems>
+    </ContentPage.ToolbarItems>-->
 
     <ContentPage.BindingContext>
         <vm:StateViewModel />
