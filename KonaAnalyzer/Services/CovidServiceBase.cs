@@ -20,7 +20,10 @@ namespace KonaAnalyzer.Services
         public DateTime Latest => _lastDate.Date;
         public DateTime Earliest => _earliestDate.Date;
 
+        public void GenerateEstimates(int days)
+        {
 
+        }
         protected override async Task UpdateItems()
         {
             UpdateDates();

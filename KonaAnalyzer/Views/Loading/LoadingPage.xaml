@@ -26,9 +26,11 @@
 
             <Button Text="Reload All" Command="{Binding Refresh}" IsVisible="{Binding ShowRefresh}" Margin="0,100,0,0" HorizontalOptions="Center"/>
             <Label  Text="{Binding TimerText,StringFormat='Load Time: {0}'}"/>
+            <Label  Text="{Binding LatestDay,StringFormat='Latest Day: {0}'}"/>
             <StackLayout Orientation="Horizontal">
               <Label Text="Font: "></Label>  <Picker ItemsSource="{Binding FontNames}" SelectedItem="{Binding Font}"/>
-            </StackLayout>  
+            </StackLayout>
+            <Button Command="{Binding AddEstimateCommand}" Text="Add 2 Week Projections"/>
         </StackLayout>
     </ContentPage.Content>
 

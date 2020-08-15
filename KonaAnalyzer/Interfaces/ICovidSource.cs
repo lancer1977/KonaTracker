@@ -15,6 +15,7 @@ namespace KonaAnalyzer.Interfaces
         //DateTime EarliestDate(string first);
         DateTime Latest { get; }
         DateTime Earliest { get; }
+        void GenerateEstimates(int days);
     }
 
 }

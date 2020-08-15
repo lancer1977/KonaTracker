@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
@@ -12,13 +13,24 @@ using SQLite;
 
 namespace KonaAnalyzer.SqlData
 {
-
+    public static class EnumerableExtensions
+    {
+        public static (T,T) GetFirstAndLastT<T2,T>(this IEnumerable<T2> source, Func<T2,T> getT)
+        {
+            var first = source.Select(getT).FirstOrDefault();
+            var last = source.Select(getT).LastOrDefault();
+            return (first, last);
+        }
+    }
     public class SQLCovidSource : BaseSource, ICovidSource
     {
         private readonly ISQLiteFactory _factory;
-        public SQLCovidSource(ISQLiteFactory factory)
+        private readonly ILocationSource _locationService;
+
+        public SQLCovidSource(ISQLiteFactory factory,ILocationSource locationService)
         {
             _factory = factory;
+            _locationService = locationService;
         }
         private SQLiteConnection _connection;
 
@@ -33,7 +45,42 @@ namespace KonaAnalyzer.SqlData
             }
         }
 
+        public void GenerateEstimates(int days)
+        {
+            List<DayChange> newChanges = new List<DayChange>();
+            for(var day = 0; day < days; day++)
+            {
+              
+                var firstDay = _lastDate - TimeSpan.FromDays(7);
+                foreach (var item in _locationService.Locations)
+                {
+                    var sevenDayTrend = CountyChanges(item.State, item.County, firstDay, _lastDate).ToList();
+                    var (firstCases, lastCases) = sevenDayTrend.GetFirstAndLastT(x => x.cases);
+                    var casesChangeAverage = (lastCases - firstCases) / 7;
+                    //cases
+                    Debug.WriteLine($"First: {firstCases} Last: {lastCases}"  );
 
+                    var (firstDeaths, lastDeaths) = sevenDayTrend.GetFirstAndLastT(x => x.deaths);
+                    var deathChangeAverage = (lastDeaths - firstDeaths) / 7;
+                    //cases
+                    Debug.WriteLine($"First: {firstDeaths} Last: {lastDeaths} Estimate: { deathChangeAverage}");
+
+                    newChanges.Add(new DayChange()
+                    {
+                        deaths = lastDeaths + deathChangeAverage,
+                        cases = lastCases + casesChangeAverage,
+                        county = item.County,
+                        state = item.State,
+                        IsEstimate = true
+                    });
+                }
+
+                _lastDate = _lastDate + TimeSpan.FromDays(1);
+            }
+
+
+           
+        }
 
         public TableQuery<DayChange> Table => Connection.Table<DayChange>();
 

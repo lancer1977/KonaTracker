@@ -12,6 +12,6 @@ namespace KonaAnalyzer.Models
         public string state { get; set; }
         public int cases { get; set; }
         public int deaths { get; set; }
-         
+        public bool IsEstimate { get; set; }
     }
 }

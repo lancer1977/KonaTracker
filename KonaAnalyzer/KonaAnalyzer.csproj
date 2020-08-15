@@ -28,26 +28,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Views\AboutPage.xaml.cs">
+    <Compile Update="Views\About\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\OverviewPage.xaml.cs">
+    <Compile Update="Views\Overview\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\StateControl.xaml.cs">
+    <Compile Update="Views\State\StateControl.xaml.cs">
       <DependentUpon>StateControl.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Views\StatePage.xaml.cs">
+    <Compile Update="Views\State\StatePage.xaml.cs">
       <DependentUpon>StatePage.xaml</DependentUpon>
     </Compile>
 
-    <Compile Update="Views\ChangeChartPage.xaml.cs">
+    <Compile Update="Views\ChangeChart\ChangeChartPage.xaml.cs">
       <DependentUpon>ChangeChartPage.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Views\LoadingPage.xaml">
+    <EmbeddedResource Update="Views\Loading\LoadingPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

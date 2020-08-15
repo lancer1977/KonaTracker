@@ -20,10 +20,41 @@ namespace KonaAnalyzer.ViewModels
         public List<string> FontNames { get; } = new List<string>() { "Default", "FuturaBold", "FuturaMedium", "ProximaNovaRegular" };
         [Reactive] public string Font { get; set; } = "Default";
         private static bool _runOnce;
+       
+
+        public ReactiveCommand<Unit, Task> LaunchNyTimesCommand { get; set; }
+        [Reactive] public string TimerText { get; set; }
+        [Reactive] public DateTime LatestDay { get; set; }
+
+
+        Stopwatch _stopwatch = new Stopwatch();
+        public string Version => Configs.Version;
+      
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
+        public bool ShowRefresh { [ObservableAsProperty] get; }
+        public ReactiveCommand<Unit, Unit> LoadCommand;
+        public ICommand AddEstimateCommand { get; }
+        public ICommand Refresh { get; }
+        private readonly ILocationSource _locationSource;
+        private readonly IPopulationSource _populationSource;
+        private readonly ICovidSource _covidSource;
         public LoadingViewModel(ICovidSource covidSource, IPopulationSource populationSource, ILocationSource locationSource)
         {
             Title = "Loading ...";
 
+       
+            _locationSource = locationSource;
+            _populationSource = populationSource;
+            _covidSource = covidSource;
+            var estinateCinnabd = ReactiveCommand.CreateFromTask(async () => await Task.Run(()=>covidSource.GenerateEstimates(7)));
+            estinateCinnabd.IsExecuting.Subscribe(x =>
+            {
+                IsBusy = x;
+                Debug.WriteLine($"Busy {IsBusy} sent:{x}");
+            });
+            estinateCinnabd.ThrownExceptions.Subscribe(OnException);
+            AddEstimateCommand = estinateCinnabd;
+            this.WhenAnyValue(x => x.IsBusy).Select(x => !x).ToPropertyEx(this, x => x.ShowRefresh);
             LoadCommand = ReactiveCommand.CreateFromTask(async x => await LoadAsync());
             LoadCommand.IsExecuting.Subscribe(x =>
             {
@@ -31,16 +62,11 @@ namespace KonaAnalyzer.ViewModels
                 Debug.WriteLine($"Busy {IsBusy} sent:{x}");
             });
             LoadCommand.ThrownExceptions.Subscribe(OnException);
-            _locationSource = locationSource;
-            _populationSource = populationSource;
-            _covidSource = covidSource;
-            this.WhenAnyValue(x => x.IsBusy).Select(x => !x).ToPropertyEx(this, x => x.ShowRefresh);
             var refresh = ReactiveCommand.CreateFromTask(async x =>
-             {
-                 await _locationSource.Reload();
-                 await _covidSource.Reload();
-                 await _populationSource.Reload();
-             });
+            {
+                _runOnce = false;
+             
+            });
             refresh.InvokeCommand(LoadCommand);
             LaunchNyTimesCommand = ReactiveCommand.Create(async () =>
             {
@@ -53,37 +79,12 @@ namespace KonaAnalyzer.ViewModels
             });
             Refresh = refresh;
         }
-
-        public ReactiveCommand<Unit, Task> LaunchNyTimesCommand { get; set; }
-
-
-        private void OnException(Exception ex)
-        {
-            Debug.WriteLine(ex.Message);
-        }
-
-        public void OnAppearing()
-        {
-            if (_runOnce == false)
-                LoadCommand.Execute().Subscribe();
-        }
-        Stopwatch _stopwatch = new Stopwatch();
-        public string Version => Configs.Version;
-        [Reactive] public string TimerText { get; set; }
-        public bool ShowRefresh { [ObservableAsProperty] get; }
-        public ReactiveCommand<Unit, Unit> LoadCommand;
-        public ICommand Refresh { get; }
-        private readonly ILocationSource _locationSource;
-        private readonly IPopulationSource _populationSource;
-        private readonly ICovidSource _covidSource;
-
+         
         private async Task LoadAsync()
         {
             Title = "Loading ...";
             _runOnce = true;
-            var cts = new CancellationTokenSource();
-
-
+            var cts = new CancellationTokenSource(); 
             var token = cts.Token;
             StartWatch(token);
             await Task.Run(async () =>
@@ -92,6 +93,7 @@ namespace KonaAnalyzer.ViewModels
                  await _covidSource.LoadAsync();
                  await _populationSource.LoadAsync();
                  Title = "Loading ... Done";
+                 LatestDay = _covidSource.Latest;
              }, cts.Token);
             cts.Cancel();
         }
@@ -115,6 +117,15 @@ namespace KonaAnalyzer.ViewModels
             Debug.WriteLine("leaving");
             watch.Stop();
         }
+        private void OnException(Exception ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
 
+        public void OnAppearing()
+        {
+            if (_runOnce == false)
+                LoadCommand.Execute().Subscribe();
+        }
     }
 }
