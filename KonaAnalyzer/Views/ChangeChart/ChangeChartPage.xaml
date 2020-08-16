@@ -101,6 +101,7 @@
                         </chart:SplineAreaSeries>
                     </chart:SfChart.Series>
                 </xForms:SfChart>
+                <Label Text="{Binding StatusText}" VerticalOptions="EndAndExpand"/>
             </StackLayout>
 
         </ScrollView>

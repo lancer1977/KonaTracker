@@ -18,10 +18,10 @@ namespace KonaAnalyzer.ViewModels
 {
     public class ChangeChartViewModel : BaseViewModel
     {
-        private readonly ILocationSource _locationSource;
-        private readonly ICovidSource _covidSource;
+        private readonly ILocationSource _locationSource; 
         public ICommand ToggleControls { get; }
         [Reactive] public bool ShowControls { get; set; }
+        [Reactive] public string StatusText { get; set; }
         public IList<ChartModel> Items { [ObservableAsProperty] get; }
         [Reactive] public DateTime StartDate { get; set; }
         [Reactive] public DateTime EndDate { get; set; }
@@ -40,8 +40,7 @@ namespace KonaAnalyzer.ViewModels
 
         public ChangeChartViewModel(ILocationSource locationSource, ICovidSource covidSource)
         {
-            _locationSource = locationSource;
-            _covidSource = covidSource;
+            _locationSource = locationSource; 
             State = "All";
             County = "All";
             States = _locationSource.States().ToList();
@@ -115,8 +114,7 @@ namespace KonaAnalyzer.ViewModels
 
         private int _updates;
         private CancellationTokenSource _cts;
-        private async Task<List<ChartModel>>
-            Update(ChartUpdate update) //string state, string county, DateTime startDay, DateTime endDay)
+        private async Task<List<ChartModel>> Update(ChartUpdate update) //string state, string county, DateTime startDay, DateTime endDay)
         {
             var changes = new List<ChartModel>();
             _cts = new CancellationTokenSource();
