@@ -35,39 +35,38 @@ namespace KonaAnalyzer.ViewModels
         {
             if (date == default || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
             IsBusy = true;
-            Task.Run(async () =>
+
+            try
             {
-                try
-                {
-                    Population = PopulationDataStore.Population(state, county);
-                    //var yesterdayDate = date - TimeSpan.FromDays(1);
+                Population = PopulationDataStore.Population(state, county);
+                //var yesterdayDate = date - TimeSpan.FromDays(1);
 
-                    var todayRates = await GetCurrentAndChangeAsync(state, county, date);
-                    Current = todayRates.current;
-                    CurrentChange = todayRates.change;
-                    CurrentChangeRate = todayRates.rate * 100;
-                    var todayDeathRates = await GetDeathsCurrentAndChangeAsync(state, county, date);
-                    Dead = todayDeathRates.current;
-                    DeadChange = todayDeathRates.change;
-                    DeadChangeRate = todayDeathRates.rate * 100;
+                var todayRates = await GetCurrentAndChangeAsync(state, county, date);
+                Current = todayRates.current;
+                CurrentChange = todayRates.change;
+                CurrentChangeRate = todayRates.rate * 100;
+                var todayDeathRates = await GetDeathsCurrentAndChangeAsync(state, county, date);
+                Dead = todayDeathRates.current;
+                DeadChange = todayDeathRates.change;
+                DeadChangeRate = todayDeathRates.rate * 100;
 
-                    DeadRiskRate = GetPercentage(Dead, Population);
-                    CurrentRiskRate = GetPercentage(Current, Population);
-                    MortalityRate = GetPercentage(Dead, Current);
-                    if (IsSubViewModel == false)
-                    {
-                        TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate);
-                        TwoWeekProjectionDeaths = GetTwoWeekProjectionCases(todayDeathRates, todayDeathRates.rate);
-                    }
-                    // BackgroundColor = Color.Default;
-                }
-                catch (Exception ex)
+                DeadRiskRate = GetPercentage(Dead, Population);
+                CurrentRiskRate = GetPercentage(Current, Population);
+                MortalityRate = GetPercentage(Dead, Current);
+                if (IsSubViewModel == false)
                 {
-                    Debug.WriteLine(ex);
+                    TwoWeekProjectionCases = GetTwoWeekProjectionCases(todayRates, todayRates.rate);
+                    TwoWeekProjectionDeaths = GetTwoWeekProjectionCases(todayDeathRates, todayDeathRates.rate);
                 }
+                // BackgroundColor = Color.Default;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
             IsBusy = false;
-            });
-     
+
+
 
         }
         public static double GetPercentage(int numerator, int denominator)

@@ -126,7 +126,7 @@ namespace KonaAnalyzer.ViewModels
                 try
                 {
                     Debug.WriteLine($"In Update: {_updates++}");
-                    var change = DataStore.CountyChanges(update.State, update.County, update.StartDay, update.EndDay);
+                    var change = DataStore.MatchingBetween(update.State, update.County, update.StartDay, update.EndDay);
                     //State = state;
                     //County = county;
 

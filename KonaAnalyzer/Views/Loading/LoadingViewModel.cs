@@ -20,7 +20,7 @@ namespace KonaAnalyzer.ViewModels
         public List<string> FontNames { get; } = new List<string>() { "Default", "FuturaBold", "FuturaMedium", "ProximaNovaRegular" };
         [Reactive] public string Font { get; set; } = "Default";
         private static bool _runOnce;
-       
+
 
         public ReactiveCommand<Unit, Task> LaunchNyTimesCommand { get; set; }
         [Reactive] public string TimerText { get; set; }
@@ -29,7 +29,7 @@ namespace KonaAnalyzer.ViewModels
 
         Stopwatch _stopwatch = new Stopwatch();
         public string Version => Configs.Version;
-      
+
         // ReSharper disable once UnassignedGetOnlyAutoProperty
         public bool ShowRefresh { [ObservableAsProperty] get; }
         public ReactiveCommand<Unit, Unit> LoadCommand;
@@ -42,18 +42,17 @@ namespace KonaAnalyzer.ViewModels
         {
             Title = "Loading ...";
 
-       
+
             _locationSource = locationSource;
             _populationSource = populationSource;
             _covidSource = covidSource;
-            var estinateCinnabd = ReactiveCommand.CreateFromTask(async () => await Task.Run(()=>covidSource.GenerateEstimates(7)));
-            estinateCinnabd.IsExecuting.Subscribe(x =>
+            var generateEstimates = ReactiveCommand.CreateFromTask(async () => await GenerateEstimates());
+            generateEstimates.IsExecuting.Subscribe(x =>
             {
                 IsBusy = x;
-                Debug.WriteLine($"Busy {IsBusy} sent:{x}");
             });
-            estinateCinnabd.ThrownExceptions.Subscribe(OnException);
-            AddEstimateCommand = estinateCinnabd;
+            generateEstimates.ThrownExceptions.Subscribe(OnException);
+            //AddEstimateCommand = generateEstimates;
             this.WhenAnyValue(x => x.IsBusy).Select(x => !x).ToPropertyEx(this, x => x.ShowRefresh);
             LoadCommand = ReactiveCommand.CreateFromTask(async x => await LoadAsync());
             LoadCommand.IsExecuting.Subscribe(x =>
@@ -65,7 +64,7 @@ namespace KonaAnalyzer.ViewModels
             var refresh = ReactiveCommand.CreateFromTask(async x =>
             {
                 _runOnce = false;
-             
+
             });
             refresh.InvokeCommand(LoadCommand);
             LaunchNyTimesCommand = ReactiveCommand.Create(async () =>
@@ -79,12 +78,24 @@ namespace KonaAnalyzer.ViewModels
             });
             Refresh = refresh;
         }
-         
+
+        public async Task GenerateEstimates()
+        {
+            var cts = new CancellationTokenSource();
+            var token = cts.Token;
+            StartWatch(token);
+            await Task.Run(async () =>
+            {
+                _covidSource.GenerateEstimates(7);
+            }, cts.Token);
+            cts.Cancel();
+        }
+
         private async Task LoadAsync()
         {
             Title = "Loading ...";
             _runOnce = true;
-            var cts = new CancellationTokenSource(); 
+            var cts = new CancellationTokenSource();
             var token = cts.Token;
             StartWatch(token);
             await Task.Run(async () =>
@@ -107,13 +118,13 @@ namespace KonaAnalyzer.ViewModels
                 {
                     TimerText = watch.Elapsed.ToString();
                     Thread.Sleep(200);
-                    if (token.IsCancellationRequested)
-                    {
-                        Debug.WriteLine("cancelled");
-                    }
                 }
                 //
             }, token);
+            if (token.IsCancellationRequested)
+            {
+                Debug.WriteLine("cancelled");
+            }
             Debug.WriteLine("leaving");
             watch.Stop();
         }

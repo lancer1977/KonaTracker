@@ -17,13 +17,16 @@ namespace KonaAnalyzer.Services
         public DateTime RealYesterday => DateTime.Today - TimeSpan.FromDays(1);
         protected DateTime _lastDate;
         protected DateTime _earliestDate;
+
+
         public DateTime Latest => _lastDate.Date;
         public DateTime Earliest => _earliestDate.Date;
-
-        public void GenerateEstimates(int days)
+        public IEnumerable<IChange> GenerateEstimates(int days)
         {
-
+            throw new NotImplementedException();
         }
+
+
         protected override async Task UpdateItems()
         {
             UpdateDates();
@@ -44,8 +47,8 @@ namespace KonaAnalyzer.Services
         }
         protected abstract void UpdateRowSource(IEnumerable<IChange> store);
 
-
-        public IEnumerable<IChange> CountyChanges(string state, string county, DateTime startDay, DateTime endDay)
+     
+        public IEnumerable<IChange> MatchingBetween(string state, string county, DateTime startDay, DateTime endDay)
         {
             var stateAll = state == "All";
             var countyAll = county == "All";

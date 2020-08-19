@@ -109,7 +109,7 @@ namespace KonaAnalyzer.ViewModels
             Counties = counties;
         }
 
-        private async void PopulateSubStateViewModels()
+        private void PopulateSubStateViewModels()
         {
             LoadingCounties = true;
             _sourceViewModels.Clear();
@@ -117,7 +117,7 @@ namespace KonaAnalyzer.ViewModels
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
-                await Task.Run(() => { vm.Load("All", item, Date); });
+                Task.Run(() => { vm.Load("All", item, Date); });
                 _sourceViewModels.Add(vm);
             }
 
