@@ -61,10 +61,10 @@ namespace KonaAnalyzer.ViewModels
                 .Subscribe();
         }
 
-        public override async Task OnStateUpdatedAsync(string state)
+        public override void OnStateUpdatedAsync(string state)
         {
             MaxDate = Date = DataStore.Latest;
-            await base.OnStateUpdatedAsync(state);
+            base.OnStateUpdatedAsync(state);
             if (State == "All")
             {
                 PopulateStates();
@@ -87,7 +87,7 @@ namespace KonaAnalyzer.ViewModels
             Counties = LocationStore.Counties(state).ToList();  
         }
 
-        private async void PopulateCountyViewModels()
+        private void PopulateCountyViewModels()
         {
             LoadingCounties = true;
             _sourceViewModels.Clear();
@@ -117,8 +117,9 @@ namespace KonaAnalyzer.ViewModels
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
-                Task.Run(() => { vm.Load("All", item, Date); });
                 _sourceViewModels.Add(vm);
+                 vm.Load("All", item, Date);
+                
             }
 
             LoadingCounties = false;

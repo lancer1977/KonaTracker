@@ -46,7 +46,11 @@ namespace KonaAnalyzer.Views
                 default:
                     if (id.Contains("-----")) return;
                     Detail = new NavigationPage(StatePage);
-                    _statePage.ViewModel.Load(id);
+                    Task.Run(() =>
+                    {
+                        _statePage.ViewModel.Load(id);
+                    });
+                   
                     break;
             }
 

@@ -31,7 +31,7 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double TwoWeekProjectionDeaths { get; set; }
         [Reactive] public double CurrentRiskRate { get; set; }
         [Reactive] public double DeadRiskRate { get; set; }
-        protected async Task UpdateValuesAsync(string state, string county, DateTime date)
+        protected  void UpdateValues(string state, string county, DateTime date)
         {
             if (date == default || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
             IsBusy = true;
@@ -41,11 +41,11 @@ namespace KonaAnalyzer.ViewModels
                 Population = PopulationDataStore.Population(state, county);
                 //var yesterdayDate = date - TimeSpan.FromDays(1);
 
-                var todayRates = await GetCurrentAndChangeAsync(state, county, date);
+                var todayRates =   GetCurrentAndChangeAsync(state, county, date);
                 Current = todayRates.current;
                 CurrentChange = todayRates.change;
                 CurrentChangeRate = todayRates.rate * 100;
-                var todayDeathRates = await GetDeathsCurrentAndChangeAsync(state, county, date);
+                var todayDeathRates =   GetDeathsCurrentAndChangeAsync(state, county, date);
                 Dead = todayDeathRates.current;
                 DeadChange = todayDeathRates.change;
                 DeadChangeRate = todayDeathRates.rate * 100;
@@ -93,34 +93,29 @@ namespace KonaAnalyzer.ViewModels
         }
 
 
-        private async Task<(int current, int change, double rate)> GetCurrentAndChangeAsync(string state, string county,
+        private  (int current, int change, double rate) GetCurrentAndChangeAsync(string state, string county,
             DateTime? date)
-        {
-            return await Task.Run(() =>
-            {
+        { 
                 var yesterdayDate = date - TimeSpan.FromDays(1);
                 var current = DataStore.Total(state, county, date);
                 var yesterdayTotal = DataStore.Total(state, county, yesterdayDate);
                 var currentChange = current - yesterdayTotal;
                 var currentChangeRate = RateChange(currentChange, yesterdayTotal);
                 return (current, currentChange, currentChangeRate);
-
-            });
+             
         }
 
-        private async Task<(int current, int change, double rate)> GetDeathsCurrentAndChangeAsync(string state,
+        private  (int current, int change, double rate) GetDeathsCurrentAndChangeAsync(string state,
             string county, DateTime? date)
         {
-            return await Task.Run(() =>
-            {
+           
                 var yesterdayDate = date - TimeSpan.FromDays(1);
                 var current = DataStore.Deaths(state, county, date);
                 var yesterdayTotal = DataStore.Deaths(state, county, yesterdayDate);
                 var currentChange = current - yesterdayTotal;
                 var currentChangeRate = RateChange(currentChange, yesterdayTotal);
                 return (current, currentChange, currentChangeRate);
-            });
-
+     
 
         }
 
@@ -160,17 +155,17 @@ namespace KonaAnalyzer.ViewModels
         public string DateText => _dateText.Value;
         public StateControlViewModel()
         {
-            this.WhenAnyValue(x => x.Date).Subscribe(async x => await UpdateValuesAsync(State, County, x));
+            this.WhenAnyValue(x => x.Date).Subscribe(  x =>   UpdateValues(State, County, x));
             this.WhenAnyValue(x => x.Date).Select(x => x.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
             this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
-            this.WhenAnyValue(x => x.County).Subscribe(async x => { await UpdateValuesAsync(State, x, Date); });
+            this.WhenAnyValue(x => x.County).Subscribe(  x => {   UpdateValues(State, x, Date); });
             this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false)
-                .Subscribe(async (x) => await OnStateUpdatedAsync(x));
+                .Subscribe(  (x) =>   OnStateUpdatedAsync(x));
         }
 
-        public virtual async Task OnStateUpdatedAsync(string state)
+        public virtual void OnStateUpdatedAsync(string state)
         {
-            await UpdateValuesAsync(state, County, Date);
+              UpdateValues(state, County, Date);
         }
 
 
