@@ -117,7 +117,7 @@ namespace KonaAnalyzer.ViewModels
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
-                await Task.Run(() => { vm.Load("All", item, Date); });
+                vm.Load("All", item, Date); 
                 _sourceViewModels.Add(vm);
             }
 

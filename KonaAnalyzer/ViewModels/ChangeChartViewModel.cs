@@ -115,86 +115,84 @@ namespace KonaAnalyzer.ViewModels
 
         private int _updates;
         private CancellationTokenSource _cts;
-        private async Task<List<ChartModel>>
-            Update(ChartUpdate update) //string state, string county, DateTime startDay, DateTime endDay)
+        private async Task<List<ChartModel>> Update(ChartUpdate update)  
         {
             var changes = new List<ChartModel>();
             _cts = new CancellationTokenSource();
             _cts.CancelAfter(5000);
             if (IsUpdating || string.IsNullOrEmpty(update.State) || string.IsNullOrEmpty(update.County) || update.StartDay == default || update.EndDay == default || update.StartDay >= update.EndDay) return changes;
 
-            await Task.Run(() =>
+   
+
+            try
             {
-                try
+                Debug.WriteLine($"In Update: {_updates++}");
+                var change = await Task.Run(() => DataStore.CountyChanges(update.State, update.County, update.StartDay, update.EndDay), _cts.Token);
+                Debug.WriteLine($"After Update: {_updates}");
+                //State = state;
+                //County = county;
+
+                if (update.State == "All" || "All" == update.County)
                 {
-                    Debug.WriteLine($"In Update: {_updates++}");
-                    var change = DataStore.CountyChanges(update.State, update.County, update.StartDay, update.EndDay);
-                    //State = state;
-                    //County = county;
-
-                    if (update.State == "All" || "All" == update.County)
+                    change = change.GroupBy(x => x.date).Select(x => new DayChange()
                     {
-                        change = change.GroupBy(x => x.date).Select(x => new DayChange()
-                        {
-                            date = x.Key,
-                            deaths = x.Sum(y => y.deaths),
-                            cases = x.Sum(y => y.cases),
-                            state = update.State,
-                            county = update.County
-                        });
+                        date = x.Key,
+                        deaths = x.Sum(y => y.deaths),
+                        cases = x.Sum(y => y.cases),
+                        state = update.State,
+                        county = update.County
+                    });
 
-                    }
+                }
 
-                    var sorted = change.OrderBy(x => x.date).ToList();
+                var sorted = change.OrderBy(x => x.date).ToList();
 
-                    for (var x = 0; x < sorted.Count; x++)
+                for (var x = 0; x < sorted.Count; x++)
+                {
+                    var current = sorted[x];
+                    var last = x > 0 ? sorted[x - 1] : null;
+                    var localChange = 0.0;
+
+
+                    if (last != null)
                     {
-                        var current = sorted[x];
-                        var last = x > 0 ? sorted[x - 1] : null;
-                        var localChange = 0.0;
-
-
-                        if (last != null)
+                        var changeCases = current.cases - last.cases;
+                        var changeDeaths = current.deaths - last.deaths;
+                        switch (DataType)
                         {
-                            var changeCases = current.cases - last.cases;
-                            var changeDeaths = current.deaths - last.deaths;
-                            switch (DataType)
-                            {
-                                case DataType.Death:
-                                    localChange = changeDeaths;
-                                    break;
-                                case DataType.Cases:
-                                    localChange = changeCases;
-                                    break;
-                                case DataType.CasesPercent:
+                            case DataType.Death:
+                                localChange = changeDeaths;
+                                break;
+                            case DataType.Cases:
+                                localChange = changeCases;
+                                break;
+                            case DataType.CasesPercent:
 
-                                    localChange = 100 * ((double)changeCases / (double)current.cases);
-                                    break;
-                                case DataType.DeathPercent:
-                                    localChange = 100 * ((double)changeDeaths / (double)current.deaths);
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
+                                localChange = 100 * ((double)changeCases / current.cases);
+                                break;
+                            case DataType.DeathPercent:
+                                localChange = 100 * ((double)changeDeaths / current.deaths);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
                         }
-
-                        changes.Add(new ChartModel()
-                        {
-                            Date = sorted[x].date,
-                            Change = localChange
-                        });
-
                     }
 
+                    changes.Add(new ChartModel()
+                    {
+                        Date = sorted[x].date,
+                        Change = localChange
+                    });
 
                 }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
 
-                }
-            }, _cts.Token);
 
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+
+            }
             _cts = null;
             return changes;
         }
@@ -214,21 +212,6 @@ namespace KonaAnalyzer.ViewModels
         }
     }
 
-    public readonly struct ChartUpdate
-    {
-        public string State { get; }
-        public string County { get; }
-        public DateTime StartDay { get; }
-        public DateTime EndDay { get; }
-
-        public ChartUpdate(string state, string county, DateTime startDay, DateTime endDay)
-        {
-            State = state;
-            County = county ?? "All";
-            StartDay = startDay;
-            EndDay = endDay;
-        }
-    }
     public enum DataType
     {
         Death,
