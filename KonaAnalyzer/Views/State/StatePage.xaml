@@ -8,16 +8,28 @@
              xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
              xmlns:views="clr-namespace:KonaAnalyzer.Views;assembly=KonaAnalyzer"
              xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:models="clr-namespace:KonaAnalyzer.Models;assembly=KonaAnalyzer"
              Title="{Binding Title}">
     <NavigationPage.TitleView >
         <Grid ColumnDefinitions="*,Auto,Auto,Auto"  HorizontalOptions="FillAndExpand"  >
             <Label Text="{Binding Title}" VerticalTextAlignment="Center" TextColor="White" FontSize="Large" HorizontalOptions="StartAndExpand">
                 <Label.IsVisible>
                     <OnPlatform x:TypeArguments="system:Boolean" Default="True">
-                        <On Platform="UWP" Value="False"/> 
+                        <On Platform="UWP" Value="False"/>
                     </OnPlatform>
                 </Label.IsVisible>
             </Label>
+            <StackLayout Orientation="Horizontal">
+                <CheckBox x:Name="SwapTemplateCheckBox" IsChecked="False"></CheckBox>
+                <Label Text="Swap Views Off">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference SwapTemplateCheckBox},  Path=IsChecked}" Value="True">
+                            <Setter Property="Text" Value="Swap Views On" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </StackLayout>
+
             <DatePicker Grid.Column="1" Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White" HorizontalOptions="End"/>
             <Frame  Grid.Column="2" BackgroundColor="Transparent" HorizontalOptions="End" >
                 <Frame.IsVisible>
@@ -43,7 +55,7 @@
             </Frame>
         </Grid>
     </NavigationPage.TitleView>
-    
+
     <!--<ContentPage.ToolbarItems>
         <ToolbarItem Text=" + "  Command="{Binding DateUpCommand}"  /> 
             <ToolbarItem   Text=" - "  Command="{Binding DateDownCommand}" />
@@ -58,6 +70,19 @@
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Accent">#96d1ff</Color>
             <Color x:Key="LightTextColor">#999999</Color>
+            <DataTemplate x:Key="LiteTemplate"  >
+                <views:StateControlLite />
+            </DataTemplate>
+
+            <DataTemplate x:Key="FullTemplate">
+                <views:StateControl />
+                <!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  -->
+            </DataTemplate>
+
+            <models:PersonDataTemplateSelector x:Key="templateSelector"
+                                               UseSecondTemplate="False"
+                                              Template1="{StaticResource LiteTemplate}"
+                                              Template2="{StaticResource FullTemplate}" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -77,6 +102,11 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <ActivityIndicator Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Black" 
+                               IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+            />
+            <BoxView  Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                      IsVisible="{Binding IsBusy}" Opacity=".7" Color="Black" />
             <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding County}">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
@@ -84,28 +114,28 @@
                         CommandParameter="Alphabetical" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="0" Grid.Column="1" Text="Total">
+            <Label Grid.Row="0" Grid.Column="1" Text="Total" TextDecorations="Underline">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Total" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="2"  Text="Change">
+            <Label  TextDecorations="Underline" Grid.Row="0" Grid.Column="2"  Text="Change">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Change" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="3"  Text="Daily Inc.">
+            <Label  TextDecorations="Underline" Grid.Row="0" Grid.Column="3"  Text="Daily Inc.">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Percent" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label  Grid.Row="0" Grid.Column="4"  Text="Pop. Risk">
+            <Label  TextDecorations="Underline" Grid.Row="0" Grid.Column="4"  Text="Pop. Risk">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
@@ -113,21 +143,21 @@
                 </Label.GestureRecognizers>
             </Label>
 
-            <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick">
+            <Label  TextDecorations="Underline" Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Total" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths">
+            <Label  TextDecorations="Underline" Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
                         CommandParameter="Dead" />
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population">
+            <Label  TextDecorations="Underline" Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
@@ -149,7 +179,7 @@
             <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0:0.#}%'}" />
             <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.###}%'}" />
 
-            <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality">
+            <Label  TextDecorations="Underline" Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                         Command="{Binding SortCommand}"
@@ -162,15 +192,28 @@
         </Grid>
 
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
-
-        <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/>-->
-        <ListView ItemsSource="{Binding CountyViewModels}" HasUnevenRows="True" ItemSelected="ListView_ItemSelected">
+        <ListView ItemsSource="{Binding CountyViewModels}"  ItemSelected="ListView_ItemSelected"  HasUnevenRows="True">
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:Key="FullTemplate">
                     <views:StateControl />
+                    <!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  -->
                 </DataTemplate>
             </ListView.ItemTemplate>
+ 
+            <!--<ListView.Triggers>
+                <DataTrigger TargetType="ListView" Binding="{Binding Source={x:Reference SwapTemplateCheckBox},  Path=IsChecked}" Value="True">
+                    <Setter Property="ItemTemplate" Value="{StaticResource LiteTemplate}" />
+                </DataTrigger>
+            </ListView.Triggers>-->
         </ListView>
+        <!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/> ItemTemplate="{StaticResource FullTemplate}"-->
+        <!--<ListView ItemsSource="{Binding CountyViewModels}"  ItemSelected="ListView_ItemSelected" ItemTemplate="{StaticResource FullTemplate}">
+            <ListView.Triggers>
+                <DataTrigger TargetType="ListView" Binding="{Binding Source={x:Reference SwapTemplateCheckBox},  Path=IsChecked}" Value="True">
+                    <Setter Property="ItemTemplate" Value="{StaticResource LiteTemplate}" />
+                </DataTrigger>
+            </ListView.Triggers>
+        </ListView>-->
 
 
     </StackLayout>
