@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.Console", "Kon
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{CABB1373-6E05-419F-BDC7-EDA59832A010}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.SqlData", "KonaAnalyzer.SqlData\KonaAnalyzer.SqlData.csproj", "{E12FE939-3037-4C4F-B114-C150DC5DDF1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonaAnalyzer.SqlData", "KonaAnalyzer.SqlData\KonaAnalyzer.SqlData.csproj", "{E12FE939-3037-4C4F-B114-C150DC5DDF1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonaAnalyzer.Mac", "KonaAnalyzer.Mac\KonaAnalyzer.Mac.csproj", "{9D393C33-D6F9-48C9-A764-E8FAE0C51AD7}"
 EndProject
@@ -186,6 +186,8 @@ Global
 		{734786FA-F431-467B-96BD-2016691B5E53}.Release|x86.ActiveCfg = Release|Any CPU
 		{734786FA-F431-467B-96BD-2016691B5E53}.Release|x86.Build.0 = Release|Any CPU
 		{66A02B35-05B5-4ACB-BD40-2333E443AF65}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{66A02B35-05B5-4ACB-BD40-2333E443AF65}.Debug|Any CPU.Build.0 = Debug|x86
+		{66A02B35-05B5-4ACB-BD40-2333E443AF65}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{66A02B35-05B5-4ACB-BD40-2333E443AF65}.Debug|ARM.ActiveCfg = Debug|ARM
 		{66A02B35-05B5-4ACB-BD40-2333E443AF65}.Debug|ARM.Build.0 = Debug|ARM
 		{66A02B35-05B5-4ACB-BD40-2333E443AF65}.Debug|ARM.Deploy.0 = Debug|ARM
