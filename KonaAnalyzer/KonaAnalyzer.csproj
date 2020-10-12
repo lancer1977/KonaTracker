@@ -34,6 +34,9 @@
     <Compile Update="Views\OverviewPage.xaml.cs">
       <DependentUpon>OverviewPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\StateControlLite.xaml.cs">
+      <DependentUpon>StateControlLite.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\StateControl.xaml.cs">
       <DependentUpon>StateControl.xaml</DependentUpon>
     </Compile>
