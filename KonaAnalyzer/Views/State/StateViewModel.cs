@@ -32,6 +32,14 @@ namespace KonaAnalyzer.ViewModels
         public StateViewModel()
         {
             Title = "NA";
+            _sourceViewModels = new SourceList<StateControlViewModel>();
+            var sortChanged = this.WhenAnyValue(x => x.Sort).Select(x => x.GetSorter());
+            _sourceViewModels.Connect()
+                .Sort(sortChanged)
+                .Bind(out _countyViewModels)
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .DisposeMany()
+                .Subscribe();
             DateUpCommand = ReactiveCommand.Create(() =>
             {
                 if (Date != MaxDate) Date += TimeSpan.FromDays(1);
@@ -52,18 +60,15 @@ namespace KonaAnalyzer.ViewModels
 
                    }
                });
-            var sortChanged = this.WhenAnyValue(x => x.Sort).Select(x => x.GetSorter());
-             _sourceViewModels = new SourceList<StateControlViewModel>();
-            var myOperation = _sourceViewModels.Connect()
-                .Sort(sortChanged)
-                .Bind(out _countyViewModels)
-                .DisposeMany()
-                .Subscribe();
+        
+        
         }
 
         public override void OnStateUpdatedAsync(string state)
         {
-            MaxDate = Date = DataStore.Latest;
+            
+            MaxDate =  DataStore.Latest;
+            Date = MaxDate;
             base.OnStateUpdatedAsync(state);
             if (State == "All")
             {
@@ -96,7 +101,7 @@ namespace KonaAnalyzer.ViewModels
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
                 _sourceViewModels.Add(vm);
-                vm.Load(item, State, Date);
+                Task.Run(()=>vm.Load(item, State, Date));
                 
             }
 

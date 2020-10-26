@@ -18,7 +18,7 @@ namespace KonaAnalyzer.ViewModels
         public int Fips { get; set; }
         [Reactive] public int Current { get; set; }
         [Reactive] public int Dead { get; set; }
-        [Reactive] public DateTime Date { get; set; }
+        [Reactive] public DateTime? Date { get; set; }
         [Reactive] public int Population { get; set; }
         [Reactive] public int CurrentChange { get; set; }
         [Reactive] public double CurrentChangeRate { get; set; }
@@ -32,9 +32,9 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double TwoWeekProjectionDeaths { get; set; }
         [Reactive] public double CurrentRiskRate { get; set; }
         [Reactive] public double DeadRiskRate { get; set; }
-        protected void UpdateValues(string state, string county, DateTime date)
+        protected void UpdateValues(string state, string county, DateTime? date)
         {
-            if (date == default || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
+            if (date == null || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
             Fips = LocationStore.GetFips(state, county);
             IsBusy = true;
 
@@ -160,7 +160,7 @@ namespace KonaAnalyzer.ViewModels
             return Math.Round((double)change / yesterday, 3);
         }
 
-        public void Load(string county, string state, DateTime date)
+        public void Load(string county, string state, DateTime? date)
         {
             IsSubViewModel = true;
             County = county;
@@ -177,8 +177,8 @@ namespace KonaAnalyzer.ViewModels
         public string DateText => _dateText.Value;
         public StateControlViewModel()
         {
-            this.WhenAnyValue(x => x.Date).Subscribe(x => UpdateValues(State, County, x));
-            this.WhenAnyValue(x => x.Date).Select(x => x.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
+            this.WhenAnyValue(x => x.Date).Where(x => x != null).Subscribe(x => UpdateValues(State, County, x));
+            this.WhenAnyValue(x => x.Date).Where(x=>x != null).Select(x => x.Value.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
             this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
             this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
             this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false)

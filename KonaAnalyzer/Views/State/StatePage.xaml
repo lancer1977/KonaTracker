@@ -70,19 +70,19 @@
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Accent">#96d1ff</Color>
             <Color x:Key="LightTextColor">#999999</Color>
-            <DataTemplate x:Key="LiteTemplate"  >
+            <!--<DataTemplate x:Key="LiteTemplate"  >
                 <views:StateControlLite />
             </DataTemplate>
 
             <DataTemplate x:Key="FullTemplate">
                 <views:StateControl />
-                <!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  -->
+                --><!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  --><!--
             </DataTemplate>
 
             <models:PersonDataTemplateSelector x:Key="templateSelector"
                                                UseSecondTemplate="False"
                                               Template1="{StaticResource LiteTemplate}"
-                                              Template2="{StaticResource FullTemplate}" />
+                                              Template2="{StaticResource FullTemplate}" />-->
         </ResourceDictionary>
     </ContentPage.Resources>
 

@@ -111,34 +111,34 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CsvHelper">
-      <Version>15.0.3</Version>
+      <Version>15.0.8</Version>
     </PackageReference>
     <PackageReference Include="PolyhydraGames.Core.SQLite">
       <Version>2.0.0.18</Version>
     </PackageReference>
     <PackageReference Include="ReactiveUI">
-      <Version>11.5.17</Version>
+      <Version>12.1.1</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.7.335</Version>
     </PackageReference>
     <PackageReference Include="SQLitePCLRaw.bundle_winsqlite3">
-      <Version>2.0.3</Version>
+      <Version>2.0.4</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.SfChart.WPF">
-      <Version>18.2.0.44</Version>
+      <Version>18.3.0.42</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfChart">
-      <Version>18.2.0.44</Version>
+      <Version>18.3.0.42</Version>
     </PackageReference>
     <PackageReference Include="Syncfusion.Xamarin.SfChart.WPF">
-      <Version>18.2.0.44</Version>
+      <Version>18.3.0.42</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>4.8.0.1269</Version>
+      <Version>4.8.0.1560</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Platform.WPF">
-      <Version>4.8.0.1269</Version>
+      <Version>4.8.0.1560</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="Autofac" Version="6.0.0" />
     <PackageReference Include="PolyhydraGames.Core.SQLite" Version="2.0.0.18" />
   </ItemGroup>
 
