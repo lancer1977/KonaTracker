@@ -11,5 +11,6 @@ namespace KonaAnalyzer.Models
         public int deaths { get; set; }
         public string state => Location.State;
         public string county => Location.County;
+        public int? fips => Location.Fips;
     }
 }

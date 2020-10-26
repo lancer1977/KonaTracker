@@ -13,16 +13,6 @@ using SQLite;
 
 namespace KonaAnalyzer.SqlData
 {
-    public static class EnumerableExtensions
-    {
-        public static (T, T) GetFirstAndLastT<T2, T>(this IEnumerable<T2> source, Func<T2, T> getT)
-        {
-            var items = source.ToList();
-            var first = items.Select(getT).FirstOrDefault();
-            var last = items.Select(getT).LastOrDefault();
-            return (first, last);
-        }
-    }
     public class SQLCovidSource : BaseSource, ICovidSource
     {
         private readonly ISQLiteFactory _factory;
@@ -128,6 +118,7 @@ namespace KonaAnalyzer.SqlData
         public DateTime RealYesterday => DateTime.Today - TimeSpan.FromDays(1);
         DateTime _lastDate;
         DateTime _earliestDate;
+
         public DateTime Latest => _lastDate.Date;
         public DateTime Earliest => _earliestDate.Date;
 
@@ -155,6 +146,26 @@ namespace KonaAnalyzer.SqlData
             var subset = Table.Where(x => startDay <= x.date && x.date <= endDay);
             return Matching(subset, state, county);
         }
+
+        public int Total(int fips, DateTime? date)
+        {
+            if (date == null) date = Yesterday;
+            return Matching(fips, date).Select(x => x.cases).Sum();
+        }
+
+
+        public int Deaths(int fips, DateTime? date)
+        {
+            if (date == null) date = Yesterday;
+            var items = Matching(fips, date).Select(x => x.deaths).Sum();
+            return items;
+        }
+        public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
+        { 
+            var subset = Table.Where(x => startDay <= x.date && x.date <= endDay);
+            return Matching(subset, fips);
+        }
+
 
         public IEnumerable<IChange> Matching(string state, string county, params DateTime[] days)
         {
@@ -203,6 +214,29 @@ namespace KonaAnalyzer.SqlData
             }
         }
 
+        public IEnumerable<DayChange> Matching(int fips, DateTime? date)
+        {
+            var dateValue = date ?? Yesterday;
+            var subset = Table.Where(x => x.date == dateValue);
+            return Matching(subset, fips);
+        }
+
+        private static IEnumerable<DayChange> Matching(TableQuery<DayChange> changes, int fips)
+        {
+
+            if (fips == 0)
+            {
+                return changes;
+            }
+
+            if (fips % 1000 == 0)
+            {
+                var maxfips = fips + 1000;
+                return changes.Where(x => x.fips > fips && x.fips < maxfips);
+            }
+            //var location = _locationService.GetLocation(state, county);
+            return changes.Where(x => x.fips == fips);
+        }
 
         public IEnumerable<IChange> Changes => Table;
 

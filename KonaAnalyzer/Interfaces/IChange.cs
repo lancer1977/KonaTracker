@@ -9,5 +9,6 @@ namespace KonaAnalyzer.Data
         int deaths { get; }
         string state { get; }
         string county { get;  }
+        int? fips { get; }
     }
 }

@@ -17,12 +17,12 @@ namespace KonaAnalyzer.Services
         public IEnumerable<Location> Locations { get; private set; }
         public int GetId(string state, string county)
         {
-            return Locations.First(x => x.State == state && x.County == county).LocationId;
+            return Locations.First(x => x.State == state && x.County == county).Fips;
         }
 
         public Location GetLocation(int id)
         {
-            return Locations.First(x => x.LocationId == id);
+            return Locations.First(x => x.Fips == id);
         }
 
         public IEnumerable<string> Counties(string state)
@@ -38,6 +38,23 @@ namespace KonaAnalyzer.Services
         public Location GetLocation(string state, string county)
         {
             return Locations.FirstOrDefault(x => x.County == county && x.State == state);
+        }
+
+        public int GetFips(string state, string county)
+        {
+            if (county != "All") return (Locations.FirstOrDefault(x => x.State == state && x.County == county) ?? new Location()).Fips;
+            {
+                Location first = null;
+                foreach (var x in Locations)
+                {
+                    if (x.State != state) continue;
+                    first = x;
+                    break;
+                }
+
+                  return (first ?? new Location()).Fips.Round(1000);
+            }
+
         }
 
         protected override async Task UpdateItems()

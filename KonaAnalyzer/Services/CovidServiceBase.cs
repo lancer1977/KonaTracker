@@ -47,7 +47,7 @@ namespace KonaAnalyzer.Services
         }
         protected abstract void UpdateRowSource(IEnumerable<IChange> store);
 
-     
+
         public IEnumerable<IChange> MatchingBetween(string state, string county, DateTime startDay, DateTime endDay)
         {
             var stateAll = state == "All";
@@ -116,6 +116,46 @@ namespace KonaAnalyzer.Services
 
         public abstract IEnumerable<IChange> Changes { get; }
 
+        public IEnumerable<IChange> Matching(int fips, DateTime? date)
+        {
+            var dateValue = date ?? Yesterday;
+            var subset = Changes.Where(x => x.date == dateValue);
+            return Matching(subset, fips);
+        }
 
+        private static IEnumerable<IChange> Matching(IEnumerable<IChange> changes, int fips)
+        {
+
+            if (fips == 0)
+            {
+                return changes;
+            }
+
+            if (fips % 1000 == 0)
+            {
+                var maxfips = fips + 1000;
+                return changes.Where(x => x.fips > fips && x.fips < maxfips);
+            }
+            //var location = _locationService.GetLocation(state, county);
+            return changes.Where(x => x.fips == fips);
+        }
+        public int Total(int fips, DateTime? date)
+        {
+            if (date == null) date = Yesterday;
+            return Matching(fips, date).Select(x => x.cases).Sum();
+        }
+
+
+        public int Deaths(int fips, DateTime? date)
+        {
+            if (date == null) date = Yesterday;
+            var items = Matching(fips, date).Select(x => x.deaths).Sum();
+            return items;
+        }
+        public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
+        {
+            var subset = Changes.Where(x => startDay <= x.date && x.date <= endDay);
+            return Matching(subset, fips);
+        }
     }
 }

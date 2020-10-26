@@ -91,18 +91,4 @@ namespace KonaAnalyzer.Services
         private List<LiteDayChange> _changes = new List<LiteDayChange>();
         public override IEnumerable<IChange> Changes => _changes;
     }
-
-    public class InMemoryCovidSource : CovidServiceBase, ICovidSource
-    {
- 
-         
-
-        protected override void UpdateRowSource(IEnumerable<IChange> store)
-        {
-            _changes = store.Cast<DayChange>().ToList();
-        }
-
-        private List<DayChange> _changes = new List<DayChange>();
-        public override IEnumerable<IChange> Changes => _changes;
-    }
 }

@@ -13,6 +13,12 @@ namespace KonaAnalyzer.Interfaces
         //DateTime LastDate(string state);
         IEnumerable<IChange> MatchingBetween(string state, string countyName, DateTime startDay, DateTime endDay);
 
+        int Total(int fips, DateTime? date);
+        int Deaths(int fips, DateTime? date);
+        //DateTime LastDate(string state);
+        IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay);
+
+
         //DateTime EarliestDate(string first);
         DateTime Latest { get; }
         DateTime Earliest { get; }

@@ -27,6 +27,7 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public DateTime EndDate { get; set; }
         [Reactive] public string State { get; set; }
         [Reactive] public string County { get; set; }
+        [Reactive] public int Fips { get; set; }
         [Reactive] public int Maximum { get; set; }
         [Reactive] public int Minimum { get; set; }
         [Reactive] public bool ShowLabels { get; set; }
@@ -43,6 +44,7 @@ namespace KonaAnalyzer.ViewModels
             _locationSource = locationSource;
             State = "All";
             County = "All";
+            Fips = 0;
             States = _locationSource.States().ToList();
             States.Insert(0, "All");
             LastestDate = covidSource.Latest;
@@ -66,10 +68,10 @@ namespace KonaAnalyzer.ViewModels
 
 
             this.WhenAnyValue(x => x.Items).Subscribe(OnItemsChanged, OnException);
-            this.WhenAnyValue(x => x.County, x => new ChartUpdate(State, x, StartDate, EndDate)).InvokeCommand(GetItems);
-            this.WhenAnyValue(x => x.StartDate, x => new ChartUpdate(State, County, x, EndDate)).InvokeCommand(GetItems);
-            this.WhenAnyValue(x => x.EndDate, x => new ChartUpdate(State, County, StartDate, x)).InvokeCommand(GetItems);
-            this.WhenAnyValue(x => x.DataType).Select(x => new ChartUpdate(State, County, StartDate, EndDate)).InvokeCommand(GetItems);
+            this.WhenAnyValue(x => x.County, x => GetChartUpdate(State, x, StartDate, EndDate)).InvokeCommand(GetItems);
+            this.WhenAnyValue(x => x.StartDate, x => GetChartUpdate(State, County, x, EndDate)).InvokeCommand(GetItems);
+            this.WhenAnyValue(x => x.EndDate, x => GetChartUpdate(State, County, StartDate, x)).InvokeCommand(GetItems);
+            this.WhenAnyValue(x => x.DataType).Select(x => GetChartUpdate(State, County, StartDate, EndDate)).InvokeCommand(GetItems);
             this.WhenAnyValue(x => x.DataType).Subscribe(x =>
             {
 
@@ -92,6 +94,12 @@ namespace KonaAnalyzer.ViewModels
                 }
             }, OnException);
             ToggleControls = ReactiveCommand.Create(() => ShowControls = !ShowControls);
+        }
+
+        private ChartUpdate GetChartUpdate(string state, string county, DateTime start, DateTime end)
+        {
+            var fips = LocationStore.GetFips(state, county);
+            return new ChartUpdate(state,county,start,end,fips);
         }
 
         public void OnException(Exception ex)
@@ -122,7 +130,8 @@ namespace KonaAnalyzer.ViewModels
             try
             {
                 Debug.WriteLine($"In Update: {_updates++}");
-                var change = DataStore.MatchingBetween(update.State, update.County, update.StartDay, update.EndDay);
+                //var change = DataStore.MatchingBetween(update.State, update.County, update.StartDay, update.EndDay);
+                var change = DataStore.MatchingBetween(update.Fips, update.StartDay, update.EndDay);
                 //State = state;
                 //County = county;
 

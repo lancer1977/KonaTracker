@@ -14,5 +14,6 @@ namespace KonaAnalyzer.Interfaces
         IEnumerable<string> States();
         Location GetLocation(string state, string county);
         Task LoadAsync();
+        int GetFips(string state, string county);
     }
 }

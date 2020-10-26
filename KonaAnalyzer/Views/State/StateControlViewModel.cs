@@ -15,6 +15,7 @@ namespace KonaAnalyzer.ViewModels
         // [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
         [Reactive] public string County { get; set; } = "All";
         [Reactive] public string State { get; set; }
+        public int Fips { get; set; }
         [Reactive] public int Current { get; set; }
         [Reactive] public int Dead { get; set; }
         [Reactive] public DateTime Date { get; set; }
@@ -31,9 +32,10 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double TwoWeekProjectionDeaths { get; set; }
         [Reactive] public double CurrentRiskRate { get; set; }
         [Reactive] public double DeadRiskRate { get; set; }
-        protected  void UpdateValues(string state, string county, DateTime date)
+        protected void UpdateValues(string state, string county, DateTime date)
         {
             if (date == default || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
+            Fips = LocationStore.GetFips(state, county);
             IsBusy = true;
 
             try
@@ -41,11 +43,11 @@ namespace KonaAnalyzer.ViewModels
                 Population = PopulationDataStore.Population(state, county);
                 //var yesterdayDate = date - TimeSpan.FromDays(1);
 
-                var todayRates =   GetCurrentAndChangeAsync(state, county, date);
+                var todayRates = GetCurrentAndChangeAsync(Fips, date);
                 Current = todayRates.current;
                 CurrentChange = todayRates.change;
                 CurrentChangeRate = todayRates.rate * 100;
-                var todayDeathRates =   GetDeathsCurrentAndChangeAsync(state, county, date);
+                var todayDeathRates = GetDeathsCurrentAndChangeAsync(Fips, date);
                 Dead = todayDeathRates.current;
                 DeadChange = todayDeathRates.change;
                 DeadChangeRate = todayDeathRates.rate * 100;
@@ -93,32 +95,52 @@ namespace KonaAnalyzer.ViewModels
         }
 
 
-        private  (int current, int change, double rate) GetCurrentAndChangeAsync(string state, string county,
-            DateTime? date)
-        { 
-                var yesterdayDate = date - TimeSpan.FromDays(1);
-                var current = DataStore.Total(state, county, date);
-                var yesterdayTotal = DataStore.Total(state, county, yesterdayDate);
-                var currentChange = current - yesterdayTotal;
-                var currentChangeRate = RateChange(currentChange, yesterdayTotal);
-                return (current, currentChange, currentChangeRate);
-             
-        }
+        //private  (int current, int change, double rate) GetCurrentAndChangeAsync(string state, string county, DateTime? date)
+        //{ 
+        //        var yesterdayDate = date - TimeSpan.FromDays(1);
+        //        var current = DataStore.Total(state, county, date);
+        //        var yesterdayTotal = DataStore.Total(state, county, yesterdayDate);
+        //        var currentChange = current - yesterdayTotal;
+        //        var currentChangeRate = RateChange(currentChange, yesterdayTotal);
+        //        return (current, currentChange, currentChangeRate);
 
-        private  (int current, int change, double rate) GetDeathsCurrentAndChangeAsync(string state,
-            string county, DateTime? date)
+        //}
+
+        //private  (int current, int change, double rate) GetDeathsCurrentAndChangeAsync(string state, string county, DateTime? date)
+        //{
+
+        //        var yesterdayDate = date - TimeSpan.FromDays(1);
+        //        var current = DataStore.Deaths(state, county, date);
+        //        var yesterdayTotal = DataStore.Deaths(state, county, yesterdayDate);
+        //        var currentChange = current - yesterdayTotal;
+        //        var currentChangeRate = RateChange(currentChange, yesterdayTotal);
+        //        return (current, currentChange, currentChangeRate);
+
+
+        //}
+        private (int current, int change, double rate) GetCurrentAndChangeAsync(int fips, DateTime? date)
         {
-           
-                var yesterdayDate = date - TimeSpan.FromDays(1);
-                var current = DataStore.Deaths(state, county, date);
-                var yesterdayTotal = DataStore.Deaths(state, county, yesterdayDate);
-                var currentChange = current - yesterdayTotal;
-                var currentChangeRate = RateChange(currentChange, yesterdayTotal);
-                return (current, currentChange, currentChangeRate);
-     
+            var yesterdayDate = date - TimeSpan.FromDays(1);
+            var current = DataStore.Total(fips, date);
+            var yesterdayTotal = DataStore.Total(fips, yesterdayDate);
+            var currentChange = current - yesterdayTotal;
+            var currentChangeRate = RateChange(currentChange, yesterdayTotal);
+            return (current, currentChange, currentChangeRate);
 
         }
 
+        private (int current, int change, double rate) GetDeathsCurrentAndChangeAsync(int fips, DateTime? date)
+        {
+
+            var yesterdayDate = date - TimeSpan.FromDays(1);
+            var current = DataStore.Deaths(fips, date);
+            var yesterdayTotal = DataStore.Deaths(fips, yesterdayDate);
+            var currentChange = current - yesterdayTotal;
+            var currentChangeRate = RateChange(currentChange, yesterdayTotal);
+            return (current, currentChange, currentChangeRate);
+
+
+        }
         protected int GetTwoWeekProjectionCases((int current, int change, double rate) changes, double decay)
         {
             var total = (double)changes.current;
@@ -155,17 +177,17 @@ namespace KonaAnalyzer.ViewModels
         public string DateText => _dateText.Value;
         public StateControlViewModel()
         {
-            this.WhenAnyValue(x => x.Date).Subscribe(  x =>   UpdateValues(State, County, x));
+            this.WhenAnyValue(x => x.Date).Subscribe(x => UpdateValues(State, County, x));
             this.WhenAnyValue(x => x.Date).Select(x => x.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
             this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
-            this.WhenAnyValue(x => x.County).Subscribe(  x => {   UpdateValues(State, x, Date); });
+            this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
             this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false)
-                .Subscribe(  (x) =>   OnStateUpdatedAsync(x));
+                .Subscribe((x) => OnStateUpdatedAsync(x));
         }
 
         public virtual void OnStateUpdatedAsync(string state)
         {
-              UpdateValues(state, County, Date);
+            UpdateValues(state, County, Date);
         }
 
 

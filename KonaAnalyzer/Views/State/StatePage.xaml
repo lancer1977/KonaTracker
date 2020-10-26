@@ -19,7 +19,7 @@
                     </OnPlatform>
                 </Label.IsVisible>
             </Label>
-            <StackLayout Orientation="Horizontal">
+            <!--<StackLayout Orientation="Horizontal">
                 <CheckBox x:Name="SwapTemplateCheckBox" IsChecked="False"></CheckBox>
                 <Label Text="Swap Views Off">
                     <Label.Triggers>
@@ -28,7 +28,7 @@
                         </DataTrigger>
                     </Label.Triggers>
                 </Label>
-            </StackLayout>
+            </StackLayout>-->
 
             <DatePicker Grid.Column="1" Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White" HorizontalOptions="End"/>
             <Frame  Grid.Column="2" BackgroundColor="Transparent" HorizontalOptions="End" >
@@ -194,7 +194,7 @@
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"></BoxView>
         <ListView ItemsSource="{Binding CountyViewModels}"  ItemSelected="ListView_ItemSelected"  HasUnevenRows="True">
             <ListView.ItemTemplate>
-                <DataTemplate x:Key="FullTemplate">
+                <DataTemplate >
                     <views:StateControl />
                     <!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  -->
                 </DataTemplate>
