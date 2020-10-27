@@ -32,6 +32,12 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public double TwoWeekProjectionDeaths { get; set; }
         [Reactive] public double CurrentRiskRate { get; set; }
         [Reactive] public double DeadRiskRate { get; set; }
+        protected bool IsSubViewModel;
+        private readonly ObservableAsPropertyHelper<string> _populationText;
+        public string PopulationText => _populationText.Value;
+        private readonly ObservableAsPropertyHelper<string> _dateText;
+
+        public string DateText => _dateText.Value;
         protected void UpdateValues(string state, string county, DateTime? date)
         {
             if (date == null || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
@@ -167,29 +173,30 @@ namespace KonaAnalyzer.ViewModels
             State = state;
             Title = county == "All" ? state : county;
             Date = date;
-
+            OnStateUpdated(State);
+            //UpdateValues(State, County, Date);
         }
-        protected bool IsSubViewModel;
-        private readonly ObservableAsPropertyHelper<string> _populationText;
-        public string PopulationText => _populationText.Value;
-        private readonly ObservableAsPropertyHelper<string> _dateText;
 
-        public string DateText => _dateText.Value;
         public StateControlViewModel()
         {
-            this.WhenAnyValue(x => x.Date).Where(x => x != null).Subscribe(x => UpdateValues(State, County, x));
-            this.WhenAnyValue(x => x.Date).Where(x=>x != null).Select(x => x.Value.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
+
+
+            //this.WhenAnyValue(x => x.Date).Where(x => x != null).Subscribe(x => UpdateValues(State, County, x));
             this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
-            this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
-            this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false)
-                .Subscribe((x) => OnStateUpdatedAsync(x));
+            //this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
+            this.WhenAnyValue(x => x.Date).Where(x => x != null).Select(x => x.Value.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
+            //this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false).Subscribe(OnStateUpdated);
         }
 
-        public virtual void OnStateUpdatedAsync(string state)
+        public virtual void OnStateUpdated(string state)
         {
             UpdateValues(state, County, Date);
         }
 
 
+        public void Refresh()
+        {
+            UpdateValues(State, County, Date);
+        }
     }
 }

@@ -10,6 +10,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Views\State\StatePage - Copy.xaml.old" />
+  </ItemGroup>
+
 
 
   <ItemGroup>

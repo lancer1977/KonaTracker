@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="KonaAnalyzer.Views.StatePage"
+             xmlns:vm="clr-namespace:KonaAnalyzer.ViewModels"
+             xmlns:views="clr-namespace:KonaAnalyzer.Views;assembly=KonaAnalyzer"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:models="clr-namespace:KonaAnalyzer.Models;assembly=KonaAnalyzer"
+             Title="{Binding Title}">
+    <NavigationPage.TitleView >
+        <Grid ColumnDefinitions="*,Auto,Auto,Auto"  HorizontalOptions="FillAndExpand"  >
+            <Label Text="{Binding Title}" VerticalTextAlignment="Center" TextColor="White" FontSize="Large" HorizontalOptions="StartAndExpand">
+                <Label.IsVisible>
+                    <OnPlatform x:TypeArguments="system:Boolean" Default="True">
+                        <On Platform="UWP" Value="False"/>
+                    </OnPlatform>
+                </Label.IsVisible>
+            </Label>
+            <!--<StackLayout Orientation="Horizontal">
+                <CheckBox x:Name="SwapTemplateCheckBox" IsChecked="False"></CheckBox>
+                <Label Text="Swap Views Off">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding Source={x:Reference SwapTemplateCheckBox},  Path=IsChecked}" Value="True">
+                            <Setter Property="Text" Value="Swap Views On" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+            </StackLayout>-->
+
+            <DatePicker Grid.Column="1" Date="{Binding Date}" BackgroundColor="Transparent"  TextColor="White" HorizontalOptions="End"/>
+            <Frame  Grid.Column="2" BackgroundColor="Transparent" HorizontalOptions="End" >
+                <Frame.IsVisible>
+                    <OnPlatform x:TypeArguments="system:Boolean" Default="True">
+                        <On Platform="UWP" Value="False"/>
+                    </OnPlatform>
+                </Frame.IsVisible>
+                <Label Text=" + " TextColor="White" FontSize="Large" BackgroundColor="Transparent" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DateUpCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+            <Frame  Grid.Column="3" BackgroundColor="Transparent"  HorizontalOptions="End" >
+                <Frame.IsVisible>
+                    <OnPlatform x:TypeArguments="system:Boolean" Default="True">
+                        <On Platform="UWP" Value="False"/>
+                    </OnPlatform>
+                </Frame.IsVisible>
+                <Label   Text=" - " TextColor="White" FontSize="Large" HorizontalOptions="End" VerticalOptions="Center"/>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding DateDownCommand}" />
+                </Frame.GestureRecognizers>
+            </Frame>
+        </Grid>
+    </NavigationPage.TitleView>
+
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem Text=" + "  Command="{Binding DateUpCommand}"  /> 
+            <ToolbarItem   Text=" - "  Command="{Binding DateDownCommand}" />
+    </ContentPage.ToolbarItems>-->
+
+    <ContentPage.BindingContext>
+        <vm:StateViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+            <!--<DataTemplate x:Key="LiteTemplate"  >
+                <views:StateControlLite />
+            </DataTemplate>
+
+            <DataTemplate x:Key="FullTemplate">
+                <views:StateControl />
+                --><!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  --><!--
+            </DataTemplate>
+
+            <models:PersonDataTemplateSelector x:Key="templateSelector"
+                                               UseSecondTemplate="False"
+                                              Template1="{StaticResource LiteTemplate}"
+                                              Template2="{StaticResource FullTemplate}" />-->
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+
+    <StackLayout Orientation="Vertical" Padding="16" Spacing="15">
+
+        <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"/>
+        <ListView ItemsSource="{Binding CountyViewModels}"  ItemSelected="ListView_ItemSelected"  HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate >
+                    <views:StateControl />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+ 
+   
+        </ListView>
+
+
+    </StackLayout>
+</ContentPage>
+<!--  BindingContext="{Binding Path=BindingContext, Source={x:Reference Name=page}}"  -->
+<!--<ListView.Triggers>
+                <DataTrigger TargetType="ListView" Binding="{Binding Source={x:Reference SwapTemplateCheckBox},  Path=IsChecked}" Value="True">
+                    <Setter Property="ItemTemplate" Value="{StaticResource LiteTemplate}" />
+                </DataTrigger>
+            </ListView.Triggers>-->
+<!--<ActivityIndicator IsVisible="{Binding LoadingCounties}" IsRunning="{Binding LoadingCounties}"/> ItemTemplate="{StaticResource FullTemplate}"-->
+<!--<ListView ItemsSource="{Binding CountyViewModels}"  ItemSelected="ListView_ItemSelected" ItemTemplate="{StaticResource FullTemplate}">
+            <ListView.Triggers>
+                <DataTrigger TargetType="ListView" Binding="{Binding Source={x:Reference SwapTemplateCheckBox},  Path=IsChecked}" Value="True">
+                    <Setter Property="ItemTemplate" Value="{StaticResource LiteTemplate}" />
+                </DataTrigger>
+            </ListView.Triggers>
+        </ListView>-->

@@ -47,7 +47,7 @@ namespace KonaAnalyzer.UWP
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-
+                
                 rootFrame.NavigationFailed += OnNavigationFailed;
                 Bootstrapper.Initialize();
                 #if __WASM__ == false

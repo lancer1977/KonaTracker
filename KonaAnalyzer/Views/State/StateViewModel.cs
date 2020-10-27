@@ -19,25 +19,26 @@ namespace KonaAnalyzer.ViewModels
 {
     public class StateViewModel : StateControlViewModel
     {
-        [Reactive] public bool LoadingCounties { get; set; } 
-        [Reactive] public List<string> Counties { get; set; } 
-        [Reactive] public DateTime MaxDate { get; set; } = DateTime.MaxValue;  
+        [Reactive] public bool LoadingCounties { get; set; }
+        [Reactive] public List<string> Counties { get; set; }
+        [Reactive] public DateTime MaxDate { get; set; } = DateTime.MaxValue;
         public ICommand DateUpCommand { get; }
         public ICommand DateDownCommand { get; }
         public ICommand SortCommand { get; }
         [Reactive] public Sort Sort { get; set; }
         private readonly SourceList<StateControlViewModel> _sourceViewModels;
         private readonly ReadOnlyObservableCollection<StateControlViewModel> _countyViewModels;
-        public IEnumerable<StateControlViewModel> CountyViewModels => _countyViewModels;
+        public ReadOnlyObservableCollection<StateControlViewModel> CountyViewModels => _countyViewModels;
         public StateViewModel()
         {
             Title = "NA";
             _sourceViewModels = new SourceList<StateControlViewModel>();
             var sortChanged = this.WhenAnyValue(x => x.Sort).Select(x => x.GetSorter());
             _sourceViewModels.Connect()
-                .Sort(sortChanged)
+                //.Sort(sortChanged)
                 .Bind(out _countyViewModels)
                 .ObserveOn(RxApp.MainThreadScheduler)
+                 
                 .DisposeMany()
                 .Subscribe();
             DateUpCommand = ReactiveCommand.Create(() =>
@@ -57,19 +58,19 @@ namespace KonaAnalyzer.ViewModels
                    foreach (var item in CountyViewModels)
                    {
                        item.Date = x;
-
+                       item.Refresh();
                    }
                });
-        
-        
+
+
         }
 
-        public override void OnStateUpdatedAsync(string state)
+        public override void OnStateUpdated(string state)
         {
-            
-            MaxDate =  DataStore.Latest;
+
+            MaxDate = DataStore.Latest;
             Date = MaxDate;
-            base.OnStateUpdatedAsync(state);
+            base.OnStateUpdated(state);
             if (State == "All")
             {
                 PopulateStates();
@@ -80,34 +81,44 @@ namespace KonaAnalyzer.ViewModels
                 PopulateCounties(state);
                 PopulateCountyViewModels();
                 County = "All";
-            } 
+            }
         }
         public void Load(string state)
         {
             State = state;
             Title = state;
+            OnStateUpdated(state);
         }
         private void PopulateCounties(string state)
         {
-            Counties = LocationStore.Counties(state).ToList();  
+            Counties = LocationStore.Counties(state).ToList();
         }
 
         private void PopulateCountyViewModels()
-        {
-            LoadingCounties = true;
-            _sourceViewModels.Clear();
+        { 
+            var locals = new List<StateControlViewModel>();
             foreach (var item in Counties)
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
-                _sourceViewModels.Add(vm);
-                Task.Run(()=>vm.Load(item, State, Date));
-                
+                locals.Add(vm);
+                Task.Run(() => vm.Load(item, State, Date));
+
             }
 
-            LoadingCounties = false;
+            FillSource(locals);
         }
 
+        private void FillSource(IList<StateControlViewModel> items)
+        {
+            //LoadingCounties = true;
+            _sourceViewModels.Edit(innerCache =>
+            {
+                innerCache.Clear();
+                innerCache.AddRange(items);
+            });
+            //LoadingCounties = false;
+        }
         private void PopulateStates()
         {
             var counties = LocationStore.States().ToList();
@@ -116,18 +127,16 @@ namespace KonaAnalyzer.ViewModels
 
         private void PopulateSubStateViewModels()
         {
-            LoadingCounties = true;
-            _sourceViewModels.Clear();
+            var locals = new List<StateControlViewModel>();
             foreach (var item in Counties)
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
                 var vm = new StateControlViewModel();
-                _sourceViewModels.Add(vm);
-                 Task.Run(()=>vm.Load("All", item, Date));
-                
-            }
+                locals.Add(vm); 
+                Task.Run(() => vm.Load("All", item, Date));
 
-            LoadingCounties = false;
+            }
+            FillSource(locals);
         }
 
 
