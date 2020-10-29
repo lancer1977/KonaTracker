@@ -62,7 +62,7 @@
 
 
     <StackLayout Orientation="Vertical" Padding="16" Spacing="15">
-        <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
+        <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto">
  
             <ActivityIndicator Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Black"  IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
             <BoxView  Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
@@ -152,6 +152,49 @@
             <Label Grid.Row="4" Grid.Column="0" Text="Two Week Projections" ></Label>
             <Label Grid.Row="4" Grid.Column="1"  Text="{Binding TwoWeekProjectionCases, StringFormat='Cases {0:0}'}" ></Label>
             <Label  Grid.Row="4" Grid.Column="2" Text="{Binding TwoWeekProjectionDeaths, StringFormat='Deaths {0:0}'}" ></Label>
+
+            <Label Grid.Row="5" Grid.Column="0" Text="MaskUse Always" TextDecorations="Underline">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding SortCommand}"
+                        CommandParameter="MaskUse" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Row="5" Grid.Column="1" Text="MaskUse Frequently" TextDecorations="Underline">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding SortCommand}"
+                        CommandParameter="MaskUse" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Row="5" Grid.Column="2" Text="MaskUse Sometimes" TextDecorations="Underline">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding SortCommand}"
+                        CommandParameter="MaskUse" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Row="5" Grid.Column="3" Text="MaskUse Rarely" TextDecorations="Underline" >
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding SortCommand}"
+                        CommandParameter="MaskUse" />
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Row="5" Grid.Column="4" Text="MaskUse Never" TextDecorations="Underline">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                        Command="{Binding SortCommand}"
+                        CommandParameter="MaskUse" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <Label Grid.Row="6" Grid.Column="0" Text="{Binding MaskUse.Always, StringFormat='M:A {0:0.##}%'}" />
+            <Label Grid.Row="6" Grid.Column="1" Text="{Binding MaskUse.Frequently, StringFormat='M:F {0:0.##}%'}" />
+            <Label Grid.Row="6" Grid.Column="2" Text="{Binding MaskUse.Sometimes, StringFormat='M:S {0:0.##}%'}" />
+            <Label Grid.Row="6" Grid.Column="3" Text="{Binding MaskUse.Rarely, StringFormat='M:R {0:0.##}%'}" />
+            <Label Grid.Row="6" Grid.Column="4" Text="{Binding MaskUse.Never, StringFormat='M:N {0:0.##}%'}" />
+
         </Grid>
  
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"/>

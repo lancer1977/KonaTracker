@@ -20,6 +20,9 @@
         MortalityAscending,
         MortalityDescending,
         ChangeAscending,
-        ChangeDescending
+        ChangeDescending,
+        MaskUseAscending,
+        MaskUseDescending
+
     }
 }

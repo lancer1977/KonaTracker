@@ -176,6 +176,8 @@ namespace KonaAnalyzer.ViewModels
                 case Sort.PopulationAscending: return SortExpressionComparer<StateControlViewModel>.Ascending(vm => vm.Population);
                 case Sort.PopulationDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.Population);
 
+                case Sort.MaskUseAscending: return SortExpressionComparer<StateControlViewModel>.Ascending(vm => vm.MaskUse.Always);
+                case Sort.MaskUseDescending: return SortExpressionComparer<StateControlViewModel>.Descending(vm => vm.MaskUse.Always);
 
                 default: throw new ArgumentOutOfRangeException(nameof(x), x, null);
             }

@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Services;
 using KonaAnalyzer.Setup;
 using Xamarin.Forms;
 using ReactiveUI.Fody.Helpers;
@@ -14,8 +15,10 @@ namespace KonaAnalyzer.ViewModels
             DataStore = IOC.Get<ICovidSource>();
             LocationStore = IOC.Get<ILocationSource>();
             PopulationDataStore = IOC.Get<IPopulationSource>();
+            MaskStore = IOC.Get<IMaskSource>();
         }
 
+        public IMaskSource MaskStore { get; }
         public ICovidSource DataStore { get; }
         public ILocationSource LocationStore { get; }
         public IPopulationSource PopulationDataStore { get; }

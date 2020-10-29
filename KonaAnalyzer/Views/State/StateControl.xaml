@@ -6,23 +6,25 @@
              mc:Ignorable="d"
              x:Class="KonaAnalyzer.Views.StateControl">
     <Frame  Padding="15" >
- 
-   
 
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
+            <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions> 
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" FontSize="12" FontAttributes="Bold" Text="{Binding Title}"/>
             <Label Grid.Row="0" Grid.Column="1" Text="Total"/>
             <Label  Grid.Row="0" Grid.Column="2"  Text="Change"/>
@@ -32,7 +34,7 @@
             <Label Grid.Row="1" Grid.Column="0"  FontSize="12" Text="Sick"/>
             <Label Grid.Row="2" Grid.Column="0"  FontSize="12" Text="Deaths"/>
             <Label Grid.Row="3" Grid.Column="0"  FontSize="12" Text="Population" LineBreakMode="TailTruncation" />
-            
+
 
 
             <Label Grid.Row="1" Grid.Column="1"  FontSize="12" Text="{Binding Current}"/>
@@ -41,25 +43,35 @@
 
             <Label  Grid.Row="1" Grid.Column="3"  FontSize="12" Text="{Binding CurrentChangeRate, StringFormat='{0:0.#}%'}" />
             <Label  Grid.Row="1" Grid.Column="4"  FontSize="12" Text="{Binding CurrentRiskRate, StringFormat='{0:0.###}%'}" />
-   
-                <Label Grid.Row="2" Grid.Column="1"  FontSize="12" Text="{Binding Dead}"/> 
-                <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" />
+
+            <Label Grid.Row="2" Grid.Column="1"  FontSize="12" Text="{Binding Dead}"/>
+            <Label  Grid.Row="2" Grid.Column="2"  FontSize="12" Text="{Binding DeadChange}" />
             <Label  Grid.Row="2" Grid.Column="3"  FontSize="12" Text="{Binding DeadChangeRate, StringFormat='{0:0.#}%'}" />
             <Label  Grid.Row="2" Grid.Column="4"  FontSize="12" Text="{Binding DeadRiskRate, StringFormat='{0:0.###}%'}" />
 
+            <Label  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />
             <Label Grid.Row="3" Grid.Column="2"  FontSize="12" Text="Mortality"/>
             <Label  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.##}%'}" />
 
-            <Label  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />
-            <ActivityIndicator Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Black" 
+            <Label  Grid.Row="3" Grid.Column="4"  FontSize="12" Text="{Binding Rank, StringFormat='Rnk. {0:0}'}" />
+            
+            <Label Grid.Row="4" Grid.Column="0" Text="{Binding MaskUse.Always, StringFormat='M:A {0:0.##}%'}" />
+            <Label Grid.Row="4" Grid.Column="1" Text="{Binding MaskUse.Frequently, StringFormat='M:F {0:0.##}%'}" />
+            <Label Grid.Row="4" Grid.Column="2" Text="{Binding MaskUse.Sometimes, StringFormat='M:S {0:0.##}%'}" />
+            <Label Grid.Row="4" Grid.Column="3" Text="{Binding MaskUse.Rarely, StringFormat='M:R {0:0.##}%'}" />
+            <Label Grid.Row="4" Grid.Column="4" Text="{Binding MaskUse.Never, StringFormat='M:N {0:0.##}%'}" />
+
+
+
+            <ActivityIndicator Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Black" 
                                 IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
             />
-            <BoxView  Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+            <BoxView  Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                       IsVisible="{Binding IsBusy}" Opacity=".7" Color="Black" />
         </Grid>
 
- 
-  
-        </Frame> 
- 
+
+
+    </Frame>
+
 </ViewCell>

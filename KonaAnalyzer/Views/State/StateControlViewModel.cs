@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using KonaAnalyzer.Models;
 using KonaAnalyzer.Views;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -14,10 +15,12 @@ namespace KonaAnalyzer.ViewModels
 {
     public class StateControlViewModel : BaseViewModel
     {
+        [Reactive] public int Rank { get; set; }
         // [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
         [Reactive] public string County { get; set; }
         [Reactive] public string State { get; set; }
         [ObservableAsProperty] public int Fips { get; }
+        [ObservableAsProperty] public MaskUseModel MaskUse { get; }
         [Reactive] public int Current { get; set; }
         [Reactive] public int Dead { get; set; }
         [Reactive] public DateTime? Date { get; set; }
@@ -48,7 +51,7 @@ namespace KonaAnalyzer.ViewModels
             try
             {
                 Debug.WriteLine($"Date{changes.Date} Fips:{changes.Fips}");
-                var todayRates = await Task.Run(()=> GetCurrentAndChange(changes.Fips, changes.Date));
+                var todayRates = await Task.Run(() => GetCurrentAndChange(changes.Fips, changes.Date));
 
                 Current = todayRates.current;
                 CurrentChange = todayRates.change;
@@ -162,17 +165,19 @@ namespace KonaAnalyzer.ViewModels
             this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
             UpdateCommand = ReactiveCommand.CreateFromTask<UpdateChanges, Unit>(async (x) => await UpdateValuesAsync(x));//, this.WhenAnyValue(x => x.IsBusy).Select(x=> !x));
             UpdateCommand.IsExecuting.Subscribe(x => IsBusy = x);
+            this.WhenAnyValue(x => x.Fips).Where(x => x != -1).Select(x => MaskStore.GetModel(x))
+                .ToPropertyEx(this, x => x.MaskUse);
 
             this.WhenAnyValue(x => x.Date, x => x.Fips).Where(x =>
-                {
-                    var (dateTime, fips) = x;
-                    return !(dateTime == null || fips == -1);
-                }).Select(x =>
-                {
-                    var (dateTime, fips) = x;
-                    return new UpdateChanges(fips, dateTime);
-                })
-                .InvokeCommand(UpdateCommand);
+                        {
+                            var (dateTime, fips) = x;
+                            return !(dateTime == null || fips == -1);
+                        }).Select(x =>
+                        {
+                            var (dateTime, fips) = x;
+                            return new UpdateChanges(fips, dateTime);
+                        })
+                        .InvokeCommand(UpdateCommand);
             //Subscribe(async x => await UpdateValuesAsync(State, County, x));
 
             //this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });

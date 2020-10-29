@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;
@@ -36,14 +37,16 @@ namespace KonaAnalyzer.ViewModels
         public ICommand AddEstimateCommand { get; }
         public ICommand Refresh { get; }
         private readonly ILocationSource _locationSource;
+        private readonly IMaskSource _maskSource;
         private readonly IPopulationSource _populationSource;
         private readonly ICovidSource _covidSource;
-        public LoadingViewModel(ICovidSource covidSource, IPopulationSource populationSource, ILocationSource locationSource)
+        public LoadingViewModel(ICovidSource covidSource, IPopulationSource populationSource, ILocationSource locationSource, IMaskSource maskSource)
         {
             Title = "Loading ...";
 
 
             _locationSource = locationSource;
+            _maskSource = maskSource;
             _populationSource = populationSource;
             _covidSource = covidSource;
             var generateEstimates = ReactiveCommand.CreateFromTask(async () => await GenerateEstimates());
@@ -99,14 +102,34 @@ namespace KonaAnalyzer.ViewModels
             var token = cts.Token;
             StartWatch(token);
             await Task.Run(async () =>
-             {
-                 await _locationSource.LoadAsync();
-                 await _covidSource.LoadAsync();
-                 await _populationSource.LoadAsync();
-                 Title = "Loading ... Done";
-                 LatestDay = _covidSource.Latest;
-             }, cts.Token);
+            {
+                await LoadServices();
+            }, cts.Token);
             cts.Cancel();
+        }
+
+        private async Task LoadServices()
+        {
+            await _maskSource.LoadAsync();
+
+            await _locationSource.LoadAsync();
+            await _covidSource.LoadAsync();
+            await _populationSource.LoadAsync();
+            Title = "Loading ... Done";
+            LatestDay = _covidSource.Latest;
+        }
+        private async Task LoadServicesParallel()
+        {
+            var tasks = new List<Task>();
+            tasks.Add(_maskSource.LoadAsync());
+
+            tasks.Add(_locationSource.LoadAsync());
+            tasks.Add(_covidSource.LoadAsync());
+            tasks.Add(_populationSource.LoadAsync());
+            tasks.ForEach(x => x.Start());
+            Task.WaitAll(tasks.ToArray());
+            Title = "Loading ... Done";
+            LatestDay = _covidSource.Latest;
         }
 
         private async void StartWatch(CancellationToken token)
