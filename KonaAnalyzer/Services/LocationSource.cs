@@ -40,22 +40,46 @@ namespace KonaAnalyzer.Services
             return Locations.FirstOrDefault(x => x.County == county && x.State == state);
         }
 
+
+
         public int GetFips(string state, string county)
         {
-            if (county != "All") return (Locations.FirstOrDefault(x => x.State == state && x.County == county) ?? new Location()).Fips;
+
+            if (string.IsNullOrEmpty(state)) return -1;
+            if (state == "All") return 0;
+            if (string.IsNullOrEmpty(county)) return -1;
+            Location first = null;
+            var fips = -1;
+            if (county != "All")
             {
-                Location first = null;
+                first = Locations.FirstOrDefault(x => x.State == state && x.County == county);
+                fips = first?.Fips ?? -1;
+            }
+            else
+            {
                 foreach (var x in Locations)
                 {
                     if (x.State != state) continue;
                     first = x;
                     break;
                 }
-
-                  return (first ?? new Location()).Fips.Round(1000);
+                fips = (first ?? new Location()).Fips.Round(1000);
             }
 
+            Debug.WriteLine($"Fips: {fips} State:{state} County:{county}");
+            return fips;
+
+
         }
+
+        //public int GetFips(string state, string county)
+        //{
+        //    var getLoc = new Func<string, string, Location>((s, c) =>
+        //    {
+        //        return Locations.FirstOrDefault(x => x.State == s && x.County == c);
+        //    });
+        //    return GetFipsBase(state, county, getLoc);
+        //}
 
         protected override async Task UpdateItems()
         {

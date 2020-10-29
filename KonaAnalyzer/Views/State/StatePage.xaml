@@ -62,7 +62,7 @@
 
 
     <StackLayout Orientation="Vertical" Padding="16" Spacing="15">
-        <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto">
+        <Grid ColumnDefinitions="*,*,*,*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto">
  
             <ActivityIndicator Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Color="Black"  IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
             <BoxView  Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="4"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
@@ -149,8 +149,11 @@
             <Label  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.#}%'}" />
 
             <Label  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />
+            <Label Grid.Row="4" Grid.Column="0" Text="Two Week Projections" ></Label>
+            <Label Grid.Row="4" Grid.Column="1"  Text="{Binding TwoWeekProjectionCases, StringFormat='Cases {0:0}'}" ></Label>
+            <Label  Grid.Row="4" Grid.Column="2" Text="{Binding TwoWeekProjectionDeaths, StringFormat='Deaths {0:0}'}" ></Label>
         </Grid>
-
+ 
         <BoxView Color="Black"  HeightRequest="3" HorizontalOptions="FillAndExpand"/>
         <ListView ItemsSource="{Binding CountyViewModels}"  ItemSelected="ListView_ItemSelected"  HasUnevenRows="True">
             <ListView.ItemTemplate>

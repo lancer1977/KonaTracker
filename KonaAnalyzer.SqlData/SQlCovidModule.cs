@@ -8,6 +8,7 @@ namespace KonaAnalyzer.SqlData
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<SQLCovidSource>().AsImplementedInterfaces().AsSelf().SingleInstance();
+            builder.RegisterType<SQLLocationSource>().AsImplementedInterfaces().AsSelf().SingleInstance();
         }
     }
 }

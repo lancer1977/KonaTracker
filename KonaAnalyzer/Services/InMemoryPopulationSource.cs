@@ -16,10 +16,12 @@ namespace KonaAnalyzer.Services
 
         public int Population(string state, string county)
         {
+         
             if (state == "All")
             {
                 return Populations.Sum(x => x.population);
             }
+            if (string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return 0;
             if (county == "All")
             {
                 return Populations.Where(x => x.state == state).Sum(x => x.population);

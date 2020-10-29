@@ -17,10 +17,12 @@ namespace KonaAnalyzer.SqlData
 
         public int Population(string state, string county)
         {
+      
             if (state == "All")
             {
                 return Table.Sum(x => x.population);
             }
+            if (string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return 0;
             if (county == "All")
             {
                 return Table.Where(x => x.state == state).Sum(x => x.population);

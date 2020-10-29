@@ -30,7 +30,7 @@
             <StackLayout Orientation="Horizontal">
               <Label Text="Font: "></Label>  <Picker ItemsSource="{Binding FontNames}" SelectedItem="{Binding Font}"/>
             </StackLayout>
-            <Button Command="{Binding AddEstimateCommand}" Text="Add 2 Week Projections"/>
+            <!--<Button Command="{Binding AddEstimateCommand}" Text="Add 2 Week Projections"/>-->
         </StackLayout>
     </ContentPage.Content>
 

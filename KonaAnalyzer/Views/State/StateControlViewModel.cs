@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using KonaAnalyzer.Views;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -13,13 +15,13 @@ namespace KonaAnalyzer.ViewModels
     public class StateControlViewModel : BaseViewModel
     {
         // [Reactive] public Color BackgroundColor { get; set; } = Color.LightGoldenrodYellow;
-        [Reactive] public string County { get; set; } = "All";
+        [Reactive] public string County { get; set; }
         [Reactive] public string State { get; set; }
-        public int Fips { get; set; }
+        [ObservableAsProperty] public int Fips { get; }
         [Reactive] public int Current { get; set; }
         [Reactive] public int Dead { get; set; }
         [Reactive] public DateTime? Date { get; set; }
-        [Reactive] public int Population { get; set; }
+        [ObservableAsProperty] public int Population { get; }
         [Reactive] public int CurrentChange { get; set; }
         [Reactive] public double CurrentChangeRate { get; set; }
         [Reactive] public int DeadChange { get; set; }
@@ -38,22 +40,20 @@ namespace KonaAnalyzer.ViewModels
         private readonly ObservableAsPropertyHelper<string> _dateText;
 
         public string DateText => _dateText.Value;
-        protected void UpdateValues(string state, string county, DateTime? date)
+        protected async Task<Unit> UpdateValuesAsync(UpdateChanges changes)
         {
-            if (date == null || string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return;
-            Fips = LocationStore.GetFips(state, county);
-            IsBusy = true;
+            //if (changes.Date == null || changes.Fips == -1) return Unit.Default;
+
 
             try
             {
-                Population = PopulationDataStore.Population(state, county);
-                //var yesterdayDate = date - TimeSpan.FromDays(1);
+                Debug.WriteLine($"Date{changes.Date} Fips:{changes.Fips}");
+                var todayRates = await Task.Run(()=> GetCurrentAndChange(changes.Fips, changes.Date));
 
-                var todayRates = GetCurrentAndChangeAsync(Fips, date);
                 Current = todayRates.current;
                 CurrentChange = todayRates.change;
                 CurrentChangeRate = todayRates.rate * 100;
-                var todayDeathRates = GetDeathsCurrentAndChangeAsync(Fips, date);
+                var todayDeathRates = await Task.Run(() => GetDeathsCurrentAndChange(changes.Fips, changes.Date));
                 Dead = todayDeathRates.current;
                 DeadChange = todayDeathRates.change;
                 DeadChangeRate = todayDeathRates.rate * 100;
@@ -72,10 +72,7 @@ namespace KonaAnalyzer.ViewModels
             {
                 Debug.WriteLine(ex);
             }
-            IsBusy = false;
-
-
-
+            return Unit.Default;
         }
         public static double GetPercentage(int numerator, int denominator)
         {
@@ -85,7 +82,7 @@ namespace KonaAnalyzer.ViewModels
         {
             var nav = (Application.Current.MainPage as MasterDetailPage).Detail.Navigation;
             var statePage = new StatePage();
-            statePage.ViewModel.Load(State);
+            statePage.ViewModel.LoadFromState(State);
             await nav.PushAsync(statePage);
 
 
@@ -99,32 +96,9 @@ namespace KonaAnalyzer.ViewModels
             statePage.ViewModel.Load(State, County, startDay, endDay);
             await nav.PushAsync(statePage);
         }
+        protected ReactiveCommand<UpdateChanges, Unit> UpdateCommand { get; }
 
-
-        //private  (int current, int change, double rate) GetCurrentAndChangeAsync(string state, string county, DateTime? date)
-        //{ 
-        //        var yesterdayDate = date - TimeSpan.FromDays(1);
-        //        var current = DataStore.Total(state, county, date);
-        //        var yesterdayTotal = DataStore.Total(state, county, yesterdayDate);
-        //        var currentChange = current - yesterdayTotal;
-        //        var currentChangeRate = RateChange(currentChange, yesterdayTotal);
-        //        return (current, currentChange, currentChangeRate);
-
-        //}
-
-        //private  (int current, int change, double rate) GetDeathsCurrentAndChangeAsync(string state, string county, DateTime? date)
-        //{
-
-        //        var yesterdayDate = date - TimeSpan.FromDays(1);
-        //        var current = DataStore.Deaths(state, county, date);
-        //        var yesterdayTotal = DataStore.Deaths(state, county, yesterdayDate);
-        //        var currentChange = current - yesterdayTotal;
-        //        var currentChangeRate = RateChange(currentChange, yesterdayTotal);
-        //        return (current, currentChange, currentChangeRate);
-
-
-        //}
-        private (int current, int change, double rate) GetCurrentAndChangeAsync(int fips, DateTime? date)
+        private (int current, int change, double rate) GetCurrentAndChange(int fips, DateTime? date)
         {
             var yesterdayDate = date - TimeSpan.FromDays(1);
             var current = DataStore.Total(fips, date);
@@ -135,7 +109,7 @@ namespace KonaAnalyzer.ViewModels
 
         }
 
-        private (int current, int change, double rate) GetDeathsCurrentAndChangeAsync(int fips, DateTime? date)
+        private (int current, int change, double rate) GetDeathsCurrentAndChange(int fips, DateTime? date)
         {
 
             var yesterdayDate = date - TimeSpan.FromDays(1);
@@ -153,7 +127,8 @@ namespace KonaAnalyzer.ViewModels
             var currentRate = changes.rate;
             for (var x = 0; x < 14; x++)
             {
-                currentRate += -.005;
+                //currentRate += -.001;
+                //if (currentRate < 0) currentRate = .001;
                 total += (total * currentRate);
                 Console.WriteLine($"Day {x}: {total}");
             }
@@ -170,33 +145,55 @@ namespace KonaAnalyzer.ViewModels
         {
             IsSubViewModel = true;
             County = county;
-            State = state;
+
             Title = county == "All" ? state : county;
             Date = date;
-            OnStateUpdated(State);
+            State = state;
             //UpdateValues(State, County, Date);
         }
 
         public StateControlViewModel()
         {
-
-
-            //this.WhenAnyValue(x => x.Date).Where(x => x != null).Subscribe(x => UpdateValues(State, County, x));
-            this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
-            //this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
             this.WhenAnyValue(x => x.Date).Where(x => x != null).Select(x => x.Value.ToShortDateString()).ToProperty(this, x => x.DateText, out _dateText);
-            //this.WhenAnyValue(x => x.State).Where(x => string.IsNullOrEmpty(x) == false).Subscribe(OnStateUpdated);
+            this.WhenAnyValue(x => x.State, x => x.County, (state, county) => LocationStore.GetFips(state, county))
+                .ToPropertyEx(this, x => x.Fips, -1);
+            this.WhenAnyValue(x => x.State, x => x.County, (state, county) => PopulationDataStore.Population(state, county))
+                .ToPropertyEx(this, x => x.Population, -1);
+            this.WhenAnyValue(x => x.Population).Select(x => x / 1000 + "K").ToProperty(this, x => x.PopulationText, out _populationText);
+            UpdateCommand = ReactiveCommand.CreateFromTask<UpdateChanges, Unit>(async (x) => await UpdateValuesAsync(x));//, this.WhenAnyValue(x => x.IsBusy).Select(x=> !x));
+            UpdateCommand.IsExecuting.Subscribe(x => IsBusy = x);
+
+            this.WhenAnyValue(x => x.Date, x => x.Fips).Where(x =>
+                {
+                    var (dateTime, fips) = x;
+                    return !(dateTime == null || fips == -1);
+                }).Select(x =>
+                {
+                    var (dateTime, fips) = x;
+                    return new UpdateChanges(fips, dateTime);
+                })
+                .InvokeCommand(UpdateCommand);
+            //Subscribe(async x => await UpdateValuesAsync(State, County, x));
+
+            //this.WhenAnyValue(x => x.County).Subscribe(x => { UpdateValues(State, x, Date); });
+
         }
 
-        public virtual void OnStateUpdated(string state)
+
+
+
+
+
+    }
+
+    public struct UpdateChanges
+    {
+        public UpdateChanges(int fips, DateTime? dateTime)
         {
-            UpdateValues(state, County, Date);
+            Fips = fips;
+            Date = dateTime;
         }
-
-
-        public void Refresh()
-        {
-            UpdateValues(State, County, Date);
-        }
+        public int Fips;
+        public DateTime? Date;
     }
 }

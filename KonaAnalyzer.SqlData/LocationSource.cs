@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using KonaAnalyzer.Data;
 using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Models;
-using KonaAnalyzer.Services; 
+using KonaAnalyzer.Services;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
 namespace KonaAnalyzer.SqlData
 {
-    public class LocationSource : BaseSource, ILocationSource
+    public class SQLLocationSource : BaseSource, ILocationSource
     {
 
 
@@ -44,20 +44,35 @@ namespace KonaAnalyzer.SqlData
 
         public int GetFips(string state, string county)
         {
-            if (county != "All") return (Locations.FirstOrDefault(x => x.State == state && x.County == county) ?? new Location()).Fips;
+            if (string.IsNullOrEmpty(state)) return -1;
+            if (state == "All") return 0;
+            if (string.IsNullOrEmpty(county)) return -1;
+
+            Location first = null;
+            var fips = -1;
+            if (county != "All")
             {
-                Location first = null;
-                foreach (var x in Locations)
+                first = Table.FirstOrDefault(x => x.State == state && x.County == county);
+                fips =  first?.Fips ?? -1;
+            }
+            else
+            {
+                foreach (var x in Table)
                 {
                     if (x.State != state) continue;
                     first = x;
                     break;
                 }
-
-                return (first ?? new Location()).Fips.Round(1000);
+                fips = (first ?? new Location()).Fips.Round(1000);
             }
 
+            Debug.WriteLine($"Fips: {fips} State:{state} County:{county}");
+            return fips;
+
+
         }
+
+
 
         protected override async Task UpdateItems()
         {
@@ -69,12 +84,12 @@ namespace KonaAnalyzer.SqlData
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message); 
+                Debug.WriteLine(ex.Message);
             }
         }
 
         private readonly ISQLiteFactory _factory;
-        public LocationSource(ISQLiteFactory factory)
+        public SQLLocationSource(ISQLiteFactory factory)
         {
             _factory = factory;
 

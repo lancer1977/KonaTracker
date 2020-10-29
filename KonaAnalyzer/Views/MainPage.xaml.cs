@@ -11,9 +11,7 @@ namespace KonaAnalyzer.Views
     // by visiting https://aka.ms/xamarinforms-previewer
     [DesignTimeVisible(false)]
     public partial class MainPage : MasterDetailPage
-    {
-        StatePage _statePage;
-        StatePage StatePage => _statePage ?? (_statePage = new StatePage());
+    { 
         OverviewPage _overviewPage;
         OverviewPage OverviewPage => _overviewPage ?? (_overviewPage = new OverviewPage());
         public MainPage()
@@ -45,10 +43,11 @@ namespace KonaAnalyzer.Views
                     break;
                 default:
                     if (id.Contains("-----")) return;
-                    Detail = new NavigationPage(StatePage);
+                    var statePage = new StatePage();
+                    Detail = new NavigationPage(statePage);
                     Task.Run(() =>
                     {
-                        _statePage.ViewModel.Load(id);
+                        statePage.ViewModel.LoadFromState(id);
                     });
                    
                     break;
