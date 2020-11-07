@@ -120,18 +120,17 @@ namespace KonaAnalyzer.ViewModels
             EndDate = endDay;
         }
 
-        private int _updates;
-        private CancellationTokenSource _cts;
+        private int _updates; 
         private async Task<List<ChartModel>> Update(ChartUpdate update) //string state, string county, DateTime startDay, DateTime endDay)
         {
             var changes = new List<ChartModel>();
-            if (IsUpdating || string.IsNullOrEmpty(update.State) || string.IsNullOrEmpty(update.County) || update.StartDay == default || update.EndDay == default || update.StartDay >= update.EndDay) return changes;
+            if (IsUpdating || update.Fips == -1 || string.IsNullOrEmpty(update.State) || string.IsNullOrEmpty(update.County) || update.StartDay == default || update.EndDay == default || update.StartDay >= update.EndDay) return changes;
 
             try
             {
                 Debug.WriteLine($"In Update: {_updates++}");
                 //var change = DataStore.MatchingBetween(update.State, update.County, update.StartDay, update.EndDay);
-                var change = DataStore.MatchingBetween(update.Fips, update.StartDay, update.EndDay);
+                var change = await Task.Run(()=> DataStore.MatchingBetween(update.Fips, update.StartDay, update.EndDay));
                 //State = state;
                 //County = county;
 
@@ -201,7 +200,7 @@ namespace KonaAnalyzer.ViewModels
 
         private void OnItemsChanged(IList<ChartModel> changes)
         {
-            if (changes == null) return;
+            if (changes == null || !changes.Any()) return;
             var changeorder = changes.OrderBy(x => x.Change).ToList();
 
             var firstChange = changeorder[1].Change;

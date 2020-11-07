@@ -149,7 +149,7 @@
             <Label  Grid.Row="3" Grid.Column="3"  FontSize="12" Text="{Binding MortalityRate, StringFormat='{0:0.#}%'}" />
 
             <Label  Grid.Row="3" Grid.Column="1"  FontSize="12" Text="{Binding PopulationText}" />
-            <Label Grid.Row="4" Grid.Column="0" Text="Two Week Projections" ></Label>
+            <!--<Label Grid.Row="4" Grid.Column="0" Text="Two Week Projections" ></Label>
             <Label Grid.Row="4" Grid.Column="1"  Text="{Binding TwoWeekProjectionCases, StringFormat='Cases {0:0}'}" ></Label>
             <Label  Grid.Row="4" Grid.Column="2" Text="{Binding TwoWeekProjectionDeaths, StringFormat='Deaths {0:0}'}" ></Label>
 
@@ -187,13 +187,13 @@
                         Command="{Binding SortCommand}"
                         CommandParameter="MaskUse" />
                 </Label.GestureRecognizers>
-            </Label>
+            </Label>-->
 
-            <Label Grid.Row="6" Grid.Column="0" Text="{Binding MaskUse.Always, StringFormat='M:A {0:0.##}%'}" />
+            <!--<Label Grid.Row="6" Grid.Column="0" Text="{Binding MaskUse.Always, StringFormat='M:A {0:0.##}%'}" />
             <Label Grid.Row="6" Grid.Column="1" Text="{Binding MaskUse.Frequently, StringFormat='M:F {0:0.##}%'}" />
             <Label Grid.Row="6" Grid.Column="2" Text="{Binding MaskUse.Sometimes, StringFormat='M:S {0:0.##}%'}" />
             <Label Grid.Row="6" Grid.Column="3" Text="{Binding MaskUse.Rarely, StringFormat='M:R {0:0.##}%'}" />
-            <Label Grid.Row="6" Grid.Column="4" Text="{Binding MaskUse.Never, StringFormat='M:N {0:0.##}%'}" />
+            <Label Grid.Row="6" Grid.Column="4" Text="{Binding MaskUse.Never, StringFormat='M:N {0:0.##}%'}" />-->
 
         </Grid>
  
