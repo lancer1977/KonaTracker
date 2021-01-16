@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CsvHelper;
@@ -92,6 +93,7 @@ namespace KonaAnalyzer.Data
         }
         private static async Task<List<T>> GetListFromUrlAsyncCSV<T>(string url )
         { 
+            Debug.WriteLine("Parsing html at " + url);
             var returnList = new List<T>();
             var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
             if (string.IsNullOrEmpty(text))
@@ -106,8 +108,10 @@ namespace KonaAnalyzer.Data
                 {
                     var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
                     csv.Configuration.Delimiter = ",";
-                    csv.Configuration.MissingFieldFound = null; 
-                        while (await csv.ReadAsync())
+                    csv.Configuration.MissingFieldFound = null;
+                    
+                    //csv.Configuration.MissingFieldFound = (x, y, z) => { Debug.WriteLine(x.Aggregate((a,b)=>a + b)); };
+                    while (await csv.ReadAsync())
                         { 
                             try
                             {
@@ -116,6 +120,7 @@ namespace KonaAnalyzer.Data
                             }
                             catch (Exception ex)
                             {
+                                return returnList;
                                 Debug.WriteLine(ex.Message);
                             }
 

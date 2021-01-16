@@ -62,7 +62,7 @@ namespace KonaAnalyzer.SqlData
                         cases = lastCases + casesChangeAverage,
                         county = item.County,
                         state = item.State,
-                        IsEstimate = true
+                        //IsEstimate = true
                     });
                 }
 
@@ -99,7 +99,7 @@ namespace KonaAnalyzer.SqlData
                         cases = lastCases + casesChangeAverage,
                         county = item.County,
                         state = item.State,
-                        IsEstimate = true
+                        //IsEstimate = true
                     });
                 }
 
