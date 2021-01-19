@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using CsvHelper;
+using CsvHelper.Configuration;
 using KonaAnalyzer.Interfaces;
 using KonaAnalyzer.Services;
 using Newtonsoft.Json;
@@ -25,7 +26,7 @@ namespace KonaAnalyzer.Data
     }
     public static class DataExtensions
     {
-     
+
         public static async Task<string> GetStringFromUrlAsync_old(string url)
         {
             try
@@ -84,15 +85,15 @@ namespace KonaAnalyzer.Data
         {
             switch (type)
             {
-                case Serialize.Json:return await GetListFromJsonUrlAsync<T>(url);
+                case Serialize.Json: return await GetListFromJsonUrlAsync<T>(url);
                 case Serialize.XML:
                     break;
                 case Serialize.CSV: return await GetListFromUrlAsyncCSV<T>(url);
             }
             return null;
         }
-        private static async Task<List<T>> GetListFromUrlAsyncCSV<T>(string url )
-        { 
+        private static async Task<List<T>> GetListFromUrlAsyncCSV<T>(string url)
+        {
             Debug.WriteLine("Parsing html at " + url);
             var returnList = new List<T>();
             var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
@@ -104,29 +105,33 @@ namespace KonaAnalyzer.Data
             // Console.WriteLine(text);
             try
             {
+                var config = new CsvConfiguration(CultureInfo.CurrentCulture)
+                {
+                    HasHeaderRecord = true,
+                    HeaderValidated = null,
+                    Delimiter = ",",
+                    IgnoreBlankLines = true,
+                    MissingFieldFound = null,
+                };
+
                 using (TextReader sr = new StringReader(text))
                 {
-                    var csv = new CsvReader(sr, CultureInfo.CurrentCulture);
-                    csv.Configuration.Delimiter = ",";
-                    csv.Configuration.MissingFieldFound = null;
-                    
-                    //csv.Configuration.MissingFieldFound = (x, y, z) => { Debug.WriteLine(x.Aggregate((a,b)=>a + b)); };
+          
+                    var csv = new CsvReader(sr, config); 
+
                     while (await csv.ReadAsync())
-                        { 
-                            try
-                            {
-                                var record = csv.GetRecord<T>();
-                                returnList.Add(record);
-                            }
-                            catch (Exception ex)
-                            {
-                                return returnList;
-                                Debug.WriteLine(ex.Message);
-                            }
-
-
-                        } 
-
+                    {
+                        try
+                        {
+                            var record = csv.GetRecord<T>();
+                            returnList.Add(record);
+                        }
+                        catch (Exception ex)
+                        {
+                            //   return returnList;
+                            Debug.WriteLine(ex.Message);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -139,7 +144,7 @@ namespace KonaAnalyzer.Data
         }
 
         private static async Task<List<T>> GetListFromJsonUrlAsync<T>(string url)
-        { 
+        {
             var returnList = new List<T>();
             var text = await GetStringFromUrlAsync(url);//.Replace("\n",";");
             if (string.IsNullOrEmpty(text))
@@ -148,7 +153,7 @@ namespace KonaAnalyzer.Data
                 return returnList;
             }
             var items = JsonConvert.DeserializeObject<List<T>>(text);
-            return items; 
+            return items;
         }
     }
 }

@@ -163,7 +163,7 @@ namespace KonaAnalyzer.ViewModels
                         switch (DataType)
                         {
                             case DataType.Death:
-                                localChange = changeDeaths;
+                                localChange = changeDeaths ?? 0;
                                 break;
                             case DataType.Cases:
                                 localChange = changeCases;

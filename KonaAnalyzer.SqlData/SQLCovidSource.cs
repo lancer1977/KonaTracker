@@ -157,7 +157,7 @@ namespace KonaAnalyzer.SqlData
         public int Deaths(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Matching(fips, date).Select(x => x.deaths).Sum();
+            var items = Matching(fips, date).Select(x => x.deaths ?? 0).Sum();
             return items;
         }
         public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
@@ -184,7 +184,7 @@ namespace KonaAnalyzer.SqlData
         public int Deaths(string state, string county, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Matching(state, county, date).Select(x => x.deaths).Sum();
+            var items = Matching(state, county, date).Select(x => x.deaths ?? 0).Sum();
             return items;
         }
 
