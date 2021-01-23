@@ -22,10 +22,10 @@
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="4.1.0" />
     <PackageReference Include="Microsoft.AppCenter.Distribute" Version="4.1.0" />
     <PackageReference Include="PolyhydraGames.Extensions" Version="2.1.0.6" />
-    <PackageReference Include="ReactiveUI" Version="13.0.38" />
-    <PackageReference Include="ReactiveUI.Fody" Version="13.0.38" />
+    <PackageReference Include="ReactiveUI" Version="13.1.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="13.1.1" />
     <PackageReference Include="Syncfusion.Xamarin.SfChart" Version="18.4.0.34" />
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1874" />  
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.1905" />  
     <PackageReference Include="Xamarin.Essentials" Version="1.6.0" />
     <PackageReference Include="Autofac" Version="6.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

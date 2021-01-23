@@ -117,7 +117,7 @@
       <Version>2.0.0.20</Version>
     </PackageReference>
     <PackageReference Include="ReactiveUI">
-      <Version>13.0.38</Version>
+      <Version>13.1.1</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.7.335</Version>
@@ -135,10 +135,10 @@
       <Version>18.4.0.34</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.1874</Version>
+      <Version>5.0.0.1905</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.Platform.WPF">
-      <Version>5.0.0.1874</Version>
+      <Version>5.0.0.1905</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
