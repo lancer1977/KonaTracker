@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KonaAnalyzer.Models
+namespace KonaAnalyzer.Data.Model
 {
     public class ChangeModel
     {

@@ -3,27 +3,45 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Services;
+using PolyhydraGames.Core.Data;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
 namespace KonaAnalyzer.SqlData
 {
-    public class SQLLocationSource : BaseSource, ILocationSource
+    public class SQLLocationSource : SQLSource<LocationModel>, ILocationSource
     {
 
+        public Dictionary<string, int> GetStateFipsDictionary()
+        {
+             var items = new Dictionary<string, int>();
 
-        public IEnumerable<Location> Locations => Table;
+            foreach (var item in States())
+            {
+                var first = Table.FirstOrDefault(x => x.State == item);
+                var fipsBottom = (first ?? new LocationModel()).Fips?.Round(1000) ?? -1;
+                items.Add(item, fipsBottom);
+            }
+            return items;
+        }
+        public IEnumerable<LocationModel> Locations => Table;
         public int GetId(string state, string county)
         {
-            return Table.First(x => x.State == state && x.County == county).Fips;
+            return Table.First(x => x.State == state && x.County == county).Fips ?? -1;
         }
 
-        public Location GetLocation(int id)
+        public LocationModel GetLocation(int id)
         {
+            if (id % 1000 == 0)
+            {
+                var first = Table.OrderBy(x=>x.Fips).First(x => x.Fips > id);
+                first.County = "All";
+                first.Fips = id;
+                return first;
+            } 
             return Table.First(x => x.Fips == id);
         }
 
@@ -37,8 +55,24 @@ namespace KonaAnalyzer.SqlData
             return Table.Select(x => x.State).Distinct();
         }
 
-        public Location GetLocation(string state, string county)
+        public LocationModel GetLocation(string state, string county)
         {
+            if (string.IsNullOrEmpty(state)) return null;
+            if (state == "All")
+                return new LocationModel()
+                {
+                    Fips = 0,
+                    State = "All"
+                };
+            if (string.IsNullOrEmpty(county)) return null;
+            if (county == "All")
+            { 
+                return new LocationModel()
+                {
+                    Fips = Locations.FirstOrDefault(x => x.State == state)?.Fips?.Round(1000) ?? 0,
+                    State = state
+                };
+            }
             return Table.FirstOrDefault(x => x.County == county && x.State == state);
         }
 
@@ -48,12 +82,12 @@ namespace KonaAnalyzer.SqlData
             if (state == "All") return 0;
             if (string.IsNullOrEmpty(county)) return -1;
 
-            Location first = null;
+            LocationModel first = null;
             var fips = -1;
             if (county != "All")
             {
                 first = Table.FirstOrDefault(x => x.State == state && x.County == county);
-                fips =  first?.Fips ?? -1;
+                fips = first?.Fips ?? -1;
             }
             else
             {
@@ -63,7 +97,7 @@ namespace KonaAnalyzer.SqlData
                     first = x;
                     break;
                 }
-                fips = (first ?? new Location()).Fips.Round(1000);
+                fips = (first ?? new LocationModel()).Fips?.Round(1000) ?? -1;
             }
 
             Debug.WriteLine($"Fips: {fips} State:{state} County:{county}");
@@ -79,7 +113,7 @@ namespace KonaAnalyzer.SqlData
             if (Table.Any()) return;
             try
             {
-                var locations = await DataExtensions.GetListFromUrlAsync<Location>(Configs.CountiesAddress, Serialize.Json);
+                var locations = await DataExtensions.GetListFromUrlAsync<LocationModel>(Configs.CountiesAddress, Serialize.Json);
                 Connection.InsertAll(locations);
             }
             catch (Exception ex)
@@ -89,26 +123,11 @@ namespace KonaAnalyzer.SqlData
         }
 
         private readonly ISQLiteFactory _factory;
-        public SQLLocationSource(ISQLiteFactory factory)
+        public SQLLocationSource(ISQLiteFactory factory) : base(factory)
         {
-            _factory = factory;
+
 
         }
-        private SQLiteConnection _connection;
 
-        internal SQLiteConnection Connection
-        {
-            get
-            {
-                if (_connection != null) return _connection;
-                _connection = _factory.CreateConnection();
-                _connection.CreateTable<Location>();
-                return _connection;
-            }
-        }
-
-
-
-        private TableQuery<Location> Table => Connection.Table<Location>();
     }
 }

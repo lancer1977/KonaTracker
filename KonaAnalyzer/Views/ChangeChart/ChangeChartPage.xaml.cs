@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using KonaAnalyzer.Setup;
+﻿using KonaAnalyzer.Setup;
 using KonaAnalyzer.ViewModels;
-using ReactiveUI;
-using Xamarin.Forms;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -19,10 +12,11 @@ namespace KonaAnalyzer.Views
     {
         public ChangeChartViewModel ViewModel => (ChangeChartViewModel)BindingContext;
         public ChangeChartPage()
-        {
+        {    
+            BindingContext = IOC.Get<ChangeChartViewModel>(); 
             this.InitializeComponent();
 
-            BindingContext = IOC.Get<ChangeChartViewModel>(); 
+        
         }
     }
 }

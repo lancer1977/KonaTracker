@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Setup;
+using PolyhydraGames.Core.Data;
 using Uno.UI.Wasm;
 
 namespace KonaAnalyzer.Wasm

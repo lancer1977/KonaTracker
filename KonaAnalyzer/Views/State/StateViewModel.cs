@@ -4,16 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using DynamicData;
 using DynamicData.Binding;
-using KonaAnalyzer.Data;
+using KonaAnalyzer.Data.Interface;
+using KonaAnalyzer.Services;
 using PolyhydraGames.Extensions;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using Xamarin.Essentials;
-using Xamarin.Forms;
 
 namespace KonaAnalyzer.ViewModels
 {
@@ -29,7 +27,7 @@ namespace KonaAnalyzer.ViewModels
         private readonly SourceList<StateControlViewModel> _sourceViewModels;
         private readonly ReadOnlyObservableCollection<StateControlViewModel> _countyViewModels;
         public ReadOnlyObservableCollection<StateControlViewModel> CountyViewModels => _countyViewModels;
-        public StateViewModel()
+        public StateViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
         {
             Title = "NA";
             _sourceViewModels = new SourceList<StateControlViewModel>();
@@ -95,7 +93,7 @@ namespace KonaAnalyzer.ViewModels
             foreach (var item in Counties)
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
-                var vm = new StateControlViewModel();
+                var vm = new StateControlViewModel(DataStore,LocationStore,MaskStore);
                 locals.Add(vm);
                 vm.Load(item, State, Date);
 
@@ -122,7 +120,7 @@ namespace KonaAnalyzer.ViewModels
             foreach (var item in Counties)
             {
                 if (string.IsNullOrEmpty(item) || item == "All") continue;
-                var vm = new StateControlViewModel();
+                var vm = new StateControlViewModel(DataStore, LocationStore, MaskStore);
                 locals.Add(vm);
                 vm.Load("All", item, Date);
             }

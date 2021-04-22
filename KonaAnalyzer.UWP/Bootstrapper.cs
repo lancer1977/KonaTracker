@@ -24,7 +24,7 @@ namespace KonaAnalyzer.UWP
 
         public static void Initialize()
         {
-            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule), typeof(Bootstrapper), typeof(SQlCovidModule) });
+            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule), typeof(Bootstrapper), typeof(SQlModule) });
         }
     }
 }

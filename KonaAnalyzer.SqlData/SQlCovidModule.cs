@@ -1,9 +1,8 @@
 ﻿using Autofac;
-using KonaAnalyzer.Data;
 
 namespace KonaAnalyzer.SqlData
 {
-    public class SQlCovidModule : Autofac.Module
+    public class SQlModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {

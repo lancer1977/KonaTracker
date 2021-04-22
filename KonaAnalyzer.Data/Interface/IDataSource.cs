@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace KonaAnalyzer.Interfaces
+namespace KonaAnalyzer.Data.Interface
 {
     public interface IDataSource
     {

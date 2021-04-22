@@ -1,18 +1,14 @@
 ﻿using KonaAnalyzer.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
 using DynamicData;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Services;
+using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Setup;
 using ReactiveUI;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace KonaAnalyzer.Views
 {

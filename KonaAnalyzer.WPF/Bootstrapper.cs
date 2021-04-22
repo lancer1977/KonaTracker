@@ -35,7 +35,7 @@ namespace Covid.WPF
                 typeof(ServicesModule), 
                 typeof(ViewModelModule),
                 typeof(Bootstrapper),
-                typeof(SQlCovidModule) });
+                typeof(SQlModule) });
         }
     }
 }

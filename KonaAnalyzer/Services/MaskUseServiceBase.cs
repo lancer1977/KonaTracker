@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.Data.Interface;
+using PolyhydraGames.Core.Data;
 
 namespace KonaAnalyzer.Services
 {
@@ -48,9 +47,5 @@ namespace KonaAnalyzer.Services
             }
         }
     }
-    public interface IMaskSource : IDataSource
-    {
-          List<MaskUseModel> Changes { get; }
-          MaskUseModel GetModel(int fips);
-    }
+
 }

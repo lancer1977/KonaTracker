@@ -1,10 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Services;
+﻿using System.Diagnostics;
 using Xamarin.Forms;
 using KonaAnalyzer.Views;
+using PolyhydraGames.Core.Data;
+
 #if !DEBUG
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Crashes;

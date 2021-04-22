@@ -48,6 +48,14 @@
     <Compile Include="Setup\SQLiteBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\PFCore\PolyhydraGames.Core.Data\PolyhydraGames.Core.Data.csproj">
+      <Project>{D627C83F-F293-4524-97D9-F8A18D089758}</Project>
+      <Name>PolyhydraGames.Core.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KonaAnalyzer.Data\KonaAnalyzer.Data.csproj">
+      <Project>{55678013-C804-4B2F-87F5-9749C41609CF}</Project>
+      <Name>KonaAnalyzer.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.SqlData.csproj">
       <Project>{e12fe939-3037-4c4f-b114-c150dc5ddf1d}</Project>
       <Name>KonaAnalyzer.SqlData</Name>
@@ -74,13 +82,13 @@
       <Version>4.7.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="PolyhydraGames.Core.SQLite">
-      <Version>2.0.0.20</Version>
+      <Version>2.0.1.10</Version>
     </PackageReference>
     <PackageReference Include="PolyhydraGames.Extensions">
-      <Version>2.1.0.6</Version>
+      <Version>2.1.0.7</Version>
     </PackageReference>
     <PackageReference Include="sqlite-net-pcl">
       <Version>1.7.335</Version>

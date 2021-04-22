@@ -9,9 +9,7 @@
              xmlns:system="clr-namespace:System;assembly=netstandard"
              xmlns:viewModels="clr-namespace:KonaAnalyzer.ViewModels;assembly=KonaAnalyzer"
              Title="{Binding Title}">
-    <ContentPage.BindingContext>
-        <viewModels:StateViewModel />
-    </ContentPage.BindingContext>
+ 
     <NavigationPage.TitleView >
         <Grid ColumnDefinitions="*,Auto,Auto,Auto"  HorizontalOptions="FillAndExpand"  >
             <Label Text="{Binding Title}" VerticalTextAlignment="Center" TextColor="White" FontSize="Large" HorizontalOptions="StartAndExpand">

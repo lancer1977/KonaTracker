@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>PolyhydraGames.SignalR.Service</id>
+    <version>1.0.1.1</version>
+    <authors>Polyhydra Games</authors>
+    <owners>Polyhydra Games</owners>
+    <!-- 
+      <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
+      <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+      <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    -->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>PolyhydraGames.Core.Chat</description> 
+    <copyright>Copyright 2018</copyright>
+    <tags>PolyhydraGames</tags>
+    <releaseNotes>
+      1.0.1 First release 
+      1.0.0.2 Dependencies
+      1.0.0.3 Disconnect.
+      1.0.0.4 User Changed.
+      1.0.0.5 event added.
+      1.0.0.7 Not so async.
+      1.0.0.8 Chat service
+      1.0.0.9 ASync
+      1.0.1.1 Rollback to AspNetCore Signal R 1.1.0
+    </releaseNotes>
+    <dependencies> 
+        <dependency id="Microsoft.AspNetCore.SignalR.Client" version="1.1.0" /> 
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\PolyhydraGames.SignalR.Service\bin\Release\netstandard2.0\PolyhydraGames.SignalR.Service.*" target="lib\netstandard2.0" />
+  </files>
+</package>

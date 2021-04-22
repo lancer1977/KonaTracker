@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="6.1.0" />
-    <PackageReference Include="PolyhydraGames.Core.SQLite" Version="2.0.0.20" />
+    <Compile Remove="PopulationSource.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.1.0" />
+    <PackageReference Include="PolyhydraGames.Core.SQLite" Version="2.0.1.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\PFCore\PolyhydraGames.Core.Data\PolyhydraGames.Core.Data.csproj" />
     <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj" />
   </ItemGroup>
 

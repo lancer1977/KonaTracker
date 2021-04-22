@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Data.Interface;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 

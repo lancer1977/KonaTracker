@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.Data.Interface;
+using PolyhydraGames.Core.Data;
 
 namespace KonaAnalyzer.Services
 {
@@ -14,13 +13,13 @@ namespace KonaAnalyzer.Services
     {
 
 
-        public IEnumerable<Location> Locations { get; private set; }
+        public IEnumerable<LocationModel> Locations { get; private set; }
         public int GetId(string state, string county)
         {
-            return Locations.First(x => x.State == state && x.County == county).Fips;
+            return Locations.First(x => x.State == state && x.County == county).Fips ?? -1;
         }
 
-        public Location GetLocation(int id)
+        public LocationModel GetLocation(int id)
         {
             return Locations.First(x => x.Fips == id);
         }
@@ -35,11 +34,23 @@ namespace KonaAnalyzer.Services
             return Locations.Select(x => x.State).Distinct();
         }
 
-        public Location GetLocation(string state, string county)
+        public LocationModel GetLocation(string state, string county)
         {
             return Locations.FirstOrDefault(x => x.County == county && x.State == state);
         }
 
+        public   Dictionary<string,int> GetStateFipsDictionary( )
+        {
+            Dictionary<string, int> items = new Dictionary<string, int>();
+
+            foreach (var item in States())
+            {
+                var first = Locations.FirstOrDefault(x => x.State == item  );
+                var fipsBottom  = (first ?? new LocationModel()).Fips?.Round(1000) ?? -1;
+                items.Add(item,fipsBottom);
+            }
+            return items;
+        }
 
 
         public int GetFips(string state, string county)
@@ -48,7 +59,7 @@ namespace KonaAnalyzer.Services
             if (string.IsNullOrEmpty(state)) return -1;
             if (state == "All") return 0;
             if (string.IsNullOrEmpty(county)) return -1;
-            Location first = null;
+            LocationModel first = null;
             var fips = -1;
             if (county != "All")
             {
@@ -63,7 +74,7 @@ namespace KonaAnalyzer.Services
                     first = x;
                     break;
                 }
-                fips = (first ?? new Location()).Fips.Round(1000);
+                fips = (first ?? new LocationModel()).Fips?.Round(1000) ?? -1;
             }
 
             Debug.WriteLine($"Fips: {fips} State:{state} County:{county}");
@@ -85,7 +96,7 @@ namespace KonaAnalyzer.Services
         {
             try
             {
-                Locations = await DataExtensions.GetListFromUrlAsync<Location>(Configs.CountiesAddress, Serialize.Json);
+                Locations = await DataExtensions.GetListFromUrlAsync<LocationModel>(Configs.CountiesAddress, Serialize.Json);
             }
             catch (Exception ex)
             {

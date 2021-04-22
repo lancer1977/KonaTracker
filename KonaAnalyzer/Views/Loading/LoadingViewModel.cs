@@ -8,7 +8,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Services;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -35,20 +35,10 @@ namespace KonaAnalyzer.ViewModels
         public bool ShowRefresh { [ObservableAsProperty] get; }
         public ReactiveCommand<Unit, Unit> LoadCommand;
         public ICommand AddEstimateCommand { get; }
-        public ICommand Refresh { get; }
-        private readonly ILocationSource _locationSource;
-        private readonly IMaskSource _maskSource;
-        private readonly IPopulationSource _populationSource;
-        private readonly ICovidSource _covidSource;
-        public LoadingViewModel(ICovidSource covidSource, IPopulationSource populationSource, ILocationSource locationSource, IMaskSource maskSource)
+        public ICommand Refresh { get; } 
+        public LoadingViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
         {
-            Title = "Loading ...";
-
-
-            _locationSource = locationSource;
-            _maskSource = maskSource;
-            _populationSource = populationSource;
-            _covidSource = covidSource;
+            Title = "Loading ..."; 
             var generateEstimates = ReactiveCommand.CreateFromTask(async () => await GenerateEstimates());
             generateEstimates.IsExecuting.Subscribe(x =>
             {
@@ -89,7 +79,7 @@ namespace KonaAnalyzer.ViewModels
             StartWatch(token);
             await Task.Run(async () =>
             {
-                _covidSource.GenerateEstimates(7);
+                DataStore.GenerateEstimates(7);
             }, cts.Token);
             cts.Cancel();
         }
@@ -110,26 +100,24 @@ namespace KonaAnalyzer.ViewModels
 
         private async Task LoadServices()
         {
-            await _maskSource.LoadAsync();
+            await MaskStore.LoadAsync();
 
-            await _locationSource.LoadAsync();
-            await _covidSource.LoadAsync();
-            await _populationSource.LoadAsync();
+            await LocationStore.LoadAsync();
+            await DataStore.LoadAsync(); 
             Title = "Loading ... Done";
-            LatestDay = _covidSource.Latest;
+            LatestDay = DataStore.Latest;
         }
         private async Task LoadServicesParallel()
         {
             var tasks = new List<Task>();
-            tasks.Add(_maskSource.LoadAsync());
+            tasks.Add(MaskStore.LoadAsync());
 
-            tasks.Add(_locationSource.LoadAsync());
-            tasks.Add(_covidSource.LoadAsync());
-            tasks.Add(_populationSource.LoadAsync());
+            tasks.Add(LocationStore.LoadAsync());
+            tasks.Add(DataStore.LoadAsync()); 
             tasks.ForEach(x => x.Start());
             Task.WaitAll(tasks.ToArray());
             Title = "Loading ... Done";
-            LatestDay = _covidSource.Latest;
+            LatestDay = DataStore.Latest;
         }
 
         private async void StartWatch(CancellationToken token)

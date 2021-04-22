@@ -1,4 +1,4 @@
-﻿namespace KonaAnalyzer.Models
+﻿namespace KonaAnalyzer.Data.Model
 {
     public class MaskUseRaw
     {

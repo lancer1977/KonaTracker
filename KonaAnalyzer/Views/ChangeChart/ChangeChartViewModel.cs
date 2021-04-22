@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.Data.Interface;
+using KonaAnalyzer.Services;
 using ReactiveUI;
-using ReactiveUI.Fody;
 using ReactiveUI.Fody.Helpers;
 
 namespace KonaAnalyzer.ViewModels
@@ -39,16 +36,15 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public string LabelFormat { get; set; }
         public ReactiveCommand<ChartUpdate, IList<ChartModel>> GetItems { get; }
 
-        public ChangeChartViewModel(ILocationSource locationSource, ICovidSource covidSource)
-        {
-            _locationSource = locationSource;
+        public ChangeChartViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
+        { 
             State = "All";
             County = "All";
             Fips = 0;
             States = _locationSource.States().ToList();
             States.Insert(0, "All");
-            LastestDate = covidSource.Latest;
-            EarliestDate = covidSource.Earliest;
+            LastestDate = DataStore.Latest;
+            EarliestDate = DataStore.Earliest;
             ShowControls = true;
             StartDate = DateTime.Today - TimeSpan.FromDays(30);
             EndDate = LastestDate;
@@ -136,18 +132,18 @@ namespace KonaAnalyzer.ViewModels
 
                 if (update.State == "All" || "All" == update.County)
                 {
-                    change = change.GroupBy(x => x.date).Select(x => new DayChange()
+                    change = change.GroupBy(x => x.Date).Select(x => new CountyChangeModel()
                     {
-                        date = x.Key,
-                        deaths = x.Sum(y => y.deaths),
-                        cases = x.Sum(y => y.cases),
-                        state = update.State,
-                        county = update.County
+                        Date = x.Key,
+                        Deaths = x.Sum(y => y.Deaths),
+                        Cases = x.Sum(y => y.Cases),
+                        State = update.State,
+                        County = update.County
                     });
 
                 }
 
-                var sorted = change.OrderBy(x => x.date).ToList();
+                var sorted = change.OrderBy(x => x.Date).ToList();
 
                 for (var x = 0; x < sorted.Count; x++)
                 {
@@ -158,22 +154,22 @@ namespace KonaAnalyzer.ViewModels
 
                     if (last != null)
                     {
-                        var changeCases = current.cases - last.cases;
-                        var changeDeaths = current.deaths - last.deaths;
+                        var changeCases = current.Cases - last.Cases;
+                        var changeDeaths = current.Deaths - last.Deaths;
                         switch (DataType)
                         {
                             case DataType.Death:
-                                localChange = changeDeaths ?? 0;
+                                localChange = changeDeaths ;
                                 break;
                             case DataType.Cases:
                                 localChange = changeCases;
                                 break;
                             case DataType.CasesPercent:
 
-                                localChange = 100 * ((double)changeCases / (double)current.cases);
+                                localChange = 100 * ((double)changeCases / (double)current.Cases);
                                 break;
                             case DataType.DeathPercent:
-                                localChange = 100 * ((double)changeDeaths / (double)current.deaths);
+                                localChange = 100 * ((double)changeDeaths / (double)current.Deaths);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -182,7 +178,7 @@ namespace KonaAnalyzer.ViewModels
 
                     changes.Add(new ChartModel()
                     {
-                        Date = sorted[x].date,
+                        Date = sorted[x].Date,
                         Change = localChange
                     });
 

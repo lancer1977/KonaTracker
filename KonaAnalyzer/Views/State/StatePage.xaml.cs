@@ -1,8 +1,8 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using KonaAnalyzer.Setup;
 using KonaAnalyzer.ViewModels;
+using KonaAnalyzer.Views.Overview;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace KonaAnalyzer.Views
 {
@@ -15,6 +15,7 @@ namespace KonaAnalyzer.Views
         public StateViewModel ViewModel => (StateViewModel)BindingContext;
         public StatePage()
         {
+            BindingContext = IOC.Get<StateViewModel>();
             InitializeComponent();
             if (Device.RuntimePlatform == Device.UWP)
             {

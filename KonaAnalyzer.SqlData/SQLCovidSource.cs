@@ -1,44 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
-using KonaAnalyzer.Services;
+using KonaAnalyzer.Data.Interface;
+using KonaAnalyzer.Data.Model;
+using PolyhydraGames.Core.Data;
+using PolyhydraGames.Extensions;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
 namespace KonaAnalyzer.SqlData
 {
-    public class SQLCovidSource : BaseSource, ICovidSource
+    public class SQLCovidSource : SQLSource<CountyChange>, ICovidSource
     {
-        private readonly ISQLiteFactory _factory;
         private readonly ILocationSource _locationService;
-
-        public SQLCovidSource(ISQLiteFactory factory, ILocationSource locationService)
-        {
-            _factory = factory;
-            _locationService = locationService;
-        }
-        private SQLiteConnection _connection;
-
-        internal SQLiteConnection Connection
-        {
-            get
-            {
-                if (_connection != null) return _connection;
-                _connection = _factory.CreateConnection();
-                _connection.CreateTable<DayChange>();
-                return _connection;
-            }
-        }
+        private readonly Dictionary<string, int> _stateFips = new Dictionary<string, int>();
 
         public IEnumerable<IChange> GenerateEstimates(int days)
         {
-            List<DayChange> newChanges = new List<DayChange>();
+            List<CountyChangeModel> newChanges = new List<CountyChangeModel>();
             for (var day = 0; day < days; day++)
             {
 
@@ -46,22 +27,22 @@ namespace KonaAnalyzer.SqlData
                 foreach (var item in _locationService.Locations)
                 {
                     var sevenDayTrend = Matching(item.State, item.County, firstDay, _lastDate).ToList();
-                    var (firstCases, lastCases) = sevenDayTrend.GetFirstAndLastT(x => x.cases);
+                    var (firstCases, lastCases) = sevenDayTrend.GetFirstAndLastT(x => x.Cases);
                     var casesChangeAverage = (lastCases - firstCases) / 7;
                     //cases
                     //Debug.WriteLine($"First: {firstCases} Last: {lastCases}"  );
 
-                    var (firstDeaths, lastDeaths) = sevenDayTrend.GetFirstAndLastT(x => x.deaths);
+                    var (firstDeaths, lastDeaths) = sevenDayTrend.GetFirstAndLastT(x => x.Deaths);
                     var deathChangeAverage = (lastDeaths - firstDeaths) / 7;
                     //cases
                     //Debug.WriteLine($"First: {firstDeaths} Last: {lastDeaths} Estimate: { deathChangeAverage}");
 
-                    newChanges.Add(new DayChange()
+                    newChanges.Add(new CountyChangeModel()
                     {
-                        deaths = lastDeaths + deathChangeAverage,
-                        cases = lastCases + casesChangeAverage,
-                        county = item.County,
-                        state = item.State,
+                        Deaths = (lastDeaths + deathChangeAverage),
+                        Cases = lastCases + casesChangeAverage,
+                        County = item.County,
+                        State = item.State,
                         //IsEstimate = true
                     });
                 }
@@ -73,45 +54,6 @@ namespace KonaAnalyzer.SqlData
 
         }
 
-        public IEnumerable<IChange> GenerateEstimates(string state, string county, int days)
-        {
-            List<DayChange> newChanges = new List<DayChange>();
-            for (var day = 0; day < days; day++)
-            {
-
-                var firstDay = _lastDate - TimeSpan.FromDays(7);
-                foreach (var item in _locationService.Locations)
-                {
-                    var sevenDayTrend = Matching(item.State, item.County, firstDay, _lastDate).ToList();
-                    var (firstCases, lastCases) = sevenDayTrend.GetFirstAndLastT(x => x.cases);
-                    var casesChangeAverage = (lastCases - firstCases) / 7;
-                    //cases
-                    //Debug.WriteLine($"First: {firstCases} Last: {lastCases}"  );
-
-                    var (firstDeaths, lastDeaths) = sevenDayTrend.GetFirstAndLastT(x => x.deaths);
-                    var deathChangeAverage = (lastDeaths - firstDeaths) / 7;
-                    //cases
-                    //Debug.WriteLine($"First: {firstDeaths} Last: {lastDeaths} Estimate: { deathChangeAverage}");
-
-                    newChanges.Add(new DayChange()
-                    {
-                        deaths = lastDeaths + deathChangeAverage,
-                        cases = lastCases + casesChangeAverage,
-                        county = item.County,
-                        state = item.State,
-                        //IsEstimate = true
-                    });
-                }
-
-                _lastDate += TimeSpan.FromDays(1);
-            }
-
-            return newChanges;
-
-        }
-
-
-        public TableQuery<DayChange> Table => Connection.Table<DayChange>();
 
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
@@ -125,77 +67,81 @@ namespace KonaAnalyzer.SqlData
 
         protected override async Task UpdateItems()
         {
-            var lastDay = Changes.Select(x => x.date).Distinct().OrderBy(x => x).LastOrDefault();
+            var lastDay = Changes.Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
             if (lastDay.Date != RealYesterday)
             {
-                var items = await DataExtensions.GetListFromUrlAsync<DayChange>(Configs.ChangesAddress);
-                var newItems = items.Where(x => x.date > lastDay).ToList();
+                var items = await RawData.GetCountyChanges();
+                var newItems = items.Where(x => x.Date > lastDay);
                 Connection.InsertAll(newItems);
             }
 
 
-            var ordered = Changes.OrderBy(x => x.date).Select(x => x.date).Distinct().ToList();
+            var ordered = Changes.OrderBy(x => x.Date).Select(x => x.Date).Distinct().ToList();
             _lastDate = ordered.LastOrDefault();
             _earliestDate = ordered.FirstOrDefault();
         }
 
 
 
-        public IEnumerable<IChange> MatchingBetween(string state, string county, DateTime startDay, DateTime endDay)
-        {
-            var subset = Table.Where(x => startDay <= x.date && x.date <= endDay);
-            return Matching(subset, state, county);
-        }
+
 
         public int Total(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(fips, date).Select(x => x.cases).Sum();
+            return Matching(fips, date).Select(x => x.Cases).Sum();
         }
 
 
         public int Deaths(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Matching(fips, date).Select(x => x.deaths ?? 0).Sum();
+            var items = Matching(fips, date).Select(x => x.Deaths).Sum();
             return items;
         }
         public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
-        { 
-            var subset = Table.Where(x => startDay <= x.date && x.date <= endDay);
-            return Matching(subset, fips);
+        {
+            var location = _locationService.GetLocation(fips);
+            if (fips == 0)
+            {
+                return Table.Where(x => startDay <= x.Date && x.Date <= endDay).ToList().ToModel(location);
+            }
+
+            if (fips % 1000 == 0)
+            {
+                var maxFips = fips + 1000;
+                return Table.Where(x => startDay <= x.Date && x.Date <= endDay && (x.Fips < maxFips || x.Fips >= fips)).ToList().ToModel(location);
+            }
+            return Table.Where(x => startDay <= x.Date && x.Date <= endDay && x.Fips == fips).ToList().ToModel(location);
         }
 
 
-        public IEnumerable<IChange> Matching(string state, string county, params DateTime[] days)
+        public IEnumerable<CountyChange> Matching(string state, string county, params DateTime[] days)
         {
-            var subset = Table.Where(x => days.Contains(x.date));
+            var subset = Table.Where(x => days.Contains(x.Date));
             return Matching(subset, state, county);
         }
 
-        public int Total(string state, string county, DateTime? date)
+        public int Total(string state, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, county, date)
-                .Select(x => x.cases).Sum();
+            return Matching(state, "All", date)
+                .Select(x => x.Cases).Sum();
         }
-
-
-        public int Deaths(string state, string county, DateTime? date)
+        public int Deaths(string state, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Matching(state, county, date).Select(x => x.deaths ?? 0).Sum();
+            var items = Matching(state, "All", date).Select(x => x.Deaths).Sum();
             return items;
         }
 
-        public IEnumerable<DayChange> Matching(string state, string county, DateTime? date)
+        public IEnumerable<CountyChange> Matching(string state, string county, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
-            var subset = Table.Where(x => x.date == dateValue);
+            var subset = Table.Where(x => x.Date == dateValue);
             return Matching(subset, state, county);
         }
 
-        private static IEnumerable<DayChange> Matching(TableQuery<DayChange> changes, string state, string county)
+        private IEnumerable<CountyChange> Matching(TableQuery<CountyChange> changes, string state, string county)
         {
             var stateAll = state == "All";
             var countyAll = county == "All";
@@ -203,25 +149,28 @@ namespace KonaAnalyzer.SqlData
             {
                 return changes;
             }
-            else if (countyAll)
+
+
+            if (countyAll)
             {
-                return changes.Where(x => x.state == state);
+                var stateBottom = _stateFips[state];
+                return changes.Where(x => x.Fips >= stateBottom || x.Fips < stateBottom + 1000);
             }
             else
             {
-                //var location = _locationService.GetLocation(state, county);
-                return changes.Where(x => x.state == state && x.county == county);
+                var location = _locationService.GetLocation(state, county);
+                return changes.Where(x => x.Fips == location.Fips);
             }
         }
 
-        public IEnumerable<DayChange> Matching(int fips, DateTime? date)
+        public IEnumerable<CountyChange> Matching(int fips, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
-            var subset = Table.Where(x => x.date == dateValue);
+            var subset = Table.Where(x => x.Date == dateValue);
             return Matching(subset, fips);
         }
 
-        private static IEnumerable<DayChange> Matching(TableQuery<DayChange> changes, int fips)
+        private static IEnumerable<CountyChange> Matching(TableQuery<CountyChange> changes, int fips)
         {
 
             if (fips == 0)
@@ -232,55 +181,19 @@ namespace KonaAnalyzer.SqlData
             if (fips % 1000 == 0)
             {
                 var maxfips = fips + 1000;
-                return changes.Where(x => x.fips > fips && x.fips < maxfips);
+                return changes.Where(x => x.Fips > fips && x.Fips < maxfips);
             }
             //var location = _locationService.GetLocation(state, county);
-            return changes.Where(x => x.fips == fips);
+            return changes.Where(x => x.Fips == fips);
         }
 
-        public IEnumerable<IChange> Changes => Table;
+        public IEnumerable<CountyChange> Changes => Table;
 
 
-    }
-
-
-    public class SQLCovidSource_sharedBase : CovidServiceBase
-    {
-        private readonly ISQLiteFactory _factory;
-        public SQLCovidSource_sharedBase(ISQLiteFactory factory)
+        public SQLCovidSource(ISQLiteFactory factory, ILocationSource locationService) : base(factory)
         {
-            _factory = factory;
-
+            _locationService = locationService;
+            this._stateFips = locationService.GetStateFipsDictionary();
         }
-        private SQLiteConnection _connection;
-
-        internal SQLiteConnection Connection
-        {
-            get
-            {
-                if (_connection != null) return _connection;
-                _connection = _factory.CreateConnection();
-                _connection.CreateTable<DayChange>();
-                return _connection;
-            }
-        }
-
-
-
-        public TableQuery<DayChange> Table => Connection.Table<DayChange>();
-
-
-
-
-
-
-        protected override void UpdateRowSource(IEnumerable<IChange> store)
-        {
-            var lastRecorded = Changes.OrderBy(x => x.date).LastOrDefault()?.date ?? default;
-            var newItems = store.Where(x => x.date > lastRecorded).ToList();
-            Connection.InsertAll(newItems);
-        }
-
-        public override IEnumerable<IChange> Changes => Table;
     }
 }

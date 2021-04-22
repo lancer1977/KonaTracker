@@ -13,7 +13,7 @@ namespace KonaAnalyzer.Setup
 
         public   ServicesModule()
         {
-            _except = new[] {typeof(InMemoryLiteCovidSource)};
+            _except = new Type[] { };
         }
         protected override void Load(ContainerBuilder builder)
         { 

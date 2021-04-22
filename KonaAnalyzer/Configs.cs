@@ -1,6 +1,4 @@
-﻿using Xamarin.Forms;
-
-namespace KonaAnalyzer
+﻿namespace KonaAnalyzer
 {
     public static class Configs
     {

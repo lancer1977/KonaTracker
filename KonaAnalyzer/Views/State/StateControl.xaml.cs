@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using KonaAnalyzer.ViewModels;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using System.ComponentModel;
 
 namespace KonaAnalyzer.Views
 {

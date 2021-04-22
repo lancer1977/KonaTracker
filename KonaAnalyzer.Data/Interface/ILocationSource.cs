@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Model;
 
-namespace KonaAnalyzer.Interfaces
+namespace KonaAnalyzer.Data.Interface
 {
     public interface ILocationSource : IDataSource
     {
-        IEnumerable<Location> Locations { get; }
+        IEnumerable<LocationModel> Locations { get; }
         int GetId(string state, string county);
 
-        Location GetLocation(int id);
+        LocationModel GetLocation(int id);
         IEnumerable<string> Counties(string state);
         IEnumerable<string> States();
-        Location GetLocation(string state, string county);
+        LocationModel GetLocation(string state, string county);
         Task LoadAsync();
         int GetFips(string state, string county);
+        Dictionary<string, int> GetStateFipsDictionary();
     }
 }

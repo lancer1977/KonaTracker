@@ -1,10 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using KonaAnalyzer.ViewModels;
+﻿using System.ComponentModel;
+using KonaAnalyzer.Setup;
 using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
-namespace KonaAnalyzer.Views
+namespace KonaAnalyzer.Views.Overview
 {
     // Learn more about making custom code visible in the Xamarin.Forms previewer
     // by visiting https://aka.ms/xamarinforms-previewer
@@ -14,7 +12,9 @@ namespace KonaAnalyzer.Views
         public OverviewViewModel ViewModel => (OverviewViewModel) BindingContext;
         public OverviewPage()
         {
+            BindingContext = IOC.Get<OverviewViewModel>();
             InitializeComponent();
+            
         }
     }
 }

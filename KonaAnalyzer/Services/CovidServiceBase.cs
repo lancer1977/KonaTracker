@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.Data.Interface;
+using PolyhydraGames.Core.Data;
 
 namespace KonaAnalyzer.Services
 {
     public abstract class CovidServiceBase : BaseSource, ICovidSource
     {
+        private readonly ILocationSource _locationSource;
+        private readonly Dictionary<string, int> _stateFips = new Dictionary<string, int>();
 
+        protected CovidServiceBase(ILocationSource locationSource)
+        {
+            _locationSource = locationSource;
+            this._stateFips = _locationSource.GetStateFipsDictionary();
+        }
 
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
@@ -32,7 +39,7 @@ namespace KonaAnalyzer.Services
             UpdateDates();
             if (_lastDate != RealYesterday)
             {
-                UpdateRowSource(await DataExtensions.GetListFromUrlAsync<DayChange>(Configs.ChangesAddress));
+                UpdateRowSource(await DataExtensions.GetListFromUrlAsync<CountyChangeModel>(Configs.ChangesAddress));
             }
             UpdateDates();
 
@@ -40,7 +47,7 @@ namespace KonaAnalyzer.Services
 
         private void UpdateDates()
         {
-            var ordered = Changes.Select(x => x.date).Distinct().OrderBy(x => x).ToList();
+            var ordered = Changes.Select(x => x.Date).Distinct().OrderBy(x => x).ToList();
             _lastDate = ordered.LastOrDefault();
             _earliestDate = ordered.FirstOrDefault();
 
@@ -48,82 +55,80 @@ namespace KonaAnalyzer.Services
         protected abstract void UpdateRowSource(IEnumerable<IChange> store);
 
 
-        public IEnumerable<IChange> MatchingBetween(string state, string county, DateTime startDay, DateTime endDay)
+
+
+
+
+        public int Total(string state, DateTime? date)
         {
-            var stateAll = state == "All";
-            var countyAll = county == "All";
-            var subset = Changes.Where(x => startDay <= x.date && x.date <= endDay);
-
-
-            if (stateAll)
-            {
-                return subset;
-            }
-            else if (countyAll)
-            {
-                return subset.Where(x => x.state == state);
-            }
-            else
-            {
-                //var location = _locationService.GetLocation(state, county);
-                return subset.Where(x => x.state == state && x.county == county);
-            }
+            if (date == null) date = Yesterday;
+            return Matching(state, "All", date)
+                .Select(x => x.Cases).Sum();
         }
 
 
-
-
-
-
-        public int Total(string state, string county, DateTime? date)
+        public int Deaths(string state, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, county, date)
-                .Select(x => x.cases).Sum();
-        }
-
-
-        public int Deaths(string state, string county, DateTime? date)
-        {
-            if (date == null) date = Yesterday;
-            var items = Matching(state, county, date).Select(x => x.deaths ?? 0).Sum();
+            var items = Matching(state, "All", date).Sum(x => x.Deaths);
             return items;
         }
 
-        public IEnumerable<IChange> Matching(string state, string county, DateTime? date)
+        public IEnumerable<CountyChange> Matching(string state, string county, DateTime? date)
         {
             var stateAll = state == "All";
             var countyAll = county == "All";
             var datevalue = date ?? Yesterday;
-            var subset = Changes.Where(x => x.date == datevalue);
 
+
+            var changes = Changes.Where(x => x.Date == datevalue);
             if (stateAll)
             {
-                return subset;
+                return changes;
             }
-            else if (countyAll)
+
+
+            if (countyAll)
             {
-                return subset.Where(x => x.state == state);
+                var stateBottom = _stateFips[state];
+                return changes.Where(x => x.Fips >= stateBottom || x.Fips < stateBottom + 1000);
             }
             else
             {
-                //var location = _locationService.GetLocation(state, county);
-                return subset.Where(x => x.state == state && x.county == county);
+                var location = _locationSource.GetLocation(state, county);
+                return changes.Where(x => x.Fips == location.Fips);
+            }
+        }
+
+        public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
+        {
+            var location = _locationSource.GetLocation(fips);
+            if (fips == 0)
+            {
+                return Changes.Where(x => startDay <= x.Date && x.Date <= endDay).ToList().ToModel(location);
+            }
+            else if (fips % 1000 == 0)
+            {
+                var maxFips = fips + 1000;
+                return Changes.Where(x => startDay <= x.Date && x.Date <= endDay && (x.Fips < maxFips || x.Fips >= fips)).ToList().ToModel(location);
+            }
+            else
+            {
+                return Changes.Where(x => startDay <= x.Date && x.Date <= endDay && x.Fips == fips).ToList().ToModel(location);
             }
         }
 
 
+        public abstract IEnumerable<CountyChange> Changes { get; }
 
-        public abstract IEnumerable<IChange> Changes { get; }
-
-        public IEnumerable<IChange> Matching(int fips, DateTime? date)
+        public IEnumerable<CountyChange> Matching(int fips, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
-            var subset = Changes.Where(x => x.date == dateValue);
+            var subset = Changes.Where(x => x.Date == dateValue);
             return Matching(subset, fips);
         }
 
-        private static IEnumerable<IChange> Matching(IEnumerable<IChange> changes, int fips)
+        private static IEnumerable<CountyChange> Matching(IEnumerable<CountyChange> changes, int fips)
         {
 
             if (fips == 0)
@@ -134,28 +139,24 @@ namespace KonaAnalyzer.Services
             if (fips % 1000 == 0)
             {
                 var maxfips = fips + 1000;
-                return changes.Where(x => x.fips > fips && x.fips < maxfips);
+                return changes.Where(x => x.Fips > fips && x.Fips < maxfips);
             }
             //var location = _locationService.GetLocation(state, county);
-            return changes.Where(x => x.fips == fips);
+            return changes.Where(x => x.Fips == fips);
         }
         public int Total(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(fips, date).Select(x => x.cases).Sum();
+            return Matching(fips, date).Select(x => x.Cases).Sum();
         }
 
 
         public int Deaths(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            var items = Matching(fips, date).Select(x => x.deaths ?? 0).Sum();
+            var items = Matching(fips, date).Sum(x => x.Deaths);
             return items;
         }
-        public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
-        {
-            var subset = Changes.Where(x => startDay <= x.date && x.date <= endDay);
-            return Matching(subset, fips);
-        }
+
     }
 }

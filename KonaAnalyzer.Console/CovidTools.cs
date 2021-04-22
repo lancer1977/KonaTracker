@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
+using KonaAnalyzer.Data.Interface;
+using KonaAnalyzer.Data.Model;
 using KonaAnalyzer.Models;
 using KonaAnalyzer.Services;
 using KonaAnalyzer.Setup;
 using Newtonsoft.Json;
+using PolyhydraGames.Core.Data;
 using Writer = System.Console;
 
 namespace KonaAnalyzer.Console
@@ -21,7 +23,7 @@ namespace KonaAnalyzer.Console
             while (true)
             {
                 //TestSources().GetAwaiter().GetResult();
-                  WriteCountyMap().GetAwaiter().GetResult();
+                WriteCountyMap().GetAwaiter().GetResult();
                 System.Console.ReadLine();
             }
 
@@ -33,9 +35,8 @@ namespace KonaAnalyzer.Console
             await locationService.LoadAsync();
 
             await IOC.Get<ILocationSource>().LoadAsync();
-            await IOC.Get<IPopulationSource>().LoadAsync();
-            await CovidSource.LoadAsync(); 
-            Writer.WriteLine(CovidSource.Total("All", "All", CovidSource.Latest));
+            await CovidSource.LoadAsync();
+            Writer.WriteLine(CovidSource.Total("All",   CovidSource.Latest));
             Writer.WriteLine("Got sources!");
         }
         public async Task WriteCountyMap()
@@ -44,15 +45,15 @@ namespace KonaAnalyzer.Console
             //Directory.CreateDirectory(path);
             System.Console.WriteLine(path);
             string url = "https://raw.githubusercontent.com/lancer1977/DataSeeds/master/covid/us-counties.csv";
-            var source = await DataExtensions.GetListFromUrlAsync<RawLocation>(url,Serialize.CSV);
- 
+            var source = await DataExtensions.GetListFromUrlAsync<RawLocation>(url, Serialize.CSV);
+
             //var stateId = 0;
-            var locations = new List<Location>();
-            foreach (var state in source.OrderBy(x=>x.fips))
+            var locations = new List<LocationModel>();
+            foreach (var state in source.OrderBy(x => x.fips))
             {
 
                 if (locations.Any(x => x.Fips == state.fips)) continue;
-                locations.Add(new Location()
+                locations.Add(new LocationModel()
                 {
                     State = state.state,
                     County = state.county,

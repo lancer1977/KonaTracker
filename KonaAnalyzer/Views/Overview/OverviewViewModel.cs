@@ -1,36 +1,47 @@
 ﻿using System.Collections.Generic;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Models;
+using System.Threading.Tasks;
+using KonaAnalyzer.Data.Interface;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.Services;
+using KonaAnalyzer.ViewModels;
 using ReactiveUI.Fody.Helpers;
 
-namespace KonaAnalyzer.ViewModels
+namespace KonaAnalyzer.Views.Overview
 {
     public class OverviewViewModel : BaseViewModel
     {
-        [Reactive] public List<DayChange> Items { get; set; }
+        [Reactive] public List<CountyChangeModel> Items { get; set; }
         [Reactive] public int Cases { get; set; }
         [Reactive] public int Deaths { get; set; }
-        public OverviewViewModel()
+        public OverviewViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore,locationStore,mask)
         {
             Title = "Overview";
-            var items = new List<DayChange>();
+         
+        }
+
+        public override Task OnAppearing()
+        {
+ 
+            var items = new List<CountyChangeModel>();
 
             foreach (var item in LocationStore.States())
             {
                 var lastDay = DataStore.Latest;
-                items.Add(new DayChange()
+                items.Add(new CountyChangeModel()
                 {
-                    date = lastDay,
-                    state = item,
-                    cases = DataStore.Total(item, "All", lastDay),
-                    deaths = DataStore.Deaths(item, "All", lastDay)
+                    Date = lastDay,
+                    State = item,
+                    Cases = DataStore.Total(item, lastDay),
+                    Deaths = DataStore.Deaths(item, lastDay)
                 });
             }
 
             Items = items;
-            Deaths = DataStore.Deaths("All", "All", null);
-            Cases = DataStore.Total("All", "All", null);
+            Deaths = DataStore.Deaths("All", null);
+            Cases = DataStore.Total("All", null);
+            return base.OnAppearing();
         }
-
     }
+    
+    
 }

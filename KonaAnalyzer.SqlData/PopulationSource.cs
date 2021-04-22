@@ -2,10 +2,10 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
-using KonaAnalyzer.Interfaces;
-using KonaAnalyzer.Models;
+using KonaAnalyzer.Data.Interface;
+using KonaAnalyzer.Data.Model;
 using KonaAnalyzer.Services;
+using PolyhydraGames.Core.Data;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
@@ -20,16 +20,16 @@ namespace KonaAnalyzer.SqlData
       
             if (state == "All")
             {
-                return Table.Sum(x => x.population);
+                return Table.Sum(x => x.Population);
             }
             if (string.IsNullOrEmpty(state) || string.IsNullOrEmpty(county)) return 0;
             if (county == "All")
             {
-                return Table.Where(x => x.state == state).Sum(x => x.population);
+                return Table.Where(x => x.State == state).Sum(x => x.Population);
             }
 
             county = county.Replace("City", "").Replace("County", "");
-            return Table.FirstOrDefault(x => x.state == state && x.county.Contains(county))?.population ?? -1;
+            return Table.FirstOrDefault(x => x.State == state && x.County.Contains(county))?.Population ?? -1;
 
         }
 
