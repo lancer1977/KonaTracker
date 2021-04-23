@@ -43,9 +43,7 @@ namespace KonaAnalyzer.Dapper
             using var con = Factory.GetConnection();
             try
             {
-                return con.QueryFirst<int>(
-                    $"SELECT Sum(Cases)   FROM {TableName} {StateMerge} where State = @state and Date = @dateValue",
-                    new { state, dateValue });
+                return con.QueryFirst<int>(  $"SELECT Sum(Cases)   FROM {TableName} {StateMerge} where State = @state and Date = @dateValue",   new { state, dateValue });
             }
             catch (Exception ex)
             {
@@ -163,6 +161,7 @@ namespace KonaAnalyzer.Dapper
 
         public override async Task LoadAsync()
         {
+            
             using var con = Factory.GetConnection();
             var lastDay = Changes.Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
             if (lastDay.Date != RealYesterday)

@@ -73,24 +73,17 @@ namespace KonaAnalyzer.SqlData
                 var items = await RawData.GetCountyChanges();
                 var newItems = items.Where(x => x.Date > lastDay);
                 Connection.InsertAll(newItems);
-            }
-
-
-            var ordered = Changes.OrderBy(x => x.Date).Select(x => x.Date).Distinct().ToList();
-            _lastDate = ordered.LastOrDefault();
-            _earliestDate = ordered.FirstOrDefault();
-        }
-
-
-
-
+                var ordered = Changes.OrderBy(x => x.Date).Select(x => x.Date).Distinct().ToList();
+                _lastDate = ordered.LastOrDefault();
+                _earliestDate = ordered.FirstOrDefault();
+            } 
+        } 
 
         public int Total(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
             return Matching(fips, date).Select(x => x.Cases).Sum();
-        }
-
+        } 
 
         public int Deaths(int fips, DateTime? date)
         {
@@ -98,6 +91,7 @@ namespace KonaAnalyzer.SqlData
             var items = Matching(fips, date).Select(x => x.Deaths).Sum();
             return items;
         }
+
         public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
         {
             var location = _locationService.GetLocation(fips);

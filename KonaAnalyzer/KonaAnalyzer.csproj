@@ -29,6 +29,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="Autofac" Version="6.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PolyhydraGames.Core.Data" Version="1.0.2.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,8 +60,6 @@
     <Folder Include="Setup\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\PFCore\PolyhydraGames.Core.Data\PolyhydraGames.Core.Data.csproj" />
     <ProjectReference Include="..\KonaAnalyzer.Data\KonaAnalyzer.Data.csproj" />
   </ItemGroup>
- 
 </Project>

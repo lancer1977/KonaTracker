@@ -14,7 +14,9 @@ namespace KonaAnalyzer.Data.Interface
 
         IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay);  
         DateTime Latest { get; }
-        DateTime Earliest { get; } 
+        DateTime Earliest { get; }
+
+        IEnumerable<IChange> GenerateEstimates(int days);
     }
 
 }

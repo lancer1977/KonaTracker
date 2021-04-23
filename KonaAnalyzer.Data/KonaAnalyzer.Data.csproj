@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PFCore\PolyhydraGames.Core.Data\PolyhydraGames.Core.Data.csproj" />
+    <PackageReference Include="PolyhydraGames.Core.Data" Version="1.0.2.4" />
   </ItemGroup>
-
 </Project>
