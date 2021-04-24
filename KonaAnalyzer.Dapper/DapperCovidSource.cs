@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -8,6 +9,7 @@ using KonaAnalyzer.Data;
 using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Data.Model;
 using PolyhydraGames.Core.Data;
+using PolyhydraGames.Core.Interfaces;
 
 namespace KonaAnalyzer.Dapper
 {
@@ -17,7 +19,7 @@ namespace KonaAnalyzer.Dapper
         public DateTime Earliest { get; }
         private readonly ILocationSource _locationSource;
 
-        public DapperCovidSource(KonaContextService factory, ILocationSource locationSource) : base(factory)
+        public DapperCovidSource(IDBConnectionFactory factory, ILocationSource locationSource) : base(factory)
         {
             _locationSource = locationSource;
             Latest = GetFirst();
@@ -29,13 +31,13 @@ namespace KonaAnalyzer.Dapper
         private DateTime GetFirst()
         {
             using var con = Factory.GetConnection();
-            return con.QueryFirst<DateTime>($"SELECT Distinct Date FROM {TableName} Order By [Date] Asc");
+            return con.QueryFirstOrDefault<DateTime>($"SELECT Distinct Date FROM {TableName} Order By [Date] Asc");
         }
 
         private DateTime GetLast()
         {
             using var con = Factory.GetConnection();
-            return con.QueryFirst<DateTime>($"SELECT Distinct Date FROM {TableName}  Order By Date Desc");
+            return con.QueryFirstOrDefault<DateTime>($"SELECT Distinct Date FROM {TableName}  Order By Date Desc");
         }
         public int Total(string state, DateTime? date)
         {
@@ -43,7 +45,7 @@ namespace KonaAnalyzer.Dapper
             using var con = Factory.GetConnection();
             try
             {
-                return con.QueryFirst<int>(  $"SELECT Sum(Cases)   FROM {TableName} {StateMerge} where State = @state and Date = @dateValue",   new { state, dateValue });
+                return con.QueryFirstOrDefault<int>($"SELECT Sum(Cases)   FROM {TableName} {StateMerge} where State = @state and Date = @dateValue", new { state, dateValue });
             }
             catch (Exception ex)
             {
@@ -149,7 +151,7 @@ namespace KonaAnalyzer.Dapper
                         //IsEstimate = true
                     });
                 }
-                 
+
             }
 
             return newChanges;
@@ -160,25 +162,27 @@ namespace KonaAnalyzer.Dapper
         public override Task<List<CountyChange>> GetWebItems() => RawData.GetCountyChanges();
 
         public override async Task LoadAsync()
-        {
-            
-            using var con = Factory.GetConnection();
+        { 
             var lastDay = Changes.Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
-            if (lastDay.Date != RealYesterday)
+            if (lastDay.Date == RealYesterday)
             {
                 var items = await GetWebItems();
-                var newItems = items.Where(x => x.Date > lastDay).ToList();
-                con.Insert(newItems);
-                var ordered = items.Select(x => x.Date).OrderBy(x => x.Date).FirstOrDefault();
+                var newItems = items.Where(x => x.Date > lastDay && x.Fips > 0).GroupBy(x => x.Date).ToList();
+                Parallel.ForEach(newItems, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, (x, y) =>
+                     {
+                         using var con = Factory.GetConnection();
+                         con.Insert(x.ToList());
+                         Debug.WriteLine(x.Key + " Inserted");
+                     });
+                var ordered = items.Select(x => x.Date).OrderBy(x => x.Date).LastOrDefault();
                 Latest = ordered;
             }
         }
-
-
+         
         public DateTime Yesterday => Latest - TimeSpan.FromDays(1);
 
         public DateTime RealYesterday => DateTime.Today - TimeSpan.FromDays(1);
- 
+
 
         public IEnumerable<CountyChange> Changes => GetAll;
 

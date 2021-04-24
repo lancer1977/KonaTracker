@@ -103,7 +103,7 @@ namespace KonaAnalyzer.Dapper
         }
 
 
-        public DapperLocationSource(KonaContextService factory) : base(factory)
+        public DapperLocationSource(IDBConnectionFactory factory) : base(factory)
         {
         }
 
