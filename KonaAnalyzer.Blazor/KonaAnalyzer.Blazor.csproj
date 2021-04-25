@@ -23,10 +23,10 @@
     <Folder Include="Bootstrapper\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer.Dapper\KonaAnalyzer.Dapper.csproj">
+    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
+    <ProjectReference Include="..\KonaAnalyzer.Dapper\KonaAnalyzer.Data.Dapper.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
   </ItemGroup>

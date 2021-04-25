@@ -112,7 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.Data.SQLite.csproj">
-      <Project>{e12fe939-3037-4c4f-b114-c150dc5ddf1d}</Project>
+      <Project>{8C0AB11E-C49F-4D32-8F54-FD15813F0D95}</Project>
       <Name>KonaAnalyzer.Data.SQLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">

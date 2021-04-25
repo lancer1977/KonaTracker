@@ -13,6 +13,7 @@ using KonaAnalyzer.Dapper;
 using KonaAnalyzer.Data.Interface; 
 using Syncfusion.Blazor;
 using KonaAnalyzer.ViewModels;
+using PolyhydraWebsite.Bootstrapper;
 
 namespace KonaAnalyzer.Blazor
 {
@@ -38,15 +39,8 @@ namespace KonaAnalyzer.Blazor
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddScoped<OverviewViewModel>();
             services.AddScoped<ChangeChartViewModel>();
-            services.AddScoped<DapperLocationSource>();
-            services.AddScoped<ILocationSource>(x=>x.GetRequiredService<DapperLocationSource>());
-            services.AddScoped<DapperCovidSource>();
-            services.AddScoped<ICovidSource>(x => x.GetRequiredService<DapperCovidSource>());
-            services.AddScoped<ICovidSourceAsync>(x => x.GetRequiredService<DapperCovidSource>());
-            services.AddScoped<MaskUseSource>();
-            services.AddScoped<IMaskSource>(x => x.GetRequiredService<MaskUseSource>());
-            services.AddSyncfusionBlazor();
-            services.AddScoped(x=> new KonaContextService(Configuration.GetConnectionString("MacMiniKona"))); 
+            KonaRegistration.Register(services, Configuration.GetConnectionString("MacMiniKona"));
+            services.AddSyncfusionBlazor();  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
