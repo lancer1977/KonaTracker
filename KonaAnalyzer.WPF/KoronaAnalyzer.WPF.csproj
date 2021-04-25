@@ -100,9 +100,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.SqlData.csproj">
+    <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.Data.SQLite.csproj">
       <Project>{E12FE939-3037-4C4F-B114-C150DC5DDF1D}</Project>
-      <Name>KonaAnalyzer.SqlData</Name>
+      <Name>KonaAnalyzer.Data.SQLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
       <Project>{6b63021f-82a7-41c2-aaa4-68798b04db0a}</Project>

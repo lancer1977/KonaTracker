@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data.Model;
@@ -10,8 +11,17 @@ namespace KonaAnalyzer.Data
     {
         public static async Task<List<CountyChange>> GetCountyChanges()
         {
-            var results = await DataExtensions.GetListFromUrlAsync<CountyChangeCsv>(Addresses.ChangesAddress);
-            return results.Select(x => x.ToCountyChange()).ToList();
+            try
+            {
+                var results = await DataExtensions.GetListFromUrlAsync<CountyChangeCsv>(Addresses.ChangesAddress);
+
+                return results.Select(x => x.ToCountyChange()).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
         }
         public static async Task<List<LocationModel>> GetLocationModel()
         {

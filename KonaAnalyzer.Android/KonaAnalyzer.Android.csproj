@@ -111,9 +111,9 @@
     <AndroidResource Include="Resources\mipmap-xxxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.SqlData.csproj">
+    <ProjectReference Include="..\KonaAnalyzer.SqlData\KonaAnalyzer.Data.SQLite.csproj">
       <Project>{e12fe939-3037-4c4f-b114-c150dc5ddf1d}</Project>
-      <Name>KonaAnalyzer.SqlData</Name>
+      <Name>KonaAnalyzer.Data.SQLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj">
       <Project>{6B63021F-82A7-41C2-AAA4-68798B04DB0A}</Project>

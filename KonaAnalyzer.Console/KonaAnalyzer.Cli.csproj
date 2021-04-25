@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="json\**" />
+    <Compile Remove="Table\**" />
+    <EmbeddedResource Remove="json\**" />
+    <EmbeddedResource Remove="Table\**" />
+    <EntityDeploy Remove="json\**" />
+    <EntityDeploy Remove="Table\**" />
+    <None Remove="json\**" />
+    <None Remove="Table\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.78" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PolyhydraGames.Core" Version="3.0.2.21" />
+    <PackageReference Include="PolyhydraGames.Pathfinder.Data.Source.Restful" Version="2.1.0.4" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.113.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\KonaTracker\KonaAnalyzer.Dapper\KonaAnalyzer.Data.Dapper.csproj" />
+  </ItemGroup>
+</Project>

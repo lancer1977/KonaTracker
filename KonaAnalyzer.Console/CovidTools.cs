@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
+using KonaAnalyzer.Dapper;
 using KonaAnalyzer.Data.Interface;
-using KonaAnalyzer.Data.Model;
-using KonaAnalyzer.Models;
-using KonaAnalyzer.Services;
-using KonaAnalyzer.Setup;
+using KonaAnalyzer.Data.Model; 
 using Newtonsoft.Json;
 using PolyhydraGames.Core.Data;
+using PolyhydraGames.Core.IOC;
 using Writer = System.Console;
 
-namespace KonaAnalyzer.Console
+namespace KonaAnalyzer.Cli
 {
     public class CovidTools
     {
