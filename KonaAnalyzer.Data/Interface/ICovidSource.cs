@@ -8,9 +8,10 @@ namespace KonaAnalyzer.Data.Interface
     {
         int Total(string state, DateTime? date);
         int Total(int fips, DateTime? date);
-
+        int Total(DateTime date);
         int Deaths(string state, DateTime? date);
-        int Deaths(int fips, DateTime? date); 
+        int Deaths(int fips, DateTime? date);
+        int Deaths(DateTime date);
 
         IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay);  
         DateTime Latest { get; }

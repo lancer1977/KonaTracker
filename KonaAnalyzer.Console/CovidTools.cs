@@ -18,27 +18,19 @@ namespace KonaAnalyzer.Console
     public class CovidTools
     {
         private ICovidSource CovidSource => IOC.Get<ICovidSource>();
-        public void StartPump()
-        {
-            while (true)
-            {
-                //TestSources().GetAwaiter().GetResult();
-                WriteCountyMap().GetAwaiter().GetResult();
-                System.Console.ReadLine();
-            }
-
-        }
+ 
 
         public async Task TestSources()
         {
-            var locationService = new LocationSource();
+            Writer.WriteLine("Start sources!");
+            var locationService = IOC.Get<ILocationSource>();
             await locationService.LoadAsync();
-
-            await IOC.Get<ILocationSource>().LoadAsync();
-            await CovidSource.LoadAsync();
+             
+            //await CovidSource.LoadAsync();
             Writer.WriteLine(CovidSource.Total("All",   CovidSource.Latest));
             Writer.WriteLine("Got sources!");
         }
+        /*
         public async Task WriteCountyMap()
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "PolyhydraGames.counties.json"); // Library folder
@@ -65,5 +57,6 @@ namespace KonaAnalyzer.Console
             Writer.ReadKey();
             System.IO.File.WriteAllText(path, json);
         }
+        */
     }
 }

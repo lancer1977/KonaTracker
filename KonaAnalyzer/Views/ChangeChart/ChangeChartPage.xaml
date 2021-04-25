@@ -44,8 +44,7 @@
                     <Picker  Grid.Row="3" Grid.Column="1" ItemsSource="{Binding DataTypes}" SelectedItem="{Binding DataType}"/>
                     <BoxView Grid.Row="4" Grid.ColumnSpan="4" HeightRequest="2" Color="DodgerBlue" ></BoxView>
                 </Grid>
-                <xForms:SfChart  
-                             x:Name="Chart" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <xForms:SfChart    x:Name="Chart" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                     <chart:SfChart.Margin>
                         <OnPlatform x:TypeArguments="Thickness" WinPhone="0,0,15,0" />
                     </chart:SfChart.Margin>

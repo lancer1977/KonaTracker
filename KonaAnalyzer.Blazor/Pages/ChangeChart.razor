@@ -1,0 +1,28 @@
+﻿@page "/changechart"
+@inject ChangeChartViewModel ViewModel
+
+
+<div style="width:650px; height:350px;">
+    <SfChart Title="Inflation - Consumer Price">
+        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category"></ChartPrimaryXAxis>
+
+        <ChartSeriesCollection>
+
+            <ChartSeries DataSource="@ViewModel.Items" XName="Date" YName="Change" Type="ChartSeriesType.Column">
+            </ChartSeries>
+        </ChartSeriesCollection>
+    </SfChart>
+</div>
+
+
+
+
+@code{ 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var start = DateTime.Today - TimeSpan.FromDays(30);
+        var end = DateTime.Today - TimeSpan.FromDays(2);
+        ViewModel.Load("All", "All", start, end);
+        
+    }
+}

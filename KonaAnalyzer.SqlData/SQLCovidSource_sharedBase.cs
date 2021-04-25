@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Data.Model;
@@ -28,14 +29,23 @@ namespace KonaAnalyzer.SqlData
                 return _connection;
             }
         }
-
-
-
+         
         public TableQuery<CountyChange> Table => Connection.Table<CountyChange>();
 
 
 
+        public override int Total(DateTime date)
+        {
+            if (date == null) date = Yesterday;
+            return Matching("All", "All", date).Select(x => x.Cases).Sum();
+        }
 
+        public override int Deaths(DateTime date)
+        {
+            if (date == null) date = Yesterday;
+            var items = Matching("All", "All", date).Sum(x => x.Deaths);
+            return items;
+        }
 
 
         protected override void UpdateRowSource(IEnumerable<IChange> store)

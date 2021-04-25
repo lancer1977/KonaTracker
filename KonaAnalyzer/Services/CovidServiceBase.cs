@@ -57,13 +57,14 @@ namespace KonaAnalyzer.Services
 
 
 
+        public abstract int Total(DateTime date);
 
+        public abstract int Deaths(DateTime date);
 
         public int Total(string state, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, "All", date)
-                .Select(x => x.Cases).Sum();
+            return Matching(state, "All", date) .Select(x => x.Cases).Sum();
         }
 
 

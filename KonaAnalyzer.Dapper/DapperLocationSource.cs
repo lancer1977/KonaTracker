@@ -13,9 +13,7 @@ using PolyhydraGames.Core.Interfaces;
 namespace KonaAnalyzer.Dapper
 {
     public class DapperLocationSource : DapperSource<LocationModel>, ILocationSource
-    {
-
-
+    { 
         public IEnumerable<LocationModel> Locations => base.GetAll;
         public int GetId(string state, string county)
         {
@@ -46,8 +44,7 @@ namespace KonaAnalyzer.Dapper
         public LocationModel GetLocation(string state, string county)
         {
             using var con = Factory.GetConnection();
-            return con.QueryFirstOrDefault<LocationModel>($"SELECT * FROM {TableName} WHERE County = @county AND State = @state",
-                new { county, state });
+            return con.QueryFirstOrDefault<LocationModel>($"SELECT * FROM {TableName} WHERE County = @county AND State = @state", new { county, state });
         }
 
 
@@ -63,21 +60,17 @@ namespace KonaAnalyzer.Dapper
             {
                 Debug.WriteLine($"State: {state} County {county}");
                 return fips;
-            }
-
-            county = county.Replace("County", "").Replace("city/county", "").Replace("Parish", "").Trim();
+            } 
 
             if (county != "All")
             {
                 using var con = Factory.GetConnection();
-                fips = con.QueryFirstOrDefault<int?>($"SELECT Fips FROM {TableName} WHERE County = @county AND State = @state",
-                    new { county, state }) ?? -1;
+                fips = con.QueryFirstOrDefault<int?>($"SELECT Fips FROM {TableName} WHERE County = @county AND State = @state",    new { county, state }) ?? -1;
             }
             else
             {
                 using var con = Factory.GetConnection();
-                var first = con.QueryFirstOrDefault<int?>($"SELECT Fips FROM {TableName} WHERE State = @state",
-                    new { county, state });
+                var first = con.QueryFirstOrDefault<int?>($"SELECT Fips FROM {TableName} WHERE State = @state",   new { county, state });
 
                 fips = (first ?? -1).Round(1000);
             }
@@ -109,7 +102,7 @@ namespace KonaAnalyzer.Dapper
 
         public override async Task<List<LocationModel>> GetWebItems()
         {
-            return await KonaAnalyzer.Data.RawData.GetLocationModel();
+            return await RawData.GetLocationModel();
         }
     }
 }

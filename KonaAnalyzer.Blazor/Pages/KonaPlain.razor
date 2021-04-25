@@ -1,0 +1,43 @@
+﻿@page "/konaplain"
+
+@inject OverviewViewModel ViewModel 
+
+<h3>@ViewModel.Title</h3>
+
+
+<label Text="Total"></label>
+
+<label Text="Sick"></label>
+<tr>@ViewModel.Cases</tr>
+<label Text="Deaths"></label>
+<tr>@ViewModel.Deaths</tr>
+
+<table ItemsSource="{Binding Items}" SeparatorColor="Black" Margin="5,0">
+    <tr>
+        <th>State</th>
+        <th>Sick</th>
+        <th>Deaths</th>
+        <th> </th>
+    </tr>
+    @foreach (var item in ViewModel.Items)
+    {
+<tr>
+    <td> @item.State</td>
+    <td> @item.Cases</td>
+    <td> @item.Deaths</td>
+
+</tr>
+  
+    }
+
+</table>
+
+@code
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await ViewModel.OnAppearing();
+        await base.OnAfterRenderAsync(firstRender);
+        await base.SetParametersAsync(ParameterView.Empty);
+    }
+}

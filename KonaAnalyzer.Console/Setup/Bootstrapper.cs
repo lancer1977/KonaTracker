@@ -1,7 +1,6 @@
 ﻿using Autofac;
-using KonaAnalyzer.Setup;
-using KonaAnalyzer.SqlData;
-
+using KonaAnalyzer.Dapper;
+using KonaAnalyzer.Setup; 
 namespace KonaAnalyzer.Console.Setup
 {
     public class Bootstrapper : Module
@@ -14,7 +13,10 @@ namespace KonaAnalyzer.Console.Setup
 
         public static void Initialize()
         {
-            IOC.Instance.Setup(new[] { typeof(ServicesModule), typeof(ViewModelModule), typeof(Bootstrapper),typeof(SQlModule),typeof(SQLiteBootstrapper) });
+            IOC.Instance.Setup(new[] {
+                typeof(SQLiteBootstrapper)  
+             
+            });
         }
     }
 }

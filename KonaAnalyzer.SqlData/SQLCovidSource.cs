@@ -115,6 +115,20 @@ namespace KonaAnalyzer.SqlData
             return Matching(subset, state, county);
         }
 
+        public int Total(DateTime date)
+        {
+            if (date == null) date = Yesterday;
+            return Matching("All", "All", date).Select(x => x.Cases).Sum();
+        }
+
+        public int Deaths(DateTime date)
+        {
+            if (date == null) date = Yesterday;
+            var items = Matching("All", "All", date).Sum(x => x.Deaths);
+            return items;
+        }
+
+
         public int Total(string state, DateTime? date)
         {
             if (date == null) date = Yesterday;

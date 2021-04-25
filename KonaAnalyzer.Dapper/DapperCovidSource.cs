@@ -11,7 +11,7 @@ using PolyhydraGames.Core.Data;
 
 namespace KonaAnalyzer.Dapper
 {
-    public class DapperCovidSource : DapperSource<CountyChange>, ICovidSource
+    public class DapperCovidSource : DapperSource<CountyChange>, ICovidSource, ICovidSourceAsync
     {
         public DateTime Latest { get; private set; }
         public DateTime Earliest { get; }
@@ -20,8 +20,8 @@ namespace KonaAnalyzer.Dapper
         public DapperCovidSource(KonaContextService factory, ILocationSource locationSource) : base(factory)
         {
             _locationSource = locationSource;
-            Latest = GetFirst();
-            Earliest = GetLast();
+            Latest = GetLast();
+            Earliest = GetFirst();
         }
 
         private readonly string StateMerge = "cc left join dbo.LocationModel loc on loc.Fips = cc.Fips";
@@ -37,62 +37,106 @@ namespace KonaAnalyzer.Dapper
             using var con = Factory.GetConnection();
             return con.QueryFirst<DateTime>($"SELECT Distinct Date FROM {TableName}  Order By Date Desc");
         }
+        private string TotalStateDateQuery => $"SELECT Sum(Cases) FROM {TableName} {StateMerge} where State = @state and Date = @dateValue";
+        private string DeathStateDateQuery => $"SELECT Sum(Deaths)   FROM {TableName}  {StateMerge} where State = @state and Date = @dateValue";
+        private string TotalDateQuery => $"SELECT Sum(Cases) FROM {TableName} where  Date = @date";
+        private string DeathDateQuery => $"SELECT Sum(Deaths) FROM {TableName} where Date = @date";
+
+        private string TotalFipsDateQuery => $"SELECT Sum(Cases) FROM {TableName} where Fips = @fips and Date = @dateValue";
+        private string DeathFipsDateQuery => $"SELECT Sum(Deaths) FROM {TableName} where Fips = @fips and Date = @dateValue";
+        private string MatchingFipsDate => $"SELECT * FROM {TableName} where Fips = @fips and Date = @dateValue";
+        private string MatchingFipsStartEndQuery => $"SELECT * FROM {TableName} where Fips = @fips and Date >= @startDate and Date <= @endDate ";
+
+        private string MatchingModelStartEndQuery => $"SELECT * FROM {TableName}  {StateMerge} where State = @state and County = @county and Date >= @startDate and Date <= @endDate ";
+
         public int Total(string state, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
-            using var con = Factory.GetConnection();
-            try
-            {
-                return con.QueryFirst<int>(  $"SELECT Sum(Cases)   FROM {TableName} {StateMerge} where State = @state and Date = @dateValue",   new { state, dateValue });
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+            using var con = Factory.GetConnection(); 
+            return con.QueryFirst<int>(TotalStateDateQuery, new { state, dateValue }); 
         }
 
-        public int Deaths(string state, DateTime? date)
+        public async  Task<int> TotalAsync(string state, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
             using var con = Factory.GetConnection();
-            try
-            {
-                return con.QueryFirst<int>(
-                    $"SELECT Sum(Deaths)   FROM {TableName}  {StateMerge} where State = @state and Date = @dateValue",
-                    new { state, dateValue });
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
-
+            return await con.QueryFirstAsync<int>(TotalStateDateQuery, new { state, dateValue }); 
         }
+
+        
+        public int Total( DateTime date)
+        { 
+            using var con = Factory.GetConnection(); 
+            return con.QueryFirst<int>(TotalDateQuery, new {  date }); 
+        }
+        public async Task<int> TotalAsync(DateTime date)
+        {
+            using var con = Factory.GetConnection();
+            return await con.QueryFirstAsync<int>(TotalDateQuery, new { date });
+        }
+
+        
+        public int Deaths( DateTime date)
+        { 
+            using var con = Factory.GetConnection(); 
+            return con.QueryFirst<int>(DeathDateQuery,  new { date }); 
+        }
+        public async Task<int> DeathsAsync(DateTime date)
+        {
+            using var con = Factory.GetConnection();
+            return await con.QueryFirstAsync<int>(DeathDateQuery, new { date });
+        }
+
+       
+        public int Deaths(string state, DateTime? date)
+        {
+            var dateValue = date ?? Yesterday;
+            using var con = Factory.GetConnection(); 
+            return con.QueryFirst<int>(DeathStateDateQuery, new { state, dateValue }); 
+        } 
+        public async Task<int> DeathsAsync(string state, DateTime? date)
+        {
+            var dateValue = date ?? Yesterday;
+            using var con = Factory.GetConnection();
+            return await con.QueryFirstAsync<int>(DeathStateDateQuery, new { state, dateValue });
+        }
+
 
         public int Total(int fips, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
+            using var con = Factory.GetConnection(); 
+            return con.QueryFirst<int>(TotalFipsDateQuery, new { fips, dateValue }); 
+        }
+        public Task<int> TotalAsync(int fips, DateTime? date)
+        {
+            var dateValue = date ?? Yesterday;
             using var con = Factory.GetConnection();
-            try
-            {
-                return con.QueryFirst<int>($"SELECT Sum(Cases) FROM {TableName} where Fips = @fips and Date = @dateValue", new { fips, dateValue });
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+            return con.QueryFirstAsync<int>(TotalFipsDateQuery, new { fips, dateValue });
         }
 
+       
         public int Deaths(int fips, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
             using var con = Factory.GetConnection();
-            return con.QueryFirst<int>($"SELECT Sum(Deaths) FROM {TableName} where Fips = @fips and Date = @dateValue", new { fips, dateValue });
+            return con.QueryFirst<int>(DeathFipsDateQuery, new { fips, dateValue });
         }
+        public async Task<int> DeathsAsync(int fips, DateTime? date)
+        {
+            var dateValue = date ?? Yesterday;
+            using var con = Factory.GetConnection();
+            return await con.QueryFirstAsync<int>(DeathFipsDateQuery, new { fips, dateValue });
+        }
+
+  
+
+
         public IEnumerable<CountyChange> Matching(int fips, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
             using var con = Factory.GetConnection();
-            return con.Query<CountyChange>($"SELECT * FROM {TableName} where Fips = @fips and Date = @dateValue", new { fips, dateValue });
+            return con.Query<CountyChange>(MatchingFipsDate, new { fips, dateValue });
 
         }
 
@@ -102,14 +146,23 @@ namespace KonaAnalyzer.Dapper
             return changes.ToModel(_locationSource);
         }
 
+        public async Task<IEnumerable<IChange>> MatchingBetweenAsync(int fips, DateTime startDay, DateTime endDay)
+        {
+            using var con = Factory.GetConnection();
+            var results = await con.QueryAsync<CountyChange>(MatchingFipsStartEndQuery, new { fips, startDay, endDay });
+            return results.ToList().ToModel(_locationSource);
+        }
 
-
-
+        public async Task<IEnumerable<IChange>> GenerateEstimatesAsync(int days)
+        {
+            var response = await Task.Run(() => GenerateEstimates(days));
+            return response;
+        }
 
         public IEnumerable<CountyChange> Matching(int fips, DateTime? startDate, DateTime endDate)
         {
             using var con = Factory.GetConnection();
-            return con.Query<CountyChange>($"SELECT * FROM {TableName} where Fips = @fips and Date >= @startDate and Date <= @endDate ", new { fips, startDate, endDate });
+            return con.Query<CountyChange>(MatchingFipsStartEndQuery, new { fips, startDate, endDate });
 
         }
 
@@ -117,9 +170,10 @@ namespace KonaAnalyzer.Dapper
         {
             if (model.Fips != null) return Matching(model.Fips.Value, startDate, endDate);
             using var con = Factory.GetConnection();
-            return con.Query<CountyChange>($"SELECT * FROM {TableName}  {StateMerge} where State = @state and County = @county and Date >= @startDate and Date <= @endDate ", new { state = model.State, county = model.County, startDate, endDate });
+            return con.Query<CountyChange>(MatchingModelStartEndQuery, new { state = model.State, county = model.County, startDate, endDate });
 
         }
+
         public IEnumerable<IChange> GenerateEstimates(int days)
         {
             List<CountyChangeModel> newChanges = new List<CountyChangeModel>();
@@ -154,9 +208,7 @@ namespace KonaAnalyzer.Dapper
 
             return newChanges;
         }
-
-
-
+         
         public override Task<List<CountyChange>> GetWebItems() => RawData.GetCountyChanges();
 
         public override async Task LoadAsync()
@@ -174,6 +226,7 @@ namespace KonaAnalyzer.Dapper
             }
         }
 
+      
 
         public DateTime Yesterday => Latest - TimeSpan.FromDays(1);
 
