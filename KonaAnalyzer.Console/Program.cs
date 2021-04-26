@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
-using Autofac;
-using KonaAnalyzer.Console.Setup;
-using KonaAnalyzer.Dapper;
+using System.Threading.Tasks;  
 
 namespace KonaAnalyzer.Cli
 {
@@ -12,8 +9,7 @@ namespace KonaAnalyzer.Cli
     {
         public static   async Task Main(string[] args)
         {
-            Debug.WriteLine("Hello World!");
-            Bootstrapper.Initialize();
+            Debug.WriteLine("Hello World!"); 
             var tools = new CovidTools();
              await tools.TestSources();
         }

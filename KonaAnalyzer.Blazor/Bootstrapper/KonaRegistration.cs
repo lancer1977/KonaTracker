@@ -1,5 +1,4 @@
 ﻿using KonaAnalyzer.Dapper;
-using KonaAnalyzer.Data.Interface;
 using Microsoft.Extensions.DependencyInjection;
 using PolyhydraGames.Core.Interfaces;
 
@@ -19,3 +18,4 @@ namespace PolyhydraWebsite.Bootstrapper
         }
     }
 }
+

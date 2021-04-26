@@ -1,15 +1,19 @@
 ﻿@page "/changechart"
 @inject ChangeChartViewModel ViewModel
 
+<h3>Change Chart</h3>
+<div style="width:950px; height:650px;">
+    <SfChart Title="Change Chart">
 
-<div style="width:650px; height:350px;">
-    <SfChart Title="Inflation - Consumer Price">
-        <ChartPrimaryXAxis ValueType="Syncfusion.Blazor.Charts.ValueType.Category"></ChartPrimaryXAxis>
-
+        <ChartPrimaryXAxis LabelFormat="MMM" ValueType="Syncfusion.Blazor.Charts.ValueType.DateTime" EdgeLabelPlacement="EdgeLabelPlacement.Shift">
+            <ChartAxisMajorGridLines Width="0"></ChartAxisMajorGridLines>
+        </ChartPrimaryXAxis>
+        <ChartPrimaryYAxis LabelFormat="{value}K" RangePadding="ChartRangePadding.None" Minimum="0" Maximum="@ViewModel.Maximum" Interval="1000">
+            <ChartAxisLineStyle Width="1"></ChartAxisLineStyle>
+        </ChartPrimaryYAxis>
+        <ChartTooltipSettings Enable="true"></ChartTooltipSettings>
         <ChartSeriesCollection>
-
-            <ChartSeries DataSource="@ViewModel.Items" XName="Date" YName="Change" Type="ChartSeriesType.Column">
-            </ChartSeries>
+            <ChartSeries DataSource="@ViewModel.Items" XName="Date" YName="Change" Width="500">  </ChartSeries>
         </ChartSeriesCollection>
     </SfChart>
 </div>
@@ -23,6 +27,8 @@
         var start = DateTime.Today - TimeSpan.FromDays(30);
         var end = DateTime.Today - TimeSpan.FromDays(2);
         ViewModel.Load("All", "All", start, end);
-        
+
+        await base.SetParametersAsync(ParameterView.Empty);
+        await base.OnAfterRenderAsync(firstRender);
     }
 }

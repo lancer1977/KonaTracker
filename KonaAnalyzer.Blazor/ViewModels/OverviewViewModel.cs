@@ -1,27 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using KonaAnalyzer.Data.Interface;
-using KonaAnalyzer.Data.Model; 
+using KonaAnalyzer.Data.Model;
 
-namespace KonaAnalyzer.Blazor.Pages
+namespace KonaAnalyzer.Blazor.ViewModels
 {
-
-    public abstract class BaseViewModel 
-    {
-        protected BaseViewModel(ICovidSourceAsync datastore, ILocationSource locationStore, IMaskSource maskSource)
-        {
-            DataStore = datastore;
-            LocationStore = locationStore;
-            MaskStore = maskSource;
-        }
-
-        public IMaskSource MaskStore { get; }
-        public ICovidSourceAsync DataStore { get; }
-        public ILocationSource LocationStore { get; }
-        public bool IsBusy { get; set; }
-        public string Title { get; set; }
- 
-    }
     public class OverviewViewModel : BaseViewModel
     {
          public List<CountyChangeModel> Items { get; set; } = new List<CountyChangeModel>();

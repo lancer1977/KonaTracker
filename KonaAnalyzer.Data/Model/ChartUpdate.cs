@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace KonaAnalyzer.ViewModels
+namespace KonaAnalyzer.Data.Model
 {
     public readonly struct ChartUpdate
     {

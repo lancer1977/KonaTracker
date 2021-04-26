@@ -8,12 +8,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using KonaAnalyzer.Blazor.Areas.Identity;
 using KonaAnalyzer.Blazor.Data;
-using KonaAnalyzer.Blazor.Pages;
-using KonaAnalyzer.Dapper;
-using KonaAnalyzer.Data.Interface; 
+using KonaAnalyzer.Blazor.Pages; 
 using Syncfusion.Blazor;
-using KonaAnalyzer.ViewModels;
 using PolyhydraWebsite.Bootstrapper;
+using KonaAnalyzer.Blazor.ViewModels;
 
 namespace KonaAnalyzer.Blazor
 {
@@ -30,6 +28,7 @@ namespace KonaAnalyzer.Blazor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Configuration["Syncfusion"]);
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();

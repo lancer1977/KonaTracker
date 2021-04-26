@@ -48,7 +48,7 @@ namespace KonaAnalyzer.Dapper
         private string DeathFipsDateQuery => $"SELECT Sum(Deaths) FROM {TableName} where Fips = @fips and Date = @dateValue";
         private string MatchingFipsDate => $"SELECT * FROM {TableName} where Fips = @fips and Date = @dateValue";
         private string MatchingFipsStartEndQuery => $"SELECT * FROM {TableName} where Fips = @fips and Date >= @startDate and Date <= @endDate ";
-
+        private string MatchingStartEndQuery => $"SELECT * FROM {TableName} where   Date >= @startDate and Date <= @endDate ";
         private string MatchingModelStartEndQuery => $"SELECT * FROM {TableName}  {StateMerge} where State = @state and County = @county and Date >= @startDate and Date <= @endDate ";
 
         public int Total(string state, DateTime? date)
@@ -142,16 +142,18 @@ namespace KonaAnalyzer.Dapper
 
         }
 
-        public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDay, DateTime endDay)
+        public IEnumerable<IChange> MatchingBetween(int fips, DateTime startDate, DateTime endDate)
         {
-            var changes = Matching(fips, startDay, endDay).ToList();
+            var changes = Matching(fips, startDate, endDate).ToList();
             return changes.ToModel(_locationSource);
         }
 
-        public async Task<IEnumerable<IChange>> MatchingBetweenAsync(int fips, DateTime startDay, DateTime endDay)
+        public async Task<IEnumerable<IChange>> MatchingBetweenAsync(int fips, DateTime startDate, DateTime endDate)
         {
             using var con = Factory.GetConnection();
-            var results = await con.QueryAsync<CountyChange>(MatchingFipsStartEndQuery, new { fips, startDay, endDay });
+            var results = fips == 0 ?
+                await con.QueryAsync<CountyChange>(MatchingStartEndQuery, new {   startDate, endDate })
+                : await con.QueryAsync<CountyChange>(MatchingFipsStartEndQuery, new { fips, startDate, endDate }) ;
             return results.ToList().ToModel(_locationSource);
         }
 
@@ -164,7 +166,9 @@ namespace KonaAnalyzer.Dapper
         public IEnumerable<CountyChange> Matching(int fips, DateTime? startDate, DateTime endDate)
         {
             using var con = Factory.GetConnection();
-            return con.Query<CountyChange>(MatchingFipsStartEndQuery, new { fips, startDate, endDate });
+            return fips == 0
+                ?  con.Query<CountyChange>(MatchingStartEndQuery, new { startDate, endDate })
+               :   con.Query<CountyChange>(MatchingFipsStartEndQuery, new { fips, startDate, endDate }); 
 
         }
 
