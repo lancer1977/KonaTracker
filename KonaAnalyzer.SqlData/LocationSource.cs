@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data.Model;
 using KonaAnalyzer.Data.Interface;
-using KonaAnalyzer.Services;
+using KonaAnalyzer.Data.Model;
 using PolyhydraGames.Core.Data;
 using PolyhydraGames.SQLite.Interfaces;
-using SQLite;
 
-namespace KonaAnalyzer.SqlData
+namespace KonaAnalyzer.Data.SQLite
 {
     public class SQLLocationSource : SQLSource<LocationModel>, ILocationSource
     {

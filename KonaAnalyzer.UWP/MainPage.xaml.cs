@@ -21,7 +21,7 @@ namespace KonaAnalyzer.UWP
         {
             this.InitializeComponent();
 
-            LoadApplication(new KonaAnalyzer.App());
+            LoadApplication(new KonaAnalyzer.KonaApp());
         }
     }
 }

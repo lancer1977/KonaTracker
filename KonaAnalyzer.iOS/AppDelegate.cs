@@ -27,7 +27,7 @@ namespace KonaAnalyzer.iOS
             // 
             SfChartRenderer.Init();
             Bootstrapper.Initialize();
-            LoadApplication(new App());
+            LoadApplication(new KonaApp());
 
             return base.FinishedLaunching(app, options);
         }

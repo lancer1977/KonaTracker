@@ -1,11 +1,10 @@
 ﻿using System;
 using Autofac;
 using KonaAnalyzer.Setup;
-using KonaAnalyzer.SqlData;
 using PolyhydraGames.SQLite;
 using PolyhydraGames.SQLite.Interfaces;
 
-namespace KonaAnalyzer.Droid
+namespace KonaAnalyzer.Droid.Setup
 {
     public class Bootstrapper : Module
     {

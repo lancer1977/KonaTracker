@@ -2,7 +2,8 @@
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime; 
-using Android.OS; 
+using Android.OS;
+using KonaAnalyzer.Droid.Setup;
 
 namespace KonaAnalyzer.Droid
 {
@@ -21,7 +22,7 @@ namespace KonaAnalyzer.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             
             Bootstrapper.Initialize();
-            LoadApplication(new App());
+            LoadApplication(new KonaApp());
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {

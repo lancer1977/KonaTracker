@@ -1,6 +1,7 @@
 ﻿using Autofac;
+using KonaAnalyzer.Data.SQLite;
 
-namespace KonaAnalyzer.Data.SQLite
+namespace KonaAnalyzer.UWP
 {
     public class SQlModule : Autofac.Module
     {

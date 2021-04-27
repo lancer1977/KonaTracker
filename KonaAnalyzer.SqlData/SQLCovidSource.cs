@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using KonaAnalyzer.Data;
 using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Data.Model;
 using PolyhydraGames.Core.Data;
-using PolyhydraGames.Extensions;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
-namespace KonaAnalyzer.SqlData
+namespace KonaAnalyzer.Data.SQLite
 {
     public class SQLCovidSource : SQLSource<CountyChange>, ICovidSource
     {

@@ -7,7 +7,7 @@ using KonaAnalyzer.Services;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
-namespace KonaAnalyzer.SqlData
+namespace KonaAnalyzer.Data.SQLite
 {
     public class SQLCovidSource_sharedBase : CovidServiceBase
     {

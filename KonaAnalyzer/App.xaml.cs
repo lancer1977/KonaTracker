@@ -12,10 +12,10 @@ using Microsoft.AppCenter.Distribute;
 
 namespace KonaAnalyzer
 {
-    public partial class App : Application
+    public partial class KonaApp : Application
     {
 
-        public App( )
+        public KonaApp( )
         {
   
             InitializeComponent();

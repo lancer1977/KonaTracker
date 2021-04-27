@@ -10,11 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5" />
+    <PackageReference Include="PolyhydraGames.Core.Interfaces" Version="1.0.1.11" />
     <PackageReference Include="PolyhydraGames.Extensions" Version="2.1.0.8" />
     <PackageReference Include="Syncfusion.Blazor" Version="19.1.0.57" />
     <PackageReference Include="ReactiveUI" Version="13.2.18" />
@@ -30,8 +32,6 @@
     <ProjectReference Include="..\KonaAnalyzer.Dapper\KonaAnalyzer.Data.Dapper.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
-    <ProjectReference Include="..\KonaAnalyzer.Data\KonaAnalyzer.Data.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <ProjectReference Include="..\KonaAnalyzer\KonaAnalyzer.csproj" />
   </ItemGroup>
 </Project>
