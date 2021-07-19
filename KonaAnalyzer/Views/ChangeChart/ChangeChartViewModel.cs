@@ -14,8 +14,7 @@ using ReactiveUI.Fody.Helpers;
 namespace KonaAnalyzer.ViewModels
 {
     public class ChangeChartViewModel : BaseViewModel
-    {
-        private readonly ILocationSource _locationSource;
+    { 
         public ICommand ToggleControls { get; }
         [Reactive] public bool ShowControls { get; set; }
         [Reactive] public string StatusText { get; set; }
@@ -37,11 +36,12 @@ namespace KonaAnalyzer.ViewModels
         public ReactiveCommand<ChartUpdate, IList<ChartModel>> GetItems { get; }
 
         public ChangeChartViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
-        { 
+        {
+          
             State = "All";
             County = "All";
             Fips = 0;
-            States = _locationSource.States().ToList();
+            States = LocationStore.States().ToList();
             States.Insert(0, "All");
             LastestDate = DataStore.Latest;
             EarliestDate = DataStore.Earliest;
@@ -55,7 +55,7 @@ namespace KonaAnalyzer.ViewModels
             this.WhenAnyValue(x => x.State).Subscribe(x =>
           {
               //await Update(x, County, StartDate, EndDate);
-              var counties = _locationSource.Counties(x).ToList();
+              var counties = LocationStore.Counties(x).ToList();
               counties.Insert(0, "All");
               Counties = counties;
               County = "All";

@@ -101,7 +101,7 @@ namespace KonaAnalyzer.Data.SQLite
             if (fips % 1000 == 0)
             {
                 var maxFips = fips + 1000;
-                return Table.Where(x => startDay <= x.Date && x.Date <= endDay && (x.Fips < maxFips || x.Fips >= fips)).ToList().ToModel(location);
+                return Table.Where(x => startDay <= x.Date && x.Date <= endDay && (x.Fips < maxFips && x.Fips >= fips)).ToList().ToModel(location);
             }
             return Table.Where(x => startDay <= x.Date && x.Date <= endDay && x.Fips == fips).ToList().ToModel(location);
         }
@@ -168,30 +168,21 @@ namespace KonaAnalyzer.Data.SQLite
                 return changes.Where(x => x.Fips == location.Fips);
             }
         }
-
         public IEnumerable<CountyChange> Matching(int fips, DateTime? date)
         {
             var dateValue = date ?? Yesterday;
-            var subset = Table.Where(x => x.Date == dateValue);
-            return Matching(subset, fips);
-        }
-
-        private static IEnumerable<CountyChange> Matching(TableQuery<CountyChange> changes, int fips)
-        {
-
             if (fips == 0)
             {
-                return changes;
+                return Changes.Where(x => x.Date == dateValue); ;
             }
 
             if (fips % 1000 == 0)
             {
                 var maxfips = fips + 1000;
-                return changes.Where(x => x.Fips > fips && x.Fips < maxfips);
+                return Changes.Where(x => x.Date == dateValue && x.Fips > fips && x.Fips < maxfips); 
             }
-            //var location = _locationService.GetLocation(state, county);
-            return changes.Where(x => x.Fips == fips);
-        }
+            return Changes.Where(x => x.Date == dateValue && x.Fips == fips);
+        } 
 
         public IEnumerable<CountyChange> Changes => Table;
 

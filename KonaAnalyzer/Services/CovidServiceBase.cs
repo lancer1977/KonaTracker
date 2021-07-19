@@ -64,7 +64,7 @@ namespace KonaAnalyzer.Services
         public int Total(string state, DateTime? date)
         {
             if (date == null) date = Yesterday;
-            return Matching(state, "All", date) .Select(x => x.Cases).Sum();
+            return Matching(state, "All", date).Select(x => x.Cases).Sum();
         }
 
 
@@ -92,7 +92,8 @@ namespace KonaAnalyzer.Services
             if (countyAll)
             {
                 var stateBottom = _stateFips[state];
-                return changes.Where(x => x.Fips >= stateBottom || x.Fips < stateBottom + 1000);
+                var stateTop = stateBottom + 1000;
+                return changes.Where(x => x.Fips >= stateBottom && x.Fips < stateTop);
             }
             else
             {
@@ -111,7 +112,7 @@ namespace KonaAnalyzer.Services
             else if (fips % 1000 == 0)
             {
                 var maxFips = fips + 1000;
-                return Changes.Where(x => startDay <= x.Date && x.Date <= endDay && (x.Fips < maxFips || x.Fips >= fips)).ToList().ToModel(location);
+                return Changes.Where(x => startDay <= x.Date && x.Date <= endDay && x.Fips < maxFips && x.Fips >= fips).ToList().ToModel(location);
             }
             else
             {
@@ -124,26 +125,18 @@ namespace KonaAnalyzer.Services
 
         public IEnumerable<CountyChange> Matching(int fips, DateTime? date)
         {
-            var dateValue = date ?? Yesterday;
-            var subset = Changes.Where(x => x.Date == dateValue);
-            return Matching(subset, fips);
-        }
-
-        private static IEnumerable<CountyChange> Matching(IEnumerable<CountyChange> changes, int fips)
-        {
-
+            var dateValue = date ?? Yesterday; 
             if (fips == 0)
             {
-                return changes;
+                return Changes.Where(x => x.Date == dateValue); ;
             }
 
             if (fips % 1000 == 0)
             {
                 var maxfips = fips + 1000;
-                return changes.Where(x => x.Fips > fips && x.Fips < maxfips);
-            }
-            //var location = _locationService.GetLocation(state, county);
-            return changes.Where(x => x.Fips == fips);
+                return Changes.Where(x => x.Date == dateValue && x.Fips > fips && x.Fips < maxfips);
+            } 
+            return Changes.Where(x => x.Date == dateValue && x.Fips == fips);
         }
         public int Total(int fips, DateTime? date)
         {

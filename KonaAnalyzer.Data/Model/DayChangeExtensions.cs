@@ -60,7 +60,7 @@ namespace KonaAnalyzer.Data.Model
         {
             if (results.Any())
             {
-                var first = results.First();
+                //var first = results.First();
                 return results.Select(x => x.ToModel(location));
             }
 

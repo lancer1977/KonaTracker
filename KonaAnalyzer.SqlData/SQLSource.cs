@@ -1,4 +1,5 @@
-﻿using KonaAnalyzer.Services;
+﻿using System.Collections;
+using KonaAnalyzer.Services;
 using PolyhydraGames.SQLite.Interfaces;
 using SQLite;
 
@@ -26,6 +27,6 @@ namespace KonaAnalyzer.Data.SQLite
             }
         }
 
-        public TableQuery<T> Table => Connection.Table<T>();
+        public TableQuery<T> Table => Connection.Table<T>(); 
     }
 }

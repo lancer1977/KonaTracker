@@ -35,10 +35,10 @@ namespace KonaAnalyzer.ViewModels
         public bool ShowRefresh { [ObservableAsProperty] get; }
         public ReactiveCommand<Unit, Unit> LoadCommand;
         public ICommand AddEstimateCommand { get; }
-        public ICommand Refresh { get; } 
+        public ICommand Refresh { get; }
         public LoadingViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
         {
-            Title = "Loading ..."; 
+            Title = "Loading ...";
             var generateEstimates = ReactiveCommand.CreateFromTask(async () => await GenerateEstimates());
             generateEstimates.IsExecuting.Subscribe(x =>
             {
@@ -99,11 +99,10 @@ namespace KonaAnalyzer.ViewModels
         }
 
         private async Task LoadServices()
-        {
+        { 
             await MaskStore.LoadAsync();
-
             await LocationStore.LoadAsync();
-            await DataStore.LoadAsync(); 
+            await DataStore.LoadAsync();
             Title = "Loading ... Done";
             LatestDay = DataStore.Latest;
         }
@@ -113,7 +112,7 @@ namespace KonaAnalyzer.ViewModels
             tasks.Add(MaskStore.LoadAsync());
 
             tasks.Add(LocationStore.LoadAsync());
-            tasks.Add(DataStore.LoadAsync()); 
+            tasks.Add(DataStore.LoadAsync());
             tasks.ForEach(x => x.Start());
             Task.WaitAll(tasks.ToArray());
             Title = "Loading ... Done";
