@@ -7,6 +7,7 @@ using KonaAnalyzer.Data.Interface;
 using KonaAnalyzer.Data.Model;
 using KonaAnalyzer.Services;
 using KonaAnalyzer.Views;
+using KonaAnalyzer.Views.ChangeChart;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;

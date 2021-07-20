@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reactive;
@@ -9,82 +7,62 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using KonaAnalyzer.Data.Interface;
-using KonaAnalyzer.Services;
+using KonaAnalyzer.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using Xamarin.Forms;
 
-namespace KonaAnalyzer.ViewModels
+namespace KonaAnalyzer.Views.Loading
 {
     public class LoadingViewModel : BaseViewModel
     {
         public List<string> FontNames { get; } = new List<string>() { "Default", "FuturaBold", "FuturaMedium", "ProximaNovaRegular" };
         [Reactive] public string Font { get; set; } = "Default";
         private static bool _runOnce;
-
-
         public ReactiveCommand<Unit, Task> LaunchNyTimesCommand { get; set; }
         [Reactive] public string TimerText { get; set; }
-        [Reactive] public DateTime LatestDay { get; set; }
-
-
-        Stopwatch _stopwatch = new Stopwatch();
+        [Reactive] public DateTime LatestDay { get; set; } 
+        
         public string Version => Configs.Version;
 
         // ReSharper disable once UnassignedGetOnlyAutoProperty
         public bool ShowRefresh { [ObservableAsProperty] get; }
-        public ReactiveCommand<Unit, Unit> LoadCommand;
-        public ICommand AddEstimateCommand { get; }
+        public ReactiveCommand<Unit, Unit> LoadCommand; 
         public ICommand Refresh { get; }
         public LoadingViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
         {
             Title = "Loading ...";
-            var generateEstimates = ReactiveCommand.CreateFromTask(async () => await GenerateEstimates());
-            generateEstimates.IsExecuting.Subscribe(x =>
-            {
-                IsBusy = x;
-            });
-            generateEstimates.ThrownExceptions.Subscribe(OnException);
-            //AddEstimateCommand = generateEstimates;
+            var generateEstimates = ReactiveCommand.CreateFromTask(GenerateEstimates).OnExecuting(x => IsBusy = x).OnException(OnException);
             this.WhenAnyValue(x => x.IsBusy).Select(x => !x).ToPropertyEx(this, x => x.ShowRefresh);
-            LoadCommand = ReactiveCommand.CreateFromTask(async x => await LoadAsync());
-            LoadCommand.IsExecuting.Subscribe(x =>
+            LoadCommand = ReactiveCommand.CreateFromTask(LoadAsync).OnExecuting(x => IsBusy = x).OnException(OnException);
+            Refresh = ReactiveCommand.CreateFromTask(async x =>
             {
-                IsBusy = x;
-                Debug.WriteLine($"Busy {IsBusy} sent:{x}");
-            });
-            LoadCommand.ThrownExceptions.Subscribe(OnException);
-            var refresh = ReactiveCommand.CreateFromTask(async x =>
-            {
+                await DataStore.Reload();
                 _runOnce = false;
 
-            });
-            refresh.InvokeCommand(LoadCommand);
+            }).OnCompletion(LoadCommand);
             LaunchNyTimesCommand = ReactiveCommand.Create(async () =>
             {
                 await Xamarin.Essentials.Browser.OpenAsync(Configs.nytimesAddress);
             });
+
             this.WhenAnyValue(x => x.Font).Subscribe(x =>
             {
                 if (x == "Default") x = string.Empty;
                 Application.Current.Resources["font"] = x;
             });
-            Refresh = refresh;
         }
 
-        public async Task GenerateEstimates()
+        public async Task GenerateEstimates(CancellationToken ct)
         {
             var cts = new CancellationTokenSource();
             var token = cts.Token;
             StartWatch(token);
-            await Task.Run(async () =>
-            {
-                DataStore.GenerateEstimates(7);
-            }, cts.Token);
+            await Task.Run(() => DataStore.GenerateEstimates(7), cts.Token);
             cts.Cancel();
         }
 
-        private async Task LoadAsync()
+        private async Task LoadAsync(CancellationToken ct)
         {
             Title = "Loading ...";
             _runOnce = true;
@@ -99,35 +77,23 @@ namespace KonaAnalyzer.ViewModels
         }
 
         private async Task LoadServices()
-        { 
+        {
             await MaskStore.LoadAsync();
             await LocationStore.LoadAsync();
             await DataStore.LoadAsync();
             Title = "Loading ... Done";
             LatestDay = DataStore.Latest;
         }
-        private async Task LoadServicesParallel()
-        {
-            var tasks = new List<Task>();
-            tasks.Add(MaskStore.LoadAsync());
-
-            tasks.Add(LocationStore.LoadAsync());
-            tasks.Add(DataStore.LoadAsync());
-            tasks.ForEach(x => x.Start());
-            Task.WaitAll(tasks.ToArray());
-            Title = "Loading ... Done";
-            LatestDay = DataStore.Latest;
-        }
-
+   
         private async void StartWatch(CancellationToken token)
         {
             var watch = Stopwatch.StartNew();
-            await Task.Run(() =>
+            await Task.Run( () =>
             {
                 while (token.IsCancellationRequested == false)
                 {
-                    TimerText = watch.Elapsed.ToString();
-                    Thread.Sleep(200);
+                    TimerText = watch.Elapsed.ToString(); 
+                    Thread.Sleep(200); 
                 }
                 //
             }, token);
@@ -143,10 +109,10 @@ namespace KonaAnalyzer.ViewModels
             Debug.WriteLine(ex.Message);
         }
 
-        public void OnAppearing()
+        public override async Task OnAppearing()
         {
             if (_runOnce == false)
-                LoadCommand.Execute().Subscribe();
+                await LoadCommand.Execute();
         }
     }
 }

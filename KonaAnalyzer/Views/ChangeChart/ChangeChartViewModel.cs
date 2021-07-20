@@ -5,13 +5,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using KonaAnalyzer.Data.Model;
 using KonaAnalyzer.Data.Interface;
-using KonaAnalyzer.Services;
+using KonaAnalyzer.Data.Model;
+using KonaAnalyzer.ViewModels;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
-namespace KonaAnalyzer.ViewModels
+namespace KonaAnalyzer.Views.ChangeChart
 {
     public class ChangeChartViewModel : BaseViewModel
     { 
@@ -30,14 +30,13 @@ namespace KonaAnalyzer.ViewModels
         [Reactive] public bool ShowMarkers { get; set; }
         [Reactive] public int Interval { get; set; }
         [Reactive] public DataType DataType { get; set; }
-        public List<DataType> DataTypes { get; } = new List<DataType>() { DataType.Death, DataType.Cases, DataType.DeathPercent, DataType.CasesPercent };
+        public List<DataType> DataTypes { get; } = new() { DataType.Death, DataType.Cases, DataType.DeathPercent, DataType.CasesPercent };
         [Reactive] public bool IsUpdating { get; set; }
         [Reactive] public string LabelFormat { get; set; }
         public ReactiveCommand<ChartUpdate, IList<ChartModel>> GetItems { get; }
 
         public ChangeChartViewModel(ILocationSource locationStore, ICovidSource covidstore, IMaskSource mask) : base(covidstore, locationStore, mask)
         {
-          
             State = "All";
             County = "All";
             Fips = 0;
@@ -53,13 +52,13 @@ namespace KonaAnalyzer.ViewModels
             GetItems.ToPropertyEx(this, x => x.Items);
 
             this.WhenAnyValue(x => x.State).Subscribe(x =>
-          {
+            {
               //await Update(x, County, StartDate, EndDate);
               var counties = LocationStore.Counties(x).ToList();
               counties.Insert(0, "All");
               Counties = counties;
               County = "All";
-          }, OnException);
+            }, OnException);
 
 
 
@@ -125,11 +124,8 @@ namespace KonaAnalyzer.ViewModels
             try
             {
                 Debug.WriteLine($"In Update: {_updates++}");
-                //var change = DataStore.MatchingBetween(update.State, update.County, update.StartDay, update.EndDay);
                 var change = await Task.Run(()=> DataStore.MatchingBetween(update.Fips, update.StartDay, update.EndDay));
-                //State = state;
-                //County = county;
-
+                
                 if (update.State == "All" || "All" == update.County)
                 {
                     change = change.GroupBy(x => x.Date).Select(x => new CountyChangeModel()
@@ -140,7 +136,6 @@ namespace KonaAnalyzer.ViewModels
                         State = update.State,
                         County = update.County
                     });
-
                 }
 
                 var sorted = change.OrderBy(x => x.Date).ToList();
@@ -150,7 +145,6 @@ namespace KonaAnalyzer.ViewModels
                     var current = sorted[x];
                     var last = x > 0 ? sorted[x - 1] : null;
                     var localChange = 0.0;
-
 
                     if (last != null)
                     {
@@ -181,15 +175,11 @@ namespace KonaAnalyzer.ViewModels
                         Date = sorted[x].Date,
                         Change = localChange
                     });
-
                 }
-
-
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-
             }
             return changes;
         }

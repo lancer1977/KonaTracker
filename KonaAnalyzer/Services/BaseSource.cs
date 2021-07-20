@@ -6,10 +6,8 @@ using ReactiveUI.Fody.Helpers;
 
 namespace KonaAnalyzer.Services
 {
-    public abstract class BaseSource : ReactiveObject, IDataSource, INotifyPropertyChanged
-    {
-
-
+    public abstract class BaseSource : ReactiveObject, IDataSource
+    { 
         public async Task Reload()
         {
             LoadState = LoadedState.Unloaded; 
@@ -22,8 +20,8 @@ namespace KonaAnalyzer.Services
             LoadState = LoadedState.Loading;
             await UpdateItems();
             LoadState = LoadedState.Loaded;
-
         }
+
         protected abstract Task UpdateItems();
         [Reactive] public LoadedState LoadState { get; set; }
 

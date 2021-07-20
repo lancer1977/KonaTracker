@@ -14,7 +14,7 @@ namespace Covid.WPF
             Bootstrapper.Initialize();
             SfChartRenderer.Init();
             Xamarin.Forms.Forms.Init();
-            LoadApplication(new KonaAnalyzer.App());
+            LoadApplication(new KonaAnalyzer.KonaApp());
         }
     }
     }

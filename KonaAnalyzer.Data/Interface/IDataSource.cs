@@ -4,7 +4,7 @@ namespace KonaAnalyzer.Data.Interface
 {
     public interface IDataSource
     {
-        LoadedState LoadState { get; } 
+        LoadedState LoadState { get;  } 
         Task LoadAsync();
         Task Reload();
     }

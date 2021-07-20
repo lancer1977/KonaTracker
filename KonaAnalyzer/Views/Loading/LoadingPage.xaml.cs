@@ -1,10 +1,8 @@
-﻿
-using KonaAnalyzer.Setup;
-using KonaAnalyzer.ViewModels; 
+﻿using KonaAnalyzer.Setup;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace KonaAnalyzer.Views
+namespace KonaAnalyzer.Views.Loading
 {
   
     [XamlCompilation(XamlCompilationOptions.Compile)]

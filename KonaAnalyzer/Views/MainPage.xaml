@@ -5,6 +5,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             mc:Ignorable="d"
             xmlns:views="clr-namespace:KonaAnalyzer.Views"
+            xmlns:loading="clr-namespace:KonaAnalyzer.Views.Loading;assembly=KonaAnalyzer"
             x:Class="KonaAnalyzer.Views.MainPage">
 
     <MasterDetailPage.Master>
@@ -14,7 +15,7 @@
     <MasterDetailPage.Detail>
         <NavigationPage>
             <x:Arguments>
-                <views:LoadingPage/>
+                <loading:LoadingPage/>
             </x:Arguments>
             <NavigationPage.Icon>
                 <OnPlatform x:TypeArguments="FileImageSource">

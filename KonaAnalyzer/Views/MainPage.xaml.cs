@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
+using KonaAnalyzer.Views.ChangeChart;
+using KonaAnalyzer.Views.Loading;
 using KonaAnalyzer.Views.Overview;
 using Xamarin.Forms;
 

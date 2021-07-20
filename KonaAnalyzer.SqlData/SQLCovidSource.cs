@@ -27,21 +27,16 @@ namespace KonaAnalyzer.Data.SQLite
                     var sevenDayTrend = Matching(item.State, item.County, firstDay, _lastDate).ToList();
                     var (firstCases, lastCases) = sevenDayTrend.GetFirstAndLastT(x => x.Cases);
                     var casesChangeAverage = (lastCases - firstCases) / 7;
-                    //cases
-                    //Debug.WriteLine($"First: {firstCases} Last: {lastCases}"  );
-
+              
                     var (firstDeaths, lastDeaths) = sevenDayTrend.GetFirstAndLastT(x => x.Deaths);
                     var deathChangeAverage = (lastDeaths - firstDeaths) / 7;
-                    //cases
-                    //Debug.WriteLine($"First: {firstDeaths} Last: {lastDeaths} Estimate: { deathChangeAverage}");
-
+         
                     newChanges.Add(new CountyChangeModel()
                     {
                         Deaths = (lastDeaths + deathChangeAverage),
                         Cases = lastCases + casesChangeAverage,
                         County = item.County,
-                        State = item.State,
-                        //IsEstimate = true
+                        State = item.State
                     });
                 }
 
@@ -56,7 +51,7 @@ namespace KonaAnalyzer.Data.SQLite
         public DateTime Yesterday => _lastDate - TimeSpan.FromDays(1);
 
         public DateTime RealYesterday => DateTime.Today - TimeSpan.FromDays(1);
-        DateTime _lastDate;
+        private DateTime _lastDate;
         DateTime _earliestDate;
 
         public DateTime Latest => _lastDate.Date;
@@ -66,22 +61,19 @@ namespace KonaAnalyzer.Data.SQLite
         protected override async Task UpdateItems()
         {
             var lastDay = Changes.Select(x => x.Date).Distinct().OrderBy(x => x).LastOrDefault();
-            if (lastDay.Date != RealYesterday)
-            {
-                var items = await RawData.GetCountyChanges();
-                var newItems = items.Where(x => x.Date > lastDay);
-                Connection.InsertAll(newItems);
-                var ordered = Changes.OrderBy(x => x.Date).Select(x => x.Date).Distinct().ToList();
-                _lastDate = ordered.LastOrDefault();
-                _earliestDate = ordered.FirstOrDefault();
-            } 
-        } 
+            var items = await RawData.GetCountyChanges();
+            var newItems = items.Where(x => x.Date > lastDay);
+            Connection.InsertAll(newItems);
+            var ordered = Changes.OrderBy(x => x.Date).Select(x => x.Date).Distinct().ToList();
+            _lastDate = ordered.LastOrDefault();
+            _earliestDate = ordered.FirstOrDefault();
+        }
 
         public int Total(int fips, DateTime? date)
         {
             if (date == null) date = Yesterday;
             return Matching(fips, date).Select(x => x.Cases).Sum();
-        } 
+        }
 
         public int Deaths(int fips, DateTime? date)
         {
@@ -115,13 +107,11 @@ namespace KonaAnalyzer.Data.SQLite
 
         public int Total(DateTime date)
         {
-            if (date == null) date = Yesterday;
             return Matching("All", "All", date).Select(x => x.Cases).Sum();
         }
 
         public int Deaths(DateTime date)
-        {
-            if (date == null) date = Yesterday;
+        { 
             var items = Matching("All", "All", date).Sum(x => x.Deaths);
             return items;
         }
@@ -179,10 +169,10 @@ namespace KonaAnalyzer.Data.SQLite
             if (fips % 1000 == 0)
             {
                 var maxfips = fips + 1000;
-                return Changes.Where(x => x.Date == dateValue && x.Fips > fips && x.Fips < maxfips); 
+                return Changes.Where(x => x.Date == dateValue && x.Fips > fips && x.Fips < maxfips);
             }
             return Changes.Where(x => x.Date == dateValue && x.Fips == fips);
-        } 
+        }
 
         public IEnumerable<CountyChange> Changes => Table;
 

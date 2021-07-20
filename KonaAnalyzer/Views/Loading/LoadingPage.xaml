@@ -6,7 +6,7 @@
              xmlns:viewModels="clr-namespace:KonaAnalyzer.ViewModels;assembly=KonaAnalyzer"
              mc:Ignorable="d"
              Title="{Binding Title}"
-             x:Class="KonaAnalyzer.Views.LoadingPage">
+             x:Class="KonaAnalyzer.Views.Loading.LoadingPage">
 
     <ContentPage.Content>
         <StackLayout>
